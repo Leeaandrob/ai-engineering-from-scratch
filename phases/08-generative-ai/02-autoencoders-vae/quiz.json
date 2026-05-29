@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the fundamental difference between a plain autoencoder and a VAE with respect to generation?",
+      "options": [
+        "A VAE uses convolutional layers; an autoencoder uses fully connected layers",
+        "A VAE encoder outputs a distribution over the latent space; an autoencoder encodes to a single deterministic point",
+        "A VAE uses a larger bottleneck dimension than an autoencoder",
+        "A plain autoencoder supports sampling by using a Gaussian prior"
+      ],
+      "correct": 1,
+      "explanation": "The key distinction is that a VAE encoder outputs (mu, sigma), parameterizing a distribution q(z|x). An autoencoder maps x to a fixed vector z with no probabilistic structure, so arbitrary points sampled from the code space decode to noise."
+    },
+    {
+      "stage": "pre",
+      "question": "What does the reparameterization trick accomplish in a VAE?",
+      "options": [
+        "It replaces the KL term with a simpler L2 penalty",
+        "It rewrites the stochastic sample z as mu + sigma * eps so gradients can flow through the sampling operation",
+        "It converts the continuous latent into discrete tokens for transformer modeling",
+        "It forces the posterior to match a uniform distribution"
+      ],
+      "correct": 1,
+      "explanation": "Sampling from q(z|x) is not differentiable, but writing z = mu + sigma * eps (eps ~ N(0,I)) makes z a deterministic function of the parameters plus pure noise, allowing gradients to flow through mu and sigma during backpropagation."
+    },
+    {
+      "stage": "post",
+      "question": "In the VAE ELBO, what role does the KL divergence term play?",
+      "options": [
+        "It measures pixel-wise reconstruction accuracy",
+        "It pushes the approximate posterior q(z|x) toward the prior N(0, I), shaping the latent space",
+        "It replaces the reconstruction loss when the decoder is Gaussian",
+        "It prevents the decoder weights from growing too large"
+      ],
+      "correct": 1,
+      "explanation": "The KL term KL[q(z|x) || N(0,I)] regularizes the code space by pulling the encoder's distribution toward the prior. Without it the code space is unstructured and arbitrary prior samples decode to noise."
+    },
+    {
+      "stage": "post",
+      "question": "What is posterior collapse in a VAE, and what causes it?",
+      "options": [
+        "The decoder outputs all-zero images; caused by too-small learning rate",
+        "The encoder ignores the input and maps every x to the prior; caused by the KL term dominating the loss",
+        "The latent dimensions shrink to zero over training; caused by large batch sizes",
+        "The decoder produces blurry images; caused by an MSE reconstruction loss"
+      ],
+      "correct": 1,
+      "explanation": "Posterior collapse occurs when the KL penalty pushes q(z|x) all the way to the prior N(0,I) regardless of input x. The decoder then receives no information and must hallucinate. Common fixes include beta-annealing and free-bits."
+    },
+    {
+      "stage": "post",
+      "question": "Why do VAEs produce blurry samples even after successful training?",
+      "options": [
+        "The KL term is too small to shape the latent space properly",
+        "The Gaussian decoder likelihood penalizes the mean of plausible outputs, which is a fuzzy average",
+        "The reparameterization trick introduces too much noise at inference",
+        "Posterior collapse causes the decoder to ignore the latent"
+      ],
+      "correct": 1,
+      "explanation": "A Gaussian (MSE) decoder is Bayes-optimal for the mean of the output distribution. The mean of many plausible images of a digit is a blurry digit. Discrete decoders (VQ-VAE) or stacking diffusion on the latents (Stable Diffusion) are the standard fixes."
+    },
+    {
+      "stage": "pre",
+      "question": "In Stable Diffusion and similar latent-diffusion models, what is the primary role of the VAE?",
+      "options": [
+        "To generate images directly from text prompts",
+        "To compress images into a lower-dimensional latent space where diffusion is run",
+        "To score the quality of generated samples during training",
+        "To provide text embeddings for cross-attention conditioning"
+      ],
+      "correct": 1,
+      "explanation": "Stable Diffusion's VAE compresses 512x512 images to 64x64x4 latents (a 48x spatial reduction). Diffusion runs in this compact latent space, making training and inference far cheaper than pixel-space diffusion."
+    }
+  ]
+}

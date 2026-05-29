@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the three memory tiers in Letta?",
+      "options": [
+        "Cache, Store, Archive",
+        "Core (always visible), Recall (conversation history), Archival (external facts)",
+        "Short-term, Medium-term, Long-term",
+        "Hot, Warm, Cold"
+      ],
+      "correct": 1,
+      "explanation": "Letta organizes memory into three tiers: Core (always visible in the prompt, managed by agent tools and sleep-time rewrites), Recall (conversation history with retrievable evicted tail), and Archival (external vector+KV+graph store)."
+    },
+    {
+      "stage": "pre",
+      "question": "What are the two default memory blocks in the original MemGPT paper?",
+      "options": [
+        "System block and User block",
+        "Human block and Persona block",
+        "Task block and History block",
+        "Input block and Output block"
+      ],
+      "correct": 1,
+      "explanation": "The original MemGPT paper defined two memory blocks: Human block (facts about the user: name, role, preferences) and Persona block (the agent's self-concept: identity, tone, constraints). Letta generalizes to arbitrary user-defined blocks."
+    },
+    {
+      "stage": "post",
+      "question": "What are the three key advantages of sleep-time compute running off the critical path?",
+      "options": [
+        "Lower cost, faster models, more accurate results",
+        "No latency cost for primary agent, stronger model allowed, natural consolidation window",
+        "Easier debugging, simpler code, better observability",
+        "Less memory usage, faster retrieval, cleaner API"
+      ],
+      "correct": 1,
+      "explanation": "Sleep-time compute running off the critical path means: no latency cost (primary responses don't wait), a stronger/more expensive model can be used (no latency constraint), and there is a natural window to deduplicate, summarize, and invalidate contradicted facts."
+    },
+    {
+      "stage": "post",
+      "question": "What does 'silent drift' mean in the context of memory blocks?",
+      "options": [
+        "The block slowly fills up with useless information",
+        "The sleep-time agent rewrites a block and the primary agent never notices the change",
+        "The agent gradually loses accuracy over time",
+        "Memory blocks are not persisted between sessions"
+      ],
+      "correct": 1,
+      "explanation": "Silent drift occurs when the sleep-time agent rewrites a block but the primary agent continues operating without awareness of the change. Mitigation: version blocks and surface diffs in the trace."
+    },
+    {
+      "stage": "post",
+      "question": "What key change does Letta V1 make compared to the original MemGPT loop?",
+      "options": [
+        "Removes the memory blocks concept entirely",
+        "Replaces send_message/heartbeat and inline Thought: tokens with native reasoning via the Responses/Messages API",
+        "Adds a fourth memory tier",
+        "Migrates from Python to TypeScript"
+      ],
+      "correct": 1,
+      "explanation": "Letta V1 (letta_v1_agent, 2026) deprecates the old send_message/heartbeat pattern and explicit Thought: token scheme in favor of native reasoning — emitted on a separate channel and passed through turns encrypted in production."
+    },
+    {
+      "stage": "pre",
+      "question": "What happens when a memory block approaches its character limit?",
+      "options": [
+        "New writes are silently discarded",
+        "The agent should call block_summarize to condense the block before the next write pushes it over the cap",
+        "The system automatically deletes the oldest entries",
+        "The block resets to its initial state"
+      ],
+      "correct": 1,
+      "explanation": "Each block has a limit (character cap). When a block is near its limit, the agent should call block_summarize to condense the block value; otherwise the next append will overflow and be rejected."
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "At approximately what requests per second does LiteLLM start breaking down in production benchmarks?",
+      "options": ["~100 RPS", "~500 RPS", "~2,000 RPS", "~10,000 RPS"],
+      "correct": 2,
+      "explanation": "Kong's published benchmark shows LiteLLM experiencing cascading failures around ~2,000 RPS on an 8 GB memory footprint. The lesson recommends it for Python apps under 500 RPS and dev/staging gateways."
+    },
+    {
+      "stage": "pre",
+      "question": "Kong's own benchmark on the same 12-CPU hardware showed Kong AI Gateway was how much faster than LiteLLM?",
+      "options": ["50% faster", "228% faster", "859% faster", "10x faster"],
+      "correct": 2,
+      "explanation": "Kong's benchmark on 12 CPUs: Kong AI Gateway was 859% faster than LiteLLM and 228% faster than Portkey. This throughput advantage matters when you exceed ~500 RPS and need consistent low latency."
+    },
+    {
+      "stage": "post",
+      "question": "Which AI gateway went Apache 2.0 open-source in March 2026 and is positioned on guardrails, PII redaction, and audit trails?",
+      "options": ["LiteLLM", "Portkey", "Kong AI Gateway", "Bifrost"],
+      "correct": 1,
+      "explanation": "Portkey went Apache 2.0 open-source in March 2026. It is control-plane-positioned with guardrails, PII redaction, jailbreak detection, and audit trails. Production tier costs $49/month and adds 20-40 ms per-request latency overhead."
+    },
+    {
+      "stage": "post",
+      "question": "What drives the self-hosted versus managed gateway decision according to the lesson?",
+      "options": [
+        "Cost — self-hosted is always cheaper at scale",
+        "Data residency — if requests must not leave your network, self-host",
+        "Latency — self-hosted adds less overhead than managed",
+        "Feature parity — managed gateways lack advanced routing"
+      ],
+      "correct": 1,
+      "explanation": "Data residency is the primary driver for self-hosting a gateway. If regulatory or contractual requirements prevent sending request data through a third-party managed proxy, you must self-host. Portkey and Kong both offer OSS + optional managed to serve this spectrum."
+    },
+    {
+      "stage": "post",
+      "question": "Which gateway is described as the best fit for regulated industries needing guardrails and observability bundled?",
+      "options": ["LiteLLM", "Portkey", "Kong AI Gateway", "Cloudflare AI Gateway"],
+      "correct": 1,
+      "explanation": "Portkey bundles guardrails, PII redaction, jailbreak detection, and audit trails — making it the regulated-industry pick. Kong AI Gateway is the scale pick if you are already on Kong. LiteLLM is for dev/prototyping."
+    },
+    {
+      "stage": "pre",
+      "question": "Which gateway pattern does Bifrost (Maxim AI) implement as a canonical recipe?",
+      "options": [
+        "Semantic caching of repeated LLM responses",
+        "Automatic retry with configurable backoff and fallback to Anthropic on OpenAI 429 errors",
+        "Request deduplication to prevent duplicate charges",
+        "Cost-based routing to the cheapest available model"
+      ],
+      "correct": 1,
+      "explanation": "Bifrost implements automatic retries with configurable backoff and the canonical recipe of falling back to Anthropic when OpenAI returns a 429 (rate limit). This is the multi-provider failover pattern in its simplest form."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the structure of the best-first tree search at the core of the autonomous research agent?",
+      "options": [
+        "Nodes are literature papers; edges are citation links; leaves are experimental results",
+        "Nodes are experiment specifications; an expand step proposes children with small config edits; each child is scored by novelty x quality x remaining budget",
+        "Nodes are research hypotheses; edges are logical deductions; leaves are proven theorems",
+        "Nodes are Python scripts; edges are import dependencies; leaves are test outcomes"
+      ],
+      "correct": 1,
+      "explanation": "The tree's nodes are experiment specifications (hypothesis, config, code, expected outcome). An expand step proposes children by making small edits; each child is ranked by a novelty x quality x remaining budget score."
+    },
+    {
+      "stage": "pre",
+      "question": "Why does every experiment node run in a fresh sandbox with no network egress and bounded resources?",
+      "options": [
+        "Deterministic seeds require an isolated environment free of network calls",
+        "Cloud providers charge less for isolated containers",
+        "The Sakana team documented sandbox-escape failures; isolation prevents network exfiltration, fork bombs, and filesystem escapes",
+        "The reviewer ensemble requires identical computational environments across nodes"
+      ],
+      "correct": 2,
+      "explanation": "The Sakana AI team documented real sandbox-escape attacks from AI-generated code. No network, bounded CPU/memory, and pinned resource limits (cgroups) prevent these attack vectors."
+    },
+    {
+      "stage": "post",
+      "question": "How does the vision-critique step improve the paper draft after the LaTeX writer produces it?",
+      "options": [
+        "A second LLM rewrites the abstract based on reviewer scores",
+        "The compiled PDF is fed back to Claude Opus 4.7's vision mode for critique on layout, figure legibility, and claim-evidence alignment",
+        "A style linter flags passive voice and overly long sentences",
+        "The tree-search trace is re-ranked by a novelty classifier to select the best branch"
+      ],
+      "correct": 1,
+      "explanation": "After the LaTeX draft is compiled to PDF, that rendered PDF is fed back into a vision-capable model (Opus 4.7) which critiques layout, figure legibility, and whether claims are backed by evidence."
+    },
+    {
+      "stage": "post",
+      "question": "What triggers the reviewer ensemble to return the paper to the writer?",
+      "options": [
+        "Any single judge scores below 3.0/5",
+        "The mean reviewer score across the ensemble of five judges drops below 4.0/5",
+        "The paper exceeds the LaTeX page limit set by the NeurIPS template",
+        "The tree-search trace reveals fewer than three successful experiment nodes"
+      ],
+      "correct": 1,
+      "explanation": "Five LLM judges score on novelty, rigor, clarity, reproducibility, and impact using NeurIPS rubrics. If the weighted mean falls below 4.0/5, the paper returns to the writer with critique. There is a hard stop after 3 rewrites."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the $30 budget ceiling per paper enforced to achieve?",
+      "options": [
+        "Limit GPU usage to one H100 node per experiment",
+        "Ensure the pipeline is economically viable and cost-bounded; Langfuse counters pre-run estimates to gate execution",
+        "Comply with Sakana AI's open-source license for AI-Scientist-v2",
+        "Prevent the reviewer ensemble from running more than three model calls"
+      ],
+      "correct": 1,
+      "explanation": "The $30 hard cap is a cost-discipline gate: it makes the pipeline economically viable and forces prioritization via the novelty x quality x budget score. Langfuse traces every dollar spent."
+    },
+    {
+      "stage": "post",
+      "question": "What does the red-team report in this capstone test, and what is the goal?",
+      "options": [
+        "It tests whether the reviewer ensemble can detect plagiarism from the literature cache",
+        "It runs adversarial tasks targeting the sandbox (fork bombs, network exfiltration, filesystem escapes, shell metacharacters) and confirms all are blocked by the isolation policy",
+        "It measures whether the agent generates correct citations for all claims in the paper",
+        "It stress-tests the W&B logging pipeline under high-frequency experiment launches"
+      ],
+      "correct": 1,
+      "explanation": "The red-team reproduces the Sakana-documented attack surface, running adversarial tasks designed to escape the sandbox, exfiltrate data, or fork-bomb the host. The goal is to confirm the isolation policy blocks every attempt."
+    }
+  ]
+}

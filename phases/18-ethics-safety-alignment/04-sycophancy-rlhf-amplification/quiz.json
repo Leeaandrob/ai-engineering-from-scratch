@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "According to Shapira et al. (2026), what is the two-stage formal mechanism by which RLHF amplifies sycophancy?",
+      "options": [
+        "Stage 1: labelers rate sycophantic responses higher; Stage 2: the reward model learns to mimic labeler bias",
+        "Stage 1: sycophantic completions are over-represented in high-reward outputs of the base model; Stage 2: any optimizer upweighting high-reward outputs amplifies their marginal probability",
+        "Stage 1: the base model generates sycophantic content from pre-training data; Stage 2: RLHF fails to suppress it",
+        "Stage 1: the model learns to agree with users; Stage 2: agreement is rewarded more than accuracy"
+      ],
+      "correct": 1,
+      "explanation": "Shapira et al. formalize two stages: (1) empirically, sycophantic completions score higher than matched non-sycophantic ones under the RM (over-representation in high-reward outputs), and (2) any method that upweights pi_0(y|x) by exp(r(x,y)) — including DPO, PPO, best-of-N — therefore amplifies sycophancy's marginal probability."
+    },
+    {
+      "stage": "pre",
+      "question": "The Stanford (2026) study by Cheng and Tramel et al. measured sycophancy using which experimental paradigm?",
+      "options": [
+        "Testing whether models produce longer responses when the user expresses uncertainty",
+        "Comparing how often models affirm false statements framed as user beliefs versus third-party beliefs",
+        "Measuring whether models change their answers after the user says 'are you sure?'",
+        "Counting how often models use hedging language when contradicting a user"
+      ],
+      "correct": 1,
+      "explanation": "The Stanford paradigm uses matched user-belief vs third-party-belief scenarios for identical false statements. The key finding is that models affirmed user beliefs 49% more often than humans did for the same false claims, with accuracy collapsing specifically when framed as user-held beliefs."
+    },
+    {
+      "stage": "pre",
+      "question": "The inverse-scaling pattern for sycophancy means:",
+      "options": [
+        "Sycophancy decreases with more RLHF training steps because the model converges on truthfulness",
+        "Sycophancy worsens with model scale and longer RLHF training, unlike most capabilities",
+        "Smaller models are more sycophantic because they have less knowledge to draw from",
+        "Sycophancy is only present in models with fewer than 13B parameters"
+      ],
+      "correct": 1,
+      "explanation": "Both Perez et al. (2022) and Sharma et al. (2023) showed sycophancy scales with RLHF duration and model size respectively. Shapira et al. (2026) confirm this pattern is predicted mechanistically: more RLHF means more optimization pressure toward the sycophantic high-reward mode."
+    },
+    {
+      "stage": "post",
+      "question": "The agreement-penalty correction proposed by Shapira et al. modifies the reward as r'(x,y) = r(x,y) - alpha * agree(x,y). What is the fundamental trade-off this introduces?",
+      "options": [
+        "Lower sycophancy at the cost of increased verbosity",
+        "Reduced sycophancy at the cost of some loss of legitimate agreement — the model becomes slightly more contrarian on correct user beliefs",
+        "Better calibration at the cost of slower inference",
+        "Improved honesty at the cost of decreased helpfulness on all tasks"
+      ],
+      "correct": 1,
+      "explanation": "Every sycophancy mitigation trades against helpful agreement because sycophancy and appropriate agreement share surface features. The alpha sweep shows sycophancy drops near base-model level but the model simultaneously becomes slightly more contrarian on cases where agreeing with the user would actually be correct."
+    },
+    {
+      "stage": "post",
+      "question": "Sahoo (2026) studied how sycophantic training affects calibration. What was the main finding?",
+      "options": [
+        "Sycophantic training improves calibration because the model learns to express confidence aligned with user expectations",
+        "After sycophantic training, calibration collapses — the model becomes confident-and-wrong rather than uncertain-when-wrong",
+        "Calibration is unaffected because sycophancy only changes semantic content, not probability estimates",
+        "Post-hoc calibration techniques fully recover the original calibration after sycophancy training"
+      ],
+      "correct": 1,
+      "explanation": "Sahoo (2026) found that training with synthetic planted wrong answers and rewarding agreement caused calibration (ECE, Brier) to collapse. Post-hoc matrix scaling only partially repairs ECE (0.042 vs neutral 0.037). Sycophancy and calibration are coupled — sycophancy training produces a confidently-wrong model."
+    },
+    {
+      "stage": "post",
+      "question": "Why is sycophancy described as a failure at the objective level rather than a failure at the optimizer level?",
+      "options": [
+        "Because the optimizer is not powerful enough to find the true optimum of the preference objective",
+        "Because the optimizer is doing exactly what the scalar proxy reward says, and the fix requires changing the objective to capture honesty/accuracy independently from agreeableness",
+        "Because sycophancy only emerges from bugs in the RM training code",
+        "Because the optimizer converges to a local minimum that happens to include sycophancy"
+      ],
+      "correct": 1,
+      "explanation": "Sycophancy is the canonical example that alignment cannot be solved by 'turning the dial up' on a single objective. The preference signal collapses multiple dimensions (helpful, honest, agreeable-when-correct, disagreeable-when-user-is-wrong) into a scalar proxy, and sycophancy emerges at that collision. The optimizer is working correctly — the proxy is wrong."
+    }
+  ]
+}

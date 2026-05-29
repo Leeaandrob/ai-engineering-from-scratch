@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the three core components of Reflexion?",
+      "options": [
+        "Generator, Discriminator, Memory",
+        "Actor, Evaluator, Self-Reflector",
+        "Planner, Executor, Validator",
+        "Proposer, Critic, Refiner"
+      ],
+      "correct": 1,
+      "explanation": "Reflexion (Shinn et al., arXiv:2303.11366) consists of an Actor that generates trajectories, an Evaluator that scores them, and a Self-Reflector that writes natural-language reflections on failures."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is Reflexion called 'verbal reinforcement learning'?",
+      "options": [
+        "It uses speech recognition to process verbal user feedback",
+        "It learns from failure through natural language reflections stored in episodic memory, without any gradient updates",
+        "It produces verbal explanations of each action taken",
+        "It uses a verbal description of the task instead of a formal reward function"
+      ],
+      "correct": 1,
+      "explanation": "Reflexion improves through natural language reflections stored in episodic memory and prepended to future trials, achieving learning without weight updates or gradient computations."
+    },
+    {
+      "stage": "post",
+      "question": "What is 'memory rot' in the context of Reflexion?",
+      "options": [
+        "When the model forgets previously successful strategies",
+        "When the episodic buffer fills with obsolete or incorrect reflections, degrading future performance",
+        "When memory usage grows too large for the system",
+        "When reflections are not stored persistently between sessions"
+      ],
+      "correct": 1,
+      "explanation": "Memory rot occurs when the episodic buffer accumulates stale, obsolete, or incorrect reflections over time. Mitigations include periodic compaction, TTL on reflections, or sleep-time cleanup agents."
+    },
+    {
+      "stage": "post",
+      "question": "Which type of evaluator provides the strongest signal in Reflexion?",
+      "options": [
+        "Self-evaluator, because the model knows its own reasoning best",
+        "Heuristic evaluator, because it catches common failure patterns",
+        "Scalar evaluator, which uses an external binary signal like test pass/fail",
+        "Random evaluator, to encourage exploration"
+      ],
+      "correct": 2,
+      "explanation": "Scalar evaluators (external binary signals like ALFWorld success/failure or HumanEval test pass/fail) provide the strongest, highest-signal feedback. Self-evaluation is a weaker fallback when no ground truth is available."
+    },
+    {
+      "stage": "post",
+      "question": "When does Reflexion NOT help an agent improve?",
+      "options": [
+        "When the agent has many tools available",
+        "When the failure is external (network down, tool broken) since reflection on those does not help future runs",
+        "When the agent is using chain-of-thought reasoning",
+        "When the task involves multi-step reasoning"
+      ],
+      "correct": 1,
+      "explanation": "Reflexion does not help when the failure is external and not due to the agent's reasoning (e.g., network down, tool broken), when the agent already succeeds on the first try, or when reflections turn into superstition about one-off flaky runs."
+    },
+    {
+      "stage": "pre",
+      "question": "Which 2026 production systems implement a pattern equivalent to Reflexion?",
+      "options": [
+        "Only research systems, not production ones",
+        "Letta sleep-time compute, Claude Code CLAUDE.md learnings, and pro-workflow learn-rule",
+        "Only OpenAI Assistants API",
+        "Only LangChain memory modules"
+      ],
+      "correct": 1,
+      "explanation": "Multiple production systems use Reflexion-derived patterns: Letta's sleep-time compute runs a Self-Reflector off the critical path, Claude Code captures CLAUDE.md learnings between sessions, and pro-workflow captures corrections as rules via /learn-rule."
+    }
+  ]
+}

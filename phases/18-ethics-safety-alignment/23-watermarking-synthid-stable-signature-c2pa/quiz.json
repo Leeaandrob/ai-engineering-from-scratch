@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "The Kirchenbauer et al. (2023) text watermarking mechanism works by:",
+      "options": [
+        "Appending a hidden signature token to every generated sequence",
+        "Hashing the previous K tokens to partition the vocabulary into green and red sets, then biasing sampling toward green tokens at each step — detectable by the green-token z-score",
+        "Training the model to embed specific Unicode characters at fixed positions in its output",
+        "Encoding a binary watermark in the model's logit distribution that is recoverable by the model owner"
+      ],
+      "correct": 1,
+      "explanation": "The Kirchenbauer mechanism: at each decoding step, hash the previous K tokens to produce a pseudorandom green/red vocabulary split. Add delta to green logit scores. The watermarked text contains more green tokens than chance, detectable via z-score. The key is the vocabulary partition function — without it, detection is impossible."
+    },
+    {
+      "stage": "pre",
+      "question": "Stable Signature (Fernandez et al., ICCV 2023) embeds an image watermark by:",
+      "options": [
+        "Adding invisible pixel-level noise to the generated image",
+        "Fine-tuning the latent diffusion decoder so every output contains a fixed binary message recoverable by a neural decoder",
+        "Encoding the model's digital signature in the image's EXIF metadata",
+        "Inserting a fixed spatial frequency pattern that survives JPEG compression"
+      ],
+      "correct": 1,
+      "explanation": "Stable Signature fine-tunes the latent diffusion decoder — the component that converts latent representations to images — so it always embeds a fixed binary message. Detection requires a trained neural decoder. At 10% cropping, detection exceeded 90% accuracy at FPR < 1e-6. The decoder is the embedding surface, not the pixel space."
+    },
+    {
+      "stage": "pre",
+      "question": "C2PA is complementary to watermarking rather than redundant. What does C2PA provide that watermarks cannot?",
+      "options": [
+        "C2PA embeds provenance information that survives aggressive image manipulation",
+        "C2PA provides a rich, cryptographically signed provenance chain (who created, when, what transformations) that carries more information than the few bits a watermark can embed",
+        "C2PA detection works without access to the original model",
+        "C2PA is mandatory under EU AI Act while watermarks are optional"
+      ],
+      "correct": 1,
+      "explanation": "Watermarks persist through transcoding but carry minimal information (essentially: was this AI-generated?). C2PA metadata carries a full provenance chain — creator identity, timestamps, transformation history — but can be stripped. They are complementary: watermarks for persistence, C2PA for rich provenance detail."
+    },
+    {
+      "stage": "post",
+      "question": "The 2024 'Stable Signature is Unstable' result demonstrated what vulnerability?",
+      "options": [
+        "The watermark decoder can be reverse-engineered from the public model checkpoint",
+        "Fine-tuning the decoder removes the watermark while preserving image quality — adversarial post-generation fine-tuning of the decoder is cheap and effective",
+        "High-compression JPEG saves destroy the watermark signal",
+        "The watermark is detectable by standard image forensics tools, allowing attackers to avoid watermarked outputs"
+      ],
+      "correct": 1,
+      "explanation": "'Stable Signature is Unstable' (arXiv:2405.07145, May 2024) showed that fine-tuning the decoder — the same component that embeds the watermark — removes the watermark while maintaining image quality. The attack is cheap and accessible to anyone who can fine-tune a diffusion decoder."
+    },
+    {
+      "stage": "post",
+      "question": "SynthID-text detection is not robust to which common transformation?",
+      "options": [
+        "Changing the font or visual presentation of the text",
+        "Paraphrasing — rewriting the text destroys the green-token signal because the vocabulary partition depends on the specific tokens generated",
+        "Translating the text to another language and back",
+        "Removing punctuation and formatting from the text"
+      ],
+      "correct": 1,
+      "explanation": "Text watermarks based on token-level green/red partitioning are not robust to paraphrase: when the text is rewritten with different words, the hash-derived vocabulary partitions no longer apply to the new tokens, destroying the statistical signal. Image watermarks can survive cropping because pixel-level features are retained; token watermarks cannot survive semantic-preserving rewording."
+    },
+    {
+      "stage": "post",
+      "question": "What does it mean that 'no SynthID signal' is NOT proof of authenticity in a deployment?",
+      "options": [
+        "SynthID detection has too high a false-positive rate to be reliable",
+        "SynthID only marks outputs from SynthID-enabled models — a human-created document and an AI document from a non-SynthID model both lack the signal, so absence of watermark cannot distinguish them",
+        "SynthID watermarks can be removed without detection, so attackers always remove them before publishing",
+        "The SynthID z-score threshold is set too high, causing many genuine watermarks to be missed"
+      ],
+      "correct": 1,
+      "explanation": "SynthID embeds a signal only in outputs from models that have SynthID enabled. A human-authored document, an AI document from a model without SynthID, and a paraphrased SynthID-watermarked document all lack the signal. 'No watermark detected' cannot distinguish these cases — it is evidence about provenance only when combined with knowledge of what models were potentially used."
+    }
+  ]
+}

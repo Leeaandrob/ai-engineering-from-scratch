@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why does the naive inpainting approach (replacing unmasked latents at each step) produce boundary artifacts?",
+      "options": [
+        "The VAE encoder does not process masked regions correctly",
+        "The model receives no information about what the masked region should contain, causing incoherent transitions at mask boundaries",
+        "The noise schedule is not calibrated for partial-image denoising",
+        "The text prompt cannot describe the masked region specifically enough"
+      ],
+      "correct": 1,
+      "explanation": "Simply clamping unmasked regions at each step means the denoising model never sees clean context around the mask. Without a conditioning signal showing the surrounding image, the model fills the mask independently and the boundary between filled and unfilled regions is visually inconsistent."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the input structure of a proper inpainting U-Net like SD-Inpaint?",
+      "options": [
+        "4 channels: noisy latent only",
+        "9 channels: noisy latent (4), VAE-encoded source image (4), and a single-channel mask",
+        "6 channels: noisy latent (4) and a 2-channel mask with edge dilation",
+        "8 channels: noisy latent (4) and text token embeddings (4)"
+      ],
+      "correct": 1,
+      "explanation": "Proper inpainting models take a 9-channel input: the noisy latent, a copy of the VAE-encoded clean source image, and the mask. This gives the model explicit visibility into both what is being generated (noisy latent) and what context surrounds it (clean encoding), enabling coherent completions."
+    },
+    {
+      "stage": "post",
+      "question": "In SDEdit, what determines the trade-off between fidelity to the source image and creative freedom?",
+      "options": [
+        "The CFG guidance scale; higher CFG = more source fidelity",
+        "The starting timestep t/T; lower t/T preserves more source structure, higher t/T allows more creative deviation",
+        "The mask dilation radius; wider masks allow more deviation",
+        "The number of inference steps; more steps = more deviation from source"
+      ],
+      "correct": 1,
+      "explanation": "SDEdit adds noise to the source image up to timestep t, then denoises with a new prompt. t/T=0.3 barely changes the image; t/T=0.9 produces a near-full regeneration. This t parameter is the fidelity lever."
+    },
+    {
+      "stage": "post",
+      "question": "What is InstructPix2Pix and what conditioning inputs does it use at inference?",
+      "options": [
+        "A GAN-based model that takes edge maps and target captions",
+        "A fine-tuned diffusion model that takes an input image plus a natural language instruction, using separate guidance scales for image fidelity and text adherence",
+        "A ControlNet variant that accepts a mask and a fill prompt",
+        "A flow-matching model that directly regresses from source image to target image"
+      ],
+      "correct": 1,
+      "explanation": "InstructPix2Pix (Brooks et al., 2023) is fine-tuned on (input_image, instruction, output_image) triples. At inference it uses two CFG scales: one for image fidelity (how much to preserve the source) and one for text adherence (how literally to apply the instruction)."
+    },
+    {
+      "stage": "post",
+      "question": "According to the lesson, what is the primary latency bottleneck in a production inpainting pipeline using SAM + SD-Inpaint?",
+      "options": [
+        "VAE encoding, which processes the full image twice",
+        "SAM mask generation (~40-200ms depending on variant), which adds to the total round trip",
+        "Text encoding via CLIP, which must run on the prompt plus the inpainting instruction",
+        "The mask dilation operation, which requires iterative morphological operations"
+      ],
+      "correct": 1,
+      "explanation": "SAM-H at 1024px takes about 200ms; SAM-ViT-B takes about 40ms. For sub-5-second round trips this is meaningful overhead, and the lesson recommends using SAM-ViT-B for single-image edits and reserving SAM-H for quality-critical cases."
+    },
+    {
+      "stage": "pre",
+      "question": "What does outpainting mean in the context of diffusion-based image editing?",
+      "options": [
+        "Generating a higher-resolution version of an existing image",
+        "Regenerating the image outside the original canvas boundary by treating the new region as the mask",
+        "Removing objects from an image and filling with the background",
+        "Changing the style of an image while preserving its semantic structure"
+      ],
+      "correct": 1,
+      "explanation": "Outpainting extends the canvas by masking the new (currently non-existent) area outside the original image and using the original as context. It is the inverse of inpainting's masking direction and uses the same underlying model and training objective."
+    }
+  ]
+}

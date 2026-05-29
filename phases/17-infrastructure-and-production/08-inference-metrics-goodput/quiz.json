@@ -1,0 +1,71 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does TTFT measure in LLM serving?",
+      "options": [
+        "Time from request receipt to the last output token",
+        "Time from request receipt to the first output token (prefill + queue + network)",
+        "Time between consecutive output tokens during decode",
+        "Total tokens processed per second across the fleet"
+      ],
+      "correct": 1,
+      "explanation": "TTFT (Time to First Token) measures the elapsed time from when a request is received to when the first output token is generated. It encompasses prefill time, queue wait, and network round-trip."
+    },
+    {
+      "stage": "pre",
+      "question": "What is goodput and why does the lesson call it the metric that actually matters for product?",
+      "options": [
+        "Total tokens per second — the headline throughput figure providers advertise",
+        "The fraction of requests that met every SLO constraint simultaneously (TTFT, TPOT, E2E)",
+        "The ratio of successful requests to failed requests over a time window",
+        "Tokens generated minus tokens that caused refusals or errors"
+      ],
+      "correct": 1,
+      "explanation": "Goodput is the fraction of requests that met all SLO constraints simultaneously. High throughput at low goodput means you are processing tokens that never reach users on time — the product is broken even if the GPU is busy."
+    },
+    {
+      "stage": "post",
+      "question": "For Llama-3.1-8B-Instruct on TRT-LLM in 2026, what are the reference mean TTFT and mean TPOT values?",
+      "options": [
+        "TTFT: 50 ms, TPOT: 2 ms",
+        "TTFT: 162 ms, TPOT: 7.33 ms",
+        "TTFT: 500 ms, TPOT: 20 ms",
+        "TTFT: 1,093 ms, TPOT: 50 ms"
+      ],
+      "correct": 1,
+      "explanation": "The lesson provides reference numbers: mean TTFT 162 ms, mean TPOT 7.33 ms, mean E2E 1,093 ms for Llama-3.1-8B-Instruct on TRT-LLM in 2026. These are production-calibrated baselines to compare against."
+    },
+    {
+      "stage": "post",
+      "question": "NVIDIA GenAI-Perf and LLMPerf measure TPOT differently for the same run. What is the key difference?",
+      "options": [
+        "GenAI-Perf uses wall-clock time while LLMPerf uses GPU-time",
+        "GenAI-Perf excludes TTFT from the ITL calculation (starts from token 2); LLMPerf includes TTFT (starts from token 1)",
+        "GenAI-Perf measures TPOT in milliseconds while LLMPerf uses microseconds",
+        "GenAI-Perf averages over all requests while LLMPerf reports the median"
+      ],
+      "correct": 1,
+      "explanation": "This is the measurement trap: GenAI-Perf excludes TTFT from the ITL calculation (inter-token latency starts at token 2), while LLMPerf includes TTFT (starts at token 1). Two tools benchmarking the same system will report different TPOT numbers."
+    },
+    {
+      "stage": "post",
+      "question": "Why should you always report P50/P90/P99 rather than mean for LLM serving metrics?",
+      "options": [
+        "Percentiles are required by OpenTelemetry's metric specification",
+        "Mean hides the long tail — users experiencing P99 latency have a broken experience even if mean looks fine",
+        "LLM outputs are non-deterministic so means are statistically meaningless",
+        "P99 is the standard metric in SLO contracts and easier to defend to customers"
+      ],
+      "correct": 1,
+      "explanation": "LLM latency distributions are heavy-tailed. Mean TTFT of 162 ms masks a P99 that could be 1,000 ms+. Users at the tail have a broken experience. Percentiles reveal the shape; mean conceals it."
+    },
+    {
+      "stage": "pre",
+      "question": "A team sets an SLO of TTFT P99 <= 800 ms AND TPOT P99 <= 25 ms AND E2E P99 <= 3 s. During a load test, 98% of requests meet all three constraints. What is the goodput?",
+      "options": ["98%", "99%", "100%", "Cannot be determined from this information"],
+      "correct": 0,
+      "explanation": "Goodput is the fraction of requests meeting all SLO constraints simultaneously. If 98% of requests satisfy all three constraints at once, goodput is 98% — regardless of how each individual metric performs in isolation."
+    }
+  ]
+}

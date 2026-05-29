@@ -1,0 +1,61 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "On GB200 NVL72 with Dynamo orchestration, what cost per million tokens did SemiAnalysis InferenceX measure for a 120B model in Q1-Q2 2026?",
+      "options": ["$0.09/M", "$0.05/M", "$0.02/M", "$0.012/M"],
+      "correct": 3,
+      "explanation": "SemiAnalysis InferenceX measured $0.012 per million tokens on GB200 NVL72 with Dynamo orchestrating TRT-LLM. The comparable H100 + vLLM cost is ~$0.09/M — a 7x economic gap."
+    },
+    {
+      "stage": "pre",
+      "question": "Why does FP8 stay critical for KV cache and attention kernels even when model weights are in NVFP4?",
+      "options": [
+        "FP8 is required for backward-compatibility with Hopper hardware",
+        "FP8 has the dynamic range that KV cache values and attention accumulators need",
+        "NVFP4 cannot be stored in HBM directly and must be promoted to FP8 at runtime",
+        "Regulators require FP8 minimum precision for financial AI workloads"
+      ],
+      "correct": 1,
+      "explanation": "KV cache values and attention accumulators have large dynamic range due to softmax and gradient magnitudes. NVFP4 lacks the range needed for these operations. FP8 is used for KV cache and attention; NVFP4 handles weights and activations."
+    },
+    {
+      "stage": "post",
+      "question": "What does TRT-LLM's day-0 FP4 weight support mean in practice?",
+      "options": [
+        "Models are automatically quantized to FP4 during the first inference call",
+        "Model providers ship FP4 weights directly and TRT-LLM loads them without post-training conversion",
+        "TRT-LLM converts any model to FP4 in the background using a background calibration process",
+        "FP4 weights are only available on Blackwell hardware and require a separate download"
+      ],
+      "correct": 1,
+      "explanation": "Day-0 FP4 means model providers (Meta, Mistral, etc.) ship FP4 checkpoints directly. TRT-LLM loads these without needing AWQ or GPTQ post-training quantization steps — eliminating the conversion pipeline."
+    },
+    {
+      "stage": "post",
+      "question": "What is the primary trade-off when adopting TRT-LLM over vLLM?",
+      "options": [
+        "TRT-LLM only supports English-language models",
+        "TRT-LLM is NVIDIA-only — adopting it trades hardware portability for throughput",
+        "TRT-LLM requires manual kernel tuning per model and does not support auto-tuning",
+        "TRT-LLM does not support LoRA fine-tuning"
+      ],
+      "correct": 1,
+      "explanation": "TRT-LLM is a closed NVIDIA stack. Once you commit, you cannot run on AMD or other hardware. The lesson frames this as trading portability for throughput, and recommends running the math on your hardware mix before committing."
+    },
+    {
+      "stage": "post",
+      "question": "The lesson cites a 7x economic gap between GB200 NVL72 + TRT-LLM and H100 + vLLM. What is the approximate cost per million tokens on H100 + vLLM for the comparable workload?",
+      "options": ["$0.012/M", "$0.05/M", "$0.09/M", "$0.40/M"],
+      "correct": 2,
+      "explanation": "H100 + vLLM is benchmarked at ~$0.09/M tokens. GB200 NVL72 + Dynamo (orchestrating TRT-LLM) achieves $0.012/M — approximately 7x cheaper at scale."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the approximate per-GPU throughput improvement of Blackwell versus Hopper for LLM inference?",
+      "options": ["2-3x", "5-6x", "11-15x", "30-50x"],
+      "correct": 2,
+      "explanation": "The lesson cites 11-15x per-GPU LLM throughput for Blackwell vs Hopper. This combines NVFP4 precision, improved Tensor Cores, NVLink 5 for MoE communication, and the TRT-LLM kernel optimizations."
+    }
+  ]
+}

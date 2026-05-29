@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is 3D Gaussian Splatting (3DGS) and what makes it practical for real-time rendering?",
+      "options": [
+        "A voxel-grid representation that stores color and density per cube; rendered by ray casting",
+        "A scene representation as a cloud of 3D Gaussians with position, covariance, opacity, and color, rendered by differentiable alpha-compositing at roughly 100fps on a 4090",
+        "A mesh-based representation that uses learnable vertex colors and is rendered via rasterization",
+        "A NeRF variant that replaces the MLP with a convolutional network for faster inference"
+      ],
+      "correct": 1,
+      "explanation": "3DGS (Kerbl et al., 2023) represents a scene as ~1M 3D Gaussians. Rendering is projection + sorted alpha-compositing, which is fully differentiable and runs at ~100fps at 1080p on consumer hardware. NeRF requires millions of MLP forwards per render and is 100-1000x slower."
+    },
+    {
+      "stage": "pre",
+      "question": "What is Score Distillation Sampling (SDS) and in which 3D generation method was it introduced?",
+      "options": [
+        "A method for sampling 3D Gaussians from a diffusion model's score function, introduced in 3DGS",
+        "A technique that uses a 2D diffusion model's score as a pseudo-gradient to optimize a 3D representation, introduced in DreamFusion",
+        "A faster DDPM sampler that reduces inference steps from 1000 to 50 for 3D rendering",
+        "A data augmentation method that scores 3D object quality using CLIP embeddings"
+      ],
+      "correct": 1,
+      "explanation": "DreamFusion (Poole et al., 2022) introduced SDS: render the 3D representation from random views, treat a 2D diffusion model as a score estimator, and backpropagate the score gradient into the 3D representation parameters. This enables text-to-3D without any 3D training data."
+    },
+    {
+      "stage": "post",
+      "question": "Why is the 2026 3D generation pipeline typically split into 'multi-view diffusion' followed by '3D reconstruction' rather than generating 3D directly?",
+      "options": [
+        "3D representations are too large to fit in GPU memory for direct generation",
+        "High-quality 2D diffusion priors are already trained; generating consistent multi-view images first then lifting to 3D leverages this knowledge and produces better results than training a 3D model from scratch",
+        "Direct 3D generation cannot handle textures and always produces untextured meshes",
+        "Multi-view pipelines are faster because they parallelize across views"
+      ],
+      "correct": 1,
+      "explanation": "Training a 3D generative model requires 3D data (scarce and lower quality than image data). Multi-view diffusion leverages the rich priors in 2D image diffusion models, generating 4-16 consistent views then fitting 3DGS or NeRF to them. Models like SV3D and CAT3D use this two-stage approach."
+    },
+    {
+      "stage": "post",
+      "question": "What is the Gaussian splat densification and pruning issue mentioned in the lesson's pitfalls?",
+      "options": [
+        "If too many Gaussians overlap, the rendering becomes too slow for real-time use",
+        "Without heuristics to split large splats and remove unused ones, the Gaussian cloud grows to 10M+ splats that overfit the training views and render poorly",
+        "Gaussians randomly initialized outside the scene boundaries cause numerical instability",
+        "The alpha-compositing step fails when more than 1M Gaussians are in the scene"
+      ],
+      "correct": 1,
+      "explanation": "3DGS training clones splats in high-gradient regions (densification) to capture fine detail, but without pruning low-opacity splats, the total count balloons and overfits. The original 3D-GS paper includes densification+pruning heuristics that are essential for clean reconstructions."
+    },
+    {
+      "stage": "post",
+      "question": "For shipping 3D assets in game engines in 2026, which pipeline is recommended and what output format does it produce?",
+      "options": [
+        "DreamFusion via SDS, producing a NeRF that can be rendered in Unreal Engine",
+        "Meshy 4 or Rodin Gen-1.5 from text or image input, producing PBR meshes with albedo, roughness, metallic, and normal channels suitable for Unity and Unreal",
+        "Gaussian splatting fit from photos, producing a .ply point cloud that game engines can import",
+        "CAT3D from multiple reference images, producing a triplane representation for real-time rendering"
+      ],
+      "correct": 1,
+      "explanation": "Game engines require PBR (Physically-Based Rendering) meshes with separate material channels. Meshy 4 and Rodin Gen-1.5 are 2025 models that produce game-engine-ready PBR meshes from text or image input in 30-60 seconds, making them the production default for that use case."
+    },
+    {
+      "stage": "pre",
+      "question": "What distinguishes a Neural Radiance Field (NeRF) from 3D Gaussian Splatting in terms of scene representation and rendering approach?",
+      "options": [
+        "NeRF uses a voxel grid; 3DGS uses a mesh; both are rendered by rasterization",
+        "NeRF uses a tiny MLP that outputs color and density at any 3D point, rendered by integrating along rays; 3DGS uses explicit Gaussians rendered by alpha-compositing and is 100-1000x faster",
+        "NeRF and 3DGS are equivalent representations; the difference is only in training speed",
+        "NeRF represents static scenes; 3DGS can represent dynamic scenes natively"
+      ],
+      "correct": 1,
+      "explanation": "NeRF is an implicit representation: a small MLP maps (x,y,z, view direction) to (color, density). Rendering requires integrating millions of MLP queries along each ray, which is very slow. 3DGS is explicit: pre-fit Gaussians are projected and alpha-composited in sorted depth order at real-time speeds."
+    }
+  ]
+}

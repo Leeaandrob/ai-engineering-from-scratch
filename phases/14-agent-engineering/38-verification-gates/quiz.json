@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What artifacts does the verification gate read to produce its verdict?",
+      "options": [
+        "Model output, system prompt, user message, tool calls",
+        "Diff, scope_report.json, rule_report.json, feedback_record.jsonl",
+        "test_results.xml, coverage.json, lint_output.txt, static_analysis.json",
+        "agent_state.json, task_board.json, AGENTS.md, requirements.txt"
+      ],
+      "correct": 1,
+      "explanation": "The verification gate reads four artifact types: the diff (what changed), scope_report.json (scope check results), rule_report.json (rule compliance), and feedback_record.jsonl (what commands ran, with what exit codes)."
+    },
+    {
+      "stage": "pre",
+      "question": "What is a block-severity finding and what can override it?",
+      "options": [
+        "A finding that blocks the user's screen; only the agent can clear it",
+        "A finding that prevents passed: true; can only be overridden by a human with a recorded override_reason and overridden_by user id in the signed override log",
+        "A critical bug in the code that must be fixed before continuing",
+        "A finding that blocks deployment but not merging"
+      ],
+      "correct": 1,
+      "explanation": "Block-severity findings prevent the gate from emitting passed: true. They can only be overridden by a human, with a signed entry in outputs/verification/overrides.jsonl containing timestamp, finding code, reason, signing user, and current HEAD commit. Agents cannot override block findings."
+    },
+    {
+      "stage": "post",
+      "question": "Why must the verification gate be deterministic?",
+      "options": [
+        "To ensure consistent performance across different hardware",
+        "Because the gate must produce the same verdict for the same artifact set every time — allowing CI to consume it reliably",
+        "To prevent any single run from having outsized influence on quality metrics",
+        "Because LLMs are non-deterministic, the gate must compensate"
+      ],
+      "correct": 1,
+      "explanation": "The verification gate must be deterministic — the same artifact set always produces the same verdict. CI consumes this report; non-deterministic gates produce false alarms that erode trust. LLM judges belong in the reviewer (Lesson 39) for qualitative evaluation, not in the gate."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'coverage floor' check and what does it prevent?",
+      "options": [
+        "Checking that code coverage stays above a minimum percentage; prevents agents from deleting tests that fail to keep the gate green",
+        "Checking that all code is covered by documentation",
+        "Ensuring that all edge cases are covered by tests",
+        "A check that the scope contract covers all relevant files"
+      ],
+      "correct": 1,
+      "explanation": "The coverage floor check fails the gate if measured test coverage drops below a threshold (default 80%) or below the previous merge's floor by more than 1 percentage point. Without this, agents quietly delete failing tests and the verification reports stay green while quality degrades."
+    },
+    {
+      "stage": "post",
+      "question": "What does '--strict' mode do in a verification gate?",
+      "options": [
+        "Enables additional security checks",
+        "Promotes every warning-severity finding to block severity; used for release branches and ship-blocking PRs",
+        "Runs the gate more slowly with more thorough checks",
+        "Enables all experimental gate checks"
+      ],
+      "correct": 1,
+      "explanation": "--strict mode promotes every warn finding to block severity. Use for release branches, ship-blocking PRs, or post-incident triage. It is opt-in by branch — not the global default, because strict-on-everything corrodes day-to-day development flow."
+    },
+    {
+      "stage": "pre",
+      "question": "Where is the single verification report stored, and why does having one path matter?",
+      "options": [
+        "In the agent's memory, accessible to all sessions",
+        "outputs/verification/<task_id>.json — one path consumed by both CI and humans prevents a fork in the source of truth",
+        "In the CI system, inaccessible to the agent",
+        "In the git history as a commit message"
+      ],
+      "correct": 1,
+      "explanation": "The gate emits one outputs/verification/<task_id>.json per task. CI and humans read the same file. Multiple gates with different paths fork the source of truth — the gate report becomes ambiguous. One report, one path."
+    }
+  ]
+}

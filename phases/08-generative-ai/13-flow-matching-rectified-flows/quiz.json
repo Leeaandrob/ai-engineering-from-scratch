@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the conditional flow matching training loss?",
+      "options": [
+        "MSE between the predicted noise and the noise added during the forward process",
+        "MSE between the predicted velocity v_theta(x_t, t) and the straight-line derivative (x_1 - x_0) along the interpolant",
+        "KL divergence between the learned flow's marginal and the data distribution",
+        "Wasserstein distance between the generated samples and real data at each timestep"
+      ],
+      "correct": 1,
+      "explanation": "The conditional flow matching loss is E[||v_theta(x_t, t) - (x_1 - x_0)||^2] where x_t = t*x_1 + (1-t)*x_0. The target velocity is the constant derivative along the straight-line interpolant. This is simulation-free: no ODE unrolling during training."
+    },
+    {
+      "stage": "pre",
+      "question": "How does flow matching sampling (inference) work once the vector field v_theta is trained?",
+      "options": [
+        "Sample x_T from noise, apply 1000 denoising steps using the DDPM reverse formula",
+        "Sample x_1 from N(0,I), then Euler-integrate the learned velocity field backward from t=1 to t=0",
+        "Sample a latent z, decode with the VAE, and apply 50 steps of DDIM",
+        "Sample multiple noise vectors and take the one with the highest likelihood under the model"
+      ],
+      "correct": 1,
+      "explanation": "Flow matching inference starts at x_1 ~ N(0,I) and integrates x_{t-dt} = x_t - dt * v_theta(x_t, t) down to t=0. Because paths are approximately straight, a small number of Euler steps (4-8) can match 50-step DDPM quality."
+    },
+    {
+      "stage": "post",
+      "question": "What is the reflow procedure in rectified flows and what problem does it solve?",
+      "options": [
+        "A fine-tuning step that adapts a pretrained diffusion model to a new domain by running the ODE forward and backward",
+        "An iterative procedure that straightens the learned flow paths: generate (x_1, x_0) pairs by integrating the current model, retrain on those pairs, repeat until paths become linear",
+        "A consistency distillation step that compresses a flow-matched model to a 1-step sampler",
+        "A variance reduction technique that uses multiple ODE trajectories per training sample"
+      ],
+      "correct": 1,
+      "explanation": "Random couplings produce curved paths because many noise vectors x_1 can correspond to the same data x_0. Reflow generates ODE-matched pairs by integrating the current model, then retrains on those pairs. After 2 iterations the paths are near-linear, enabling high-quality 2-step inference."
+    },
+    {
+      "stage": "post",
+      "question": "How does classifier-free guidance apply in a flow-matching model?",
+      "options": [
+        "CFG is not applicable to flow-matching models; only epsilon-prediction models support it",
+        "The velocity version is v_cfg = (1+w)*v_cond - w*v_uncond, the same linear combination as epsilon-CFG but applied to velocities",
+        "Flow-matching uses a separate classifier network rather than the unconditional model for guidance",
+        "CFG in flow matching requires retraining the model with guidance scale as an input token"
+      ],
+      "correct": 1,
+      "explanation": "CFG translates directly: compute both conditional velocity v_cond and unconditional velocity v_uncond, then combine as v_cfg = (1+w)*v_cond - w*v_uncond. The math is identical to epsilon-CFG with epsilon replaced by v."
+    },
+    {
+      "stage": "post",
+      "question": "According to the lesson, Flux.1-schnell achieves roughly 12x faster inference than Flux.1-dev. What two techniques enable this?",
+      "options": [
+        "Quantization and tensor parallelism",
+        "Flow matching training (straighter paths) combined with distillation (reflow straightening to 4 steps vs 50)",
+        "Using DDIM instead of Euler sampler and removing the VAE encode step",
+        "Reducing the DiT model size from 12B to 3B parameters"
+      ],
+      "correct": 1,
+      "explanation": "Flux-dev is a flow-matched model requiring ~50 steps. Flux-schnell applies rectified-flow distillation to reduce inference to 4 steps while preserving quality. These two techniques together give ~12x speedup (50 steps -> 4 steps) at comparable quality."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the key training efficiency advantage of conditional flow matching over DDPM?",
+      "options": [
+        "Flow matching uses a smaller network architecture that trains faster per step",
+        "Flow matching is simulation-free: you never unroll the ODE during training, just sample (x_0, x_1, t) and compute the velocity target in closed form",
+        "Flow matching requires fewer training samples because the loss is more informative",
+        "Flow matching avoids the need for a noise schedule, simplifying hyperparameter tuning"
+      ],
+      "correct": 1,
+      "explanation": "DDPM requires backpropagating through the forward diffusion process. Conditional flow matching needs only (x_0, x_1, t): compute x_t = t*x_1 + (1-t)*x_0, target = x_1-x_0, loss = ||v_theta(x_t,t) - target||^2. No ODE simulation, no truncated BPTT, trivial to implement."
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "According to MultiAgentBench (MARBLE), which debate topology performs best for research-style tasks and why?",
+      "options": ["Star topology because the hub can consolidate all information efficiently", "Graph (fully-connected) topology because any-to-any critique allows each agent to challenge every other agent's reasoning", "Chain topology because sequential refinement mirrors the natural research process", "Tree topology because hierarchical summarization reduces context bloat"],
+      "correct": 1,
+      "explanation": "MARBLE benchmarked star, chain, tree, and graph. Graph topology wins on research tasks because information flows any-to-any — an agent critiquing a specific claim can reach the agent that made it directly. Star consolidates through a bottleneck hub. Chain refines sequentially but misses cross-cutting critique. Tree has local summarization but constrained flow."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the 'coordination tax' identified by MultiAgentBench and when does it appear?",
+      "options": ["The overhead of running the selector function, which becomes expensive past 10 agents", "Past approximately 4 agents on graph topology, cost and wall-clock grow faster than quality gains", "The additional latency caused by agents waiting for each other's outputs before proceeding to the next round", "The token overhead of each agent reading all others' messages, which grows quadratically with agent count"],
+      "correct": 1,
+      "explanation": "MARBLE's empirical finding: graph topology quality gains plateau around 4 agents while cost (tokens, latency) continues growing. Beyond 4-5 agents, each additional agent's context is dominated by reading others' outputs rather than contributing new reasoning. The coordination overhead swamps the added value."
+    },
+    {
+      "stage": "post",
+      "question": "What does AgentVerse (ICLR 2024) mean by 'volunteer behavior' in multi-agent debate?",
+      "options": ["Agents offering to take additional turns beyond their assigned role when the debate stalls", "An emergent pattern where an agent unprompted offers to handle the next step, allocating work to the most capable agent for that subtask", "Agents voluntarily reducing their confidence scores to prevent sycophancy cascades", "An agent signaling to the group that it has detected a factual error and wants to correct it"],
+      "correct": 1,
+      "explanation": "Volunteer behavior from AgentVerse: an agent says 'I can take the next step' without being explicitly selected. This is useful because it routes work to the agent most suited for the current subtask. The complementary failure is conformity behavior — agents adjusting to match whoever spoke confidently, even when that agent was wrong."
+    },
+    {
+      "stage": "post",
+      "question": "Why does three different base models beat five copies of the same model on most tasks with clear ground truth?",
+      "options": ["Different models have different latency profiles, allowing faster parallel execution", "Different models have uncorrelated errors; each new independent-error source is worth more than an additional correlated sample from the same model", "Different models produce stylistically distinct outputs that are easier for a judge to evaluate fairly", "Using multiple model providers reduces vendor lock-in and improves system resilience"],
+      "correct": 1,
+      "explanation": "Heterogeneity beats numerosity: each additional copy of the same model adds a correlated sample. The model's systematic biases appear in all copies. A different model introduces uncorrelated failures — it is wrong on different questions. Empirically, swapping one of your N agents for a different base model gives a bigger accuracy bump than adding N+1 copies of the same model."
+    },
+    {
+      "stage": "post",
+      "question": "What practical recommendation does the lesson make for when to upgrade from self-consistency to multi-agent debate?",
+      "options": ["Always upgrade to debate when accuracy matters; self-consistency is never competitive", "Start with self-consistency at N=5 as the cheap baseline; upgrade to heterogeneous voting at N=3 only if accuracy delta justifies it; add debate topology only for structured multi-step tasks with bounded rounds", "Only use debate for code generation tasks where a verifier can confirm correctness deterministically", "Upgrade to debate when the task has more than 3 subtasks that can benefit from specialization"],
+      "correct": 1,
+      "explanation": "The lesson's hierarchy: (1) self-consistency at N=5 — cheapest, one model, good baseline; (2) heterogeneous vote at N=3 — measure if the accuracy delta justifies the added model cost; (3) debate topology — only for structured tasks (research, multi-step) with bounded rounds and a separate judge/verifier. Always benchmark wall-clock and tokens alongside accuracy."
+    }
+  ]
+}

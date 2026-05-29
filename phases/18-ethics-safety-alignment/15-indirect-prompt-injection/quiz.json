@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What distinguishes indirect prompt injection (IPI) from direct prompt injection?",
+      "options": [
+        "IPI uses longer prompts while direct injection uses shorter ones",
+        "IPI embeds instructions in external content consumed by an agent during normal operation; the attacker never touches the user's input",
+        "IPI targets the system prompt while direct injection targets user messages",
+        "IPI requires physical access to the server while direct injection operates remotely"
+      ],
+      "correct": 1,
+      "explanation": "In direct prompt injection, the attacker reaches the user's prompt or input. In IPI, the attacker places a payload in any external content the agent might read — a web page, email, GitHub issue, product review — and the agent picks it up during normal operation. The user is the messenger, not the intent."
+    },
+    {
+      "stage": "pre",
+      "question": "Why does IPI bypass user-input safety filters entirely?",
+      "options": [
+        "IPI payloads are encoded in a format that safety filters cannot parse",
+        "The payload does not appear in the user's input — it appears in retrieved or tool output content, bypassing filters that are gated on the user input field",
+        "IPI attacks are too short to trigger minimum-length safety filters",
+        "IPI uses Unicode homoglyphs that look identical to safe characters"
+      ],
+      "correct": 1,
+      "explanation": "User-input filters check the user-facing input field. IPI payloads arrive via retrieval (RAG), email content, tool output, or other external data sources. Because the filter is gated on user input, not all content that reaches the model, the payload bypasses it by design."
+    },
+    {
+      "stage": "pre",
+      "question": "The 'Information Flow Control' (IFC) defense paradigm for IPI is borrowed from which field?",
+      "options": [
+        "Network security — firewall rules",
+        "Classical operating system security — security labels on data flows",
+        "Cryptography — key derivation functions",
+        "Database security — SQL injection defenses"
+      ],
+      "correct": 1,
+      "explanation": "IFC for AI borrows from OS security label models: treat each content source with a security label (trusted vs untrusted). The model's control flow treats actions triggered by untrusted content as requiring trusted ratification before execution. Containment rather than prevention is the goal while code and data share the same context."
+    },
+    {
+      "stage": "post",
+      "question": "Nasr et al. (October 2025) tested 12 published IPI defenses with adaptive attacks. What was the key finding?",
+      "options": [
+        "All 12 defenses held up under adaptive attacks, demonstrating that IPC effectively prevents IPI",
+        "Adaptive attacks (gradient, RL, random search, human red-team) broke more than 90% of defenses that had originally reported near-zero attack success rates",
+        "Only defenses that used information flow control survived adaptive attacks",
+        "Adaptive attacks took more than 72 hours to break the best defenses, making them impractical"
+      ],
+      "correct": 1,
+      "explanation": "'The Attacker Moves Second' (Nasr et al., October 2025): all defenses that had originally reported near-zero ASR were broken to >90% ASR by adaptive attacks. The methodological lesson is that publishing a defense requires adaptive-attack evaluation — static benchmarks are not evidence of robustness."
+    },
+    {
+      "stage": "post",
+      "question": "EchoLeak (CVE-2025-32711) and CamoLeak demonstrate IPI in production. What ranks IPI as the most important production threat according to OWASP (2025) and NIST?",
+      "options": [
+        "IPI is the only attack that requires no user action to succeed",
+        "OWASP LLM Top 10 (2025) ranks prompt injection (direct and indirect) as LLM01, the number-one application-layer threat; NIST called indirect prompt injection 'generative AI's greatest security flaw'",
+        "IPI can be performed at scale by a single attacker reaching thousands of users",
+        "IPI bypasses all known defenses and has no known mitigations"
+      ],
+      "correct": 1,
+      "explanation": "Both OWASP's 2025 LLM Top 10 and NIST's AI SPD 2024 identify indirect prompt injection as the top application-layer AI threat. The EchoLeak and CamoLeak CVEs validate the threat model in production: attacks have occurred in deployed systems, not just benchmarks."
+    },
+    {
+      "stage": "post",
+      "question": "A 'benign instruction' IPI payload such as 'please print Yes' illustrates what defense challenge?",
+      "options": [
+        "That all IPI payloads are actually benign and the threat has been overstated",
+        "That IPI payloads can be semantically harmless while still constituting a scope violation — execution of untrusted instructions — making keyword-based and harm-based filtering insufficient",
+        "That IPI can be easily detected by checking whether the output contains 'Yes'",
+        "That only complex multi-step instructions can cause meaningful harm through IPI"
+      ],
+      "correct": 1,
+      "explanation": "A payload like 'please print Yes' is semantically harmless. Yet if executed, it demonstrates the attacker can inject instructions that override the user's intent. Keyword and harm classifiers cannot catch it because it triggers no harm signals. The NDSS 2026 defense paper identifies this as a fundamental challenge for detection-based defenses."
+    }
+  ]
+}

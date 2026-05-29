@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "The 2024-2025 bio-uplift narrative evolved through three phases. What was the turning point that changed the description from 'mild uplift' to 'on the cusp'?",
+      "options": [
+        "WMDP biosecurity accuracy crossed 80% on frontier models",
+        "OpenAI's Preparedness Framework v2 (April 2025) reported models were 'on the cusp of meaningfully helping novices create known biological threats'",
+        "Anthropic's 2025 bioweapon-acquisition trial reported 2.53x novice uplift",
+        "A lab accident attributed to AI assistance occurred and was publicly reported"
+      ],
+      "correct": 1,
+      "explanation": "The three phases: (1) 2024 'mild uplift' from early Preparedness/RSP evaluations; (2) April 2025 'on the cusp' language in OpenAI's PF v2 — the first official lab statement that the threshold was near; (3) Anthropic's 2025 bioweapon-acquisition trial reporting 2.53x novice uplift insufficient to rule out ASL-3. The PF v2 language was the inflection point."
+    },
+    {
+      "stage": "pre",
+      "question": "The November 2025 Anthropic cyber report on Chinese-linked state actors using Claude described AI involvement in what proportion of the cyberattack campaign?",
+      "options": [
+        "10-20% of steps — limited to initial reconnaissance only",
+        "50% of steps — split evenly between AI and human operators",
+        "80-90% of the campaign, with human intervention required in only 4-6 steps",
+        "100% automation — fully autonomous with no human involvement"
+      ],
+      "correct": 2,
+      "explanation": "Anthropic's November 2025 report documented Chinese-linked state actors using Claude's agentic coding tool to automate 80-90% of a cyberattack campaign. Human intervention was required in only 4-6 steps. This represented agentic attack automation at scale — integrating reconnaissance, exploitation, post-exploitation, and exfiltration steps."
+    },
+    {
+      "stage": "pre",
+      "question": "The 'chem/bio execution gap' was the historical defense that information access alone is insufficient for novices. What 2025 development began eroding this defense?",
+      "options": [
+        "LLMs producing more detailed synthesis routes than previously",
+        "Vision-enabled frontier models that can observe wet-lab video in real time and provide correction of execution errors mid-procedure",
+        "AI models providing procurement advice that bypasses supplier checks",
+        "Chemistry databases becoming freely accessible through AI-powered search"
+      ],
+      "correct": 1,
+      "explanation": "The execution gap defense held that tacit wet-lab skill blocked novices from converting information into harm. Vision-enabled frontier models (GPT-5.2, Gemini 3 Pro, Claude Opus 4.5, Grok 4.1) can observe wet-lab procedures via video and provide real-time correction of technique errors, partially replacing the tacit-knowledge barrier. December 2025 OpenAI demonstration showed 79x efficiency improvement."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the nuclear domain remain the least analyzed and least concerning of the four CBRN domains in the 2026 dual-use assessment?",
+      "options": [
+        "Nuclear information is not publicly available for AI training",
+        "The nuclear threat model is dominated by fissile-material acquisition barriers, not information gaps — AI uplift on information provides limited novice benefit when the bottleneck is physical material access",
+        "No lab has conducted nuclear capability evaluations on frontier models",
+        "Nuclear attacks require state-level resources that AI assistance cannot provide"
+      ],
+      "correct": 1,
+      "explanation": "The nuclear threat model differs structurally from bio/chem/cyber: the bottleneck is acquiring fissile material (highly controlled, physically scarce), not knowledge (information about nuclear design is relatively more accessible). AI uplift on the information layer provides limited novice benefit when the material-acquisition gap is the binding constraint."
+    },
+    {
+      "stage": "post",
+      "question": "OpenAI's 'trusted access' pilot for cyber defense represents what asymmetry claim?",
+      "options": [
+        "Defenders have more compute resources than attackers and therefore benefit more from AI assistance",
+        "Giving vetted defenders (established incident-response firms, government) earlier capability access could favor defense over attack if the pilot scales — asymmetry in access favoring defenders",
+        "AI is fundamentally better at defense than offense because defenders have more context about their own systems",
+        "Attackers cannot legally use AI tools due to computer fraud laws, creating an automatic defender advantage"
+      ],
+      "correct": 1,
+      "explanation": "The trusted-access pilot provides vetted defenders — not offensive actors — with expanded capability access. The asymmetry claim: if defenders can use AI-augmented security capabilities before these capabilities are widely available to attackers, defenders may gain relative advantage. This depends on the pilot scaling and the vetted-access controls holding."
+    },
+    {
+      "stage": "post",
+      "question": "The cross-domain synthesis table in the lesson shows three domains crossed thresholds between 2024 and 2025. Which domain remained bounded by non-informational barriers?",
+      "options": [
+        "Cyber",
+        "Chemistry",
+        "Biology",
+        "Nuclear"
+      ],
+      "correct": 3,
+      "explanation": "The table: Bio (mild uplift → 2.53x uplift, ASL-3 approach via acquisition-phase automation), Chem (mild uplift → execution-gap erosion via vision), Cyber (code assistance → 80-90% campaign automation via agentic coding), Nuclear (limited → limited; material-access bottleneck holds). Nuclear remained bounded because the bottleneck is physical material, not information."
+    }
+  ]
+}

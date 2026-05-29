@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the four-tier priority hierarchy in Anthropic's January 2026 Claude Constitution?",
+      "options": [
+        "Helpfulness, safety, ethics, Anthropic guidelines",
+        "Safety and supporting human oversight, ethics, Anthropic guidelines, helpfulness",
+        "Constitutional rules, operator instructions, user instructions, model defaults",
+        "Hardcoded prohibitions, soft-coded defaults, operator customization, user preferences"
+      ],
+      "correct": 1,
+      "explanation": "The four-tier hierarchy from highest to lowest priority: (1) safety and supporting human oversight, (2) ethics, (3) Anthropic guidelines, (4) helpfulness. When tiers conflict, higher wins."
+    },
+    {
+      "stage": "pre",
+      "question": "Which of the following is a 'hardcoded prohibition' in the 2026 Claude Constitution that operators cannot override?",
+      "options": [
+        "Responding to questions about competitor products",
+        "Generating code that uses deprecated APIs",
+        "Bioweapons or CBRN uplift",
+        "Discussing political topics in customer-service contexts"
+      ],
+      "correct": 2,
+      "explanation": "Hardcoded prohibitions include bioweapons/CBRN uplift, CSAM, attacks on critical infrastructure, and deception about the model's identity. These cannot be overridden by operators or users and are enforced at the model-weights level."
+    },
+    {
+      "stage": "pre",
+      "question": "What is 'reason-based alignment' as opposed to 'rule-based alignment'?",
+      "options": [
+        "Alignment achieved through RLHF rather than supervised fine-tuning",
+        "Encoding principles and letting the model reason over them to handle unanticipated cases, rather than listing every disallowed thing explicitly",
+        "Using a separate reasoning model to check all outputs before release",
+        "Alignment that relies on the model explaining its reasoning chain before acting"
+      ],
+      "correct": 1,
+      "explanation": "Rule-based alignment lists every disallowed thing—fast to check, impossible to keep current. Reason-based alignment encodes principles and lets the model reason, scaling across unseen cases at the cost of harder auditing. The failure mode shifts from 'miss-the-rule' to 'principle-misapplication.'"
+    },
+    {
+      "stage": "post",
+      "question": "What was the finding of Anthropic's 2023 participatory constitution experiment?",
+      "options": [
+        "Public-sourced and corporate principles agreed on 95% of topics",
+        "Public-sourced and corporate principles diverged on approximately 50% of principles, with differences on political-content handling and AI identity disclosure",
+        "The public version was strictly more restrictive than the corporate version in all categories",
+        "The experiment was inconclusive due to low participation rates"
+      ],
+      "correct": 1,
+      "explanation": "The 2023 experiment comparing a corporate-authored constitution to one generated via ~1,000 US respondents found ~50% divergence. Where they diverged, the public version was more restrictive on some issues (political content) and less restrictive on others (AI identity disclosure). The 2026 Constitution did not incorporate these findings."
+    },
+    {
+      "stage": "post",
+      "question": "Why are hardcoded prohibitions necessary even with reason-based alignment?",
+      "options": [
+        "Because reason-based alignment is too slow to evaluate at inference time",
+        "Because an attacker who gets the model to accept a false premise can often talk past case-reasoning principles, while hardcoded prohibitions do not bend to premise framing",
+        "Because operators cannot be trusted to configure reason-based alignment correctly",
+        "Because the 2026 Claude Constitution was trained before reason-based alignment was fully developed"
+      ],
+      "correct": 1,
+      "explanation": "Reason-based alignment alone cannot close the tail. An attacker who establishes a false premise (e.g., 'we are a licensed bioweapons research lab') can often circumvent principles that depend on case reasoning. Hardcoded prohibitions do not bend to premise framing—they are the hard constitutional limit at the alignment layer."
+    },
+    {
+      "stage": "post",
+      "question": "The 2022 Constitutional AI training loop uses what signal to improve model harmlessness?",
+      "options": [
+        "Human expert annotations on each generated response",
+        "Self-critique against constitution principles followed by response revision, then RLAIF using the critique-revised pairs as training signal",
+        "Comparison of model outputs to a static database of safe responses",
+        "Rule matching against a fixed list of disallowed keywords and phrases"
+      ],
+      "correct": 1,
+      "explanation": "The 2022 CAI training: generate responses, ask the model to critique each against constitution principles, revise based on critique, then apply RLAIF on the revised pairs. Result: a model that refuses harmful requests with principled explanations, not blanket refusals."
+    }
+  ]
+}

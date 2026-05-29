@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the key difference between an 'activity' and a 'workflow' in durable execution?",
+      "options": [
+        "A workflow is automated; an activity requires human approval",
+        "An activity is a non-deterministic unit of work (LLM call, tool call) that is logged; a workflow is deterministic orchestration code that can be replayed from the event log",
+        "A workflow handles failures; an activity handles successes",
+        "An activity runs in a sandbox; a workflow runs in production"
+      ],
+      "correct": 1,
+      "explanation": "A workflow is deterministic orchestration code that must be replayable from the event log. An activity is a non-deterministic, potentially failing unit of work (LLM call, tool call, HTTP request)—each is logged with inputs and outputs. On recovery, completed activities return logged results without re-executing."
+    },
+    {
+      "stage": "pre",
+      "question": "What does METR's '35-minute degradation' finding imply for durable execution design?",
+      "options": [
+        "Durable execution fixes the reliability decay observed after 35 minutes",
+        "Durable execution lets you run longer than the reliability profile supports, which requires combining it with HITL checkpoints and budget kill switches",
+        "Agents should be restarted every 35 minutes regardless of whether they crash",
+        "The 35-minute limit applies only to agents without memory systems"
+      ],
+      "correct": 1,
+      "explanation": "METR observed reliability decay beyond ~35 minutes. Durable execution does not fix this decay; it lets you run longer by surviving crashes. The safe pattern combines durability with HITL checkpoints on re-entry and budget kill switches that cap total compute regardless of wall-clock time."
+    },
+    {
+      "stage": "pre",
+      "question": "Why must workflow orchestration code be deterministic in a durable execution system?",
+      "options": [
+        "To ensure all LLM outputs are reproducible across runs",
+        "Because the workflow code re-runs from the start on recovery, and completed activities return their logged results—non-determinism in the orchestrator would cause divergence from the original run",
+        "To satisfy EU AI Act Article 14 requirements for auditability",
+        "Because deterministic workflows run faster than non-deterministic ones"
+      ],
+      "correct": 1,
+      "explanation": "On recovery, the workflow code re-runs from the start. Every already-completed activity returns its logged result without re-executing. If the workflow code is non-deterministic (e.g., branches on wall-clock time), its decisions on replay will differ from the original run, causing divergence."
+    },
+    {
+      "stage": "post",
+      "question": "Why is 'human-input as a first-class state' important in durable execution systems?",
+      "options": [
+        "Because human input is required to start every durable workflow",
+        "Because propose-then-commit requires a durable waiting state so an overnight approval can resume a workflow from exactly the paused point, not from the beginning",
+        "Because human inputs are the only non-deterministic activities in the system",
+        "Because regulators require a human-input state machine in all deployed agents"
+      ],
+      "correct": 1,
+      "explanation": "Propose-then-commit (Lesson 15) requires a durable waiting state. Without durability, a workflow waiting for a human approval that arrives two days later would either be lost or restart from scratch. With durability, the workflow pauses in the 'waiting on human' state, and an approval the next morning resumes from exactly that point."
+    },
+    {
+      "stage": "post",
+      "question": "What is a 'thread_id' in the context of durable execution checkpoint backends?",
+      "options": [
+        "A database primary key for the agent's conversation history",
+        "A session identifier that scopes durable state, allowing multiple concurrent workflows to share the same engine without colliding event logs",
+        "A token that authorizes the agent to write to the checkpoint backend",
+        "A unique identifier assigned to each LLM call in the workflow"
+      ],
+      "correct": 1,
+      "explanation": "A thread_id (or equivalent key) identifies the session. Each state transition persists to a backend (PostgreSQL, SQLite, Redis, Cloudflare Durable Objects) keyed by thread_id. Resume reads the latest checkpoint for that key. Multiple concurrent sessions can share one engine as long as their thread_ids are distinct."
+    },
+    {
+      "stage": "post",
+      "question": "When is durable execution the WRONG approach for an agent run?",
+      "options": [
+        "When the run might crash partway through",
+        "When the run includes tool calls with real side effects",
+        "When the run is shorter than a few minutes, strictly read-only, or requires end-to-end correctness within one context window",
+        "When the run needs to comply with EU AI Act Article 14"
+      ],
+      "correct": 2,
+      "explanation": "Durable execution has overhead. For short runs with no human input, the overhead exceeds the benefit. For strictly read-only information retrieval, there are no side effects to protect. For tasks where correctness requires end-to-end reasoning within one context window, checkpointing and replay can introduce subtle inconsistencies."
+    }
+  ]
+}

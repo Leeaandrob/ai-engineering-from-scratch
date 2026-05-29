@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the two flow directions in Pipecat's pipeline?",
+      "options": [
+        "Input and Output",
+        "DOWNSTREAM (source to sink: audio in, TTS out) and UPSTREAM (feedback and control: cancellation, metrics, barge-in)",
+        "Forward and Backward",
+        "Primary and Secondary"
+      ],
+      "correct": 1,
+      "explanation": "Pipecat has two flow directions: DOWNSTREAM (source to sink — audio in, through VAD/STT/LLM/TTS, speech out) and UPSTREAM (feedback and control — cancellation frames, metrics, barge-in signals flowing back through the pipeline)."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the typical voice pipeline stage order in Pipecat?",
+      "options": [
+        "LLM -> TTS -> STT -> VAD -> transport",
+        "VAD -> STT -> LLM -> TTS -> transport",
+        "STT -> VAD -> LLM -> TTS -> transport",
+        "transport -> TTS -> LLM -> STT -> VAD"
+      ],
+      "correct": 1,
+      "explanation": "The canonical Pipecat pipeline runs: VAD (Voice Activity Detection) -> STT (Speech-to-Text) -> LLM -> TTS (Text-to-Speech) -> transport. Each stage is a FrameProcessor that passes Frame objects to the next processor."
+    },
+    {
+      "stage": "post",
+      "question": "What are the two LiveKit Agents voice agent classes and when does each apply?",
+      "options": [
+        "SimpleAgent and ComplexAgent; use Simple for easy tasks",
+        "MultimodalAgent (direct audio via OpenAI Realtime) and VoicePipelineAgent (STT+LLM+TTS cascade with text-level control)",
+        "SpeechAgent and TextAgent; use Speech for voice tasks",
+        "FastAgent and SlowAgent; use Fast for low-latency requirements"
+      ],
+      "correct": 1,
+      "explanation": "LiveKit Agents has two classes: MultimodalAgent (direct audio-in/audio-out via OpenAI Realtime or equivalent — no text in the middle) and VoicePipelineAgent (STT -> LLM -> TTS cascade, giving text-level control at the cost of added latency)."
+    },
+    {
+      "stage": "post",
+      "question": "What are the 2026 production latency targets for premium voice stacks end-to-end?",
+      "options": [
+        "100-200ms",
+        "450-600ms",
+        "1-2 seconds",
+        "Under 50ms"
+      ],
+      "correct": 1,
+      "explanation": "Premium 2026 voice stacks target 450-600ms end-to-end (Vapi ~450-600ms, Retell ~600ms across 180 test calls). Common stacks land at 800-1200ms; anything over 1500ms feels broken to users."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'barge-in' handling requirement in voice agents?",
+      "options": [
+        "The agent must speak louder when background noise is detected",
+        "When the user interrupts, an UPSTREAM cancel frame must stop the TTS mid-utterance so the agent does not keep talking over the user",
+        "The agent must ask the user to repeat when it cannot hear them",
+        "The system must record all user interruptions for later analysis"
+      ],
+      "correct": 1,
+      "explanation": "Barge-in handling means: when the user interrupts while the agent is speaking, an UPSTREAM cancel frame propagates through Pipecat (or equivalent in LiveKit) to stop the TTS mid-utterance. Without this, the agent keeps talking over the user — a critical UX failure."
+    },
+    {
+      "stage": "pre",
+      "question": "What is 'semantic turn detection' in voice agents?",
+      "options": [
+        "Using timestamps to detect when the user stops speaking",
+        "A transformer model that decides whether the user is truly done speaking based on meaning, not just silence",
+        "Detecting when the user says 'over' or 'done'",
+        "Analyzing speech volume to detect end of utterance"
+      ],
+      "correct": 1,
+      "explanation": "Semantic turn detection uses a transformer model to decide whether the user has finished their turn based on semantic understanding, not just silence detection. LiveKit Agents ships this natively."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the actor model's fundamental rule about inter-actor communication?",
+      "options": [
+        "Actors can share memory but must use locks",
+        "Actors communicate ONLY by sending messages; no shared memory is ever directly accessed",
+        "Actors can call each other's methods synchronously",
+        "Actors communicate via a shared database"
+      ],
+      "correct": 1,
+      "explanation": "In the actor model, two actors can never share memory directly. All interaction is through message passing: each actor has a private inbox and receives messages from other actors who can only send, never read or write the actor's state directly."
+    },
+    {
+      "stage": "pre",
+      "question": "What are AutoGen v0.4's three API layers?",
+      "options": [
+        "Input, Processing, Output",
+        "Core (low-level actor framework), AgentChat (task-driven high-level API), Extensions (integrations)",
+        "Client, Server, Database",
+        "Model, View, Controller"
+      ],
+      "correct": 1,
+      "explanation": "AutoGen v0.4 has three layers: Core (AgentRuntime, Agent, Message, Topic — the low-level actor framework), AgentChat (AssistantAgent, UserProxyAgent, RoundRobinGroupChat, SelectorGroupChat — high-level task API), and Extensions (OpenAI, Anthropic, Azure, tools, memory integrations)."
+    },
+    {
+      "stage": "post",
+      "question": "Why does decoupling message delivery from handling provide fault isolation in AutoGen v0.4?",
+      "options": [
+        "Messages are encrypted so failures cannot propagate",
+        "If Agent B crashes, the runtime catches the failure in B's handler without crashing Agent A, which sent the message",
+        "The runtime automatically retries failed messages",
+        "Agents run in separate processes by default"
+      ],
+      "correct": 1,
+      "explanation": "When A calls send(agent_b, msg), it returns immediately. If B's handler raises, the runtime catches it in B's isolated context — Agent A has already moved on. B's crash is contained; A continues processing its own inbox."
+    },
+    {
+      "stage": "post",
+      "question": "What is Magentic-One?",
+      "options": [
+        "AutoGen's next-generation model",
+        "A reference multi-agent team for web browsing, code execution, and file handling built on AgentChat",
+        "AutoGen's visual debugging tool",
+        "A benchmarking suite for multi-agent systems"
+      ],
+      "correct": 1,
+      "explanation": "Magentic-One is the reference multi-agent team in AutoGen v0.4, built on AgentChat, designed for web browsing, code execution, and file handling tasks."
+    },
+    {
+      "stage": "post",
+      "question": "What is the current status of AutoGen v0.4 in early 2026?",
+      "options": [
+        "Actively developed with new features being added weekly",
+        "In maintenance mode; Microsoft has shifted active development to the Microsoft Agent Framework",
+        "Deprecated and no longer supported",
+        "Being merged into LangChain"
+      ],
+      "correct": 1,
+      "explanation": "Early 2026: AutoGen v0.7.x is stable for research and prototyping, but Microsoft has shifted active development to the Microsoft Agent Framework (public preview October 1, 2025; 1.0 GA targeted end of Q1 2026). AutoGen patterns port forward cleanly."
+    },
+    {
+      "stage": "pre",
+      "question": "What built-in observability does AutoGen v0.4 provide?",
+      "options": [
+        "Custom proprietary tracing format only readable in Visual Studio",
+        "OpenTelemetry support with spans per message carrying gen_ai.* attributes per OTel GenAI semantic conventions",
+        "Logging to a plain text file",
+        "No built-in observability; you must add your own"
+      ],
+      "correct": 1,
+      "explanation": "AutoGen v0.4 has built-in OpenTelemetry support. Every message emits a span; tool calls carry gen_ai.* attributes per the 2026 OTel GenAI semantic conventions (Lesson 23)."
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the key structural difference between the AutoGen GroupChat pattern and the Swarm handoff pattern in terms of who decides the next speaker?",
+      "options": ["GroupChat uses an LLM to select the next speaker from outside; Swarm lets the current agent pick its successor by calling a handoff tool", "GroupChat uses round-robin selection while Swarm uses random selection", "GroupChat requires a human approval step between turns while Swarm is fully autonomous", "GroupChat runs agents in parallel while Swarm runs them sequentially"],
+      "correct": 0,
+      "explanation": "GroupChat: the GroupChatManager (an external selector function) reads the shared pool and decides who speaks next. Swarm: the currently active agent calls a handoff tool that returns the next Agent — the agent itself decides who goes next. GroupChat is 'manager picks'; Swarm is 'agent picks.'"
+    },
+    {
+      "stage": "pre",
+      "question": "What is the 'hot speaker' problem in GroupChat and how does it manifest?",
+      "options": ["One agent's system prompt is too long, causing the LLM selector to always pick it due to its prominent position in context", "The selector consistently picks the same agent because its specialties match the current topic, resulting in other agents rarely contributing", "An agent with a high temperature setting produces more varied outputs that attract the selector's attention", "The GroupChatManager agent itself starts contributing to conversations instead of only selecting speakers"],
+      "correct": 1,
+      "explanation": "Hot speaker: the LLM-selected selector favors whichever agent's expertise aligns most with the current discussion thread. If a coder is in a chat that is mostly about code, the selector keeps picking the coder, even when a reviewer or researcher would add more value. This creates an imbalanced conversation. Fix: add speaker-balance as a selector feature."
+    },
+    {
+      "stage": "post",
+      "question": "Why did Microsoft put AutoGen into maintenance mode in February 2026, and what replaced it?",
+      "options": ["AutoGen was found to have critical security vulnerabilities that could not be patched without a full rewrite", "Microsoft rewrote AutoGen v0.4 as an event-driven actor model and merged it with Semantic Kernel into Microsoft Agent Framework RC, while the community forked the v0.2 GroupChat semantics as AG2", "AutoGen was replaced by Google ADK after a cross-company collaboration agreement", "AutoGen's GroupChat pattern was found to underperform LangGraph on all benchmarks, making continued development unjustifiable"],
+      "correct": 1,
+      "explanation": "Microsoft's v0.4 rewrite moved to an event-driven actor model (closer to swarm/actor primitives). In February 2026, this merged with Semantic Kernel into Microsoft Agent Framework RC. The community who had built on v0.2 GroupChat semantics forked it as AG2 to preserve the API. Both tracks survive; AG2 is the v0.2-compatible line."
+    },
+    {
+      "stage": "post",
+      "question": "What are the three common GroupChat termination conditions?",
+      "options": ["Agent timeout, budget exhaustion, or human approval", "Max rounds cap, a sentinel TERMINATE token emitted by any agent, or a goal-reached verifier check", "All agents reaching consensus, the orchestrator detecting a repeated state, or a fixed-time wall-clock limit", "The shared pool exceeding a size threshold, an agent emitting an error, or the selector making the same choice 3 times consecutively"],
+      "correct": 1,
+      "explanation": "The three standard GroupChat termination patterns: (1) hard max rounds cap — always required as a safety net; (2) TERMINATE token — any agent can end the chat by emitting this sentinel; (3) goal-reached check — a lightweight verifier runs each turn and stops when done. Most production systems use all three with the max rounds as the fallback."
+    },
+    {
+      "stage": "post",
+      "question": "What is 'context bloat' in GroupChat and what is the recommended mitigation?",
+      "options": ["The GroupChatManager's own context growing because it must store the full selector history", "Each agent reading every prior message causes context to grow unboundedly with turns; mitigate with projections or scoped memory views", "The system prompt growing as agents are added to the group, approaching the context limit", "The LLM selector consuming increasing tokens per selection call as the chat history grows"],
+      "correct": 1,
+      "explanation": "GroupChat's full-pool design: every agent reads every message. After 10+ turns, each agent's context contains all prior conversation. Context bloat reduces the signal-to-noise ratio, slows inference, and increases cost. Mitigation: per-agent projections (each agent only sees messages relevant to its role) or summarization of older turns."
+    }
+  ]
+}

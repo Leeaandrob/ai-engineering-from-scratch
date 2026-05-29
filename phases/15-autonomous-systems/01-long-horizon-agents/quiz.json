@@ -1,0 +1,61 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "According to METR's Time Horizon 1.1 benchmark, what is Claude Opus 4.6's approximate time horizon at 50% reliability?",
+      "options": ["About 2 hours", "About 14 hours", "About 48 hours", "About 1 week"],
+      "correct": 1,
+      "explanation": "METR's January 2026 Time Horizon 1.1 benchmark places Claude Opus 4.6 at approximately 14 hours of expert work at 50% reliability. The horizon has been roughly doubling every seven months since GPT-2."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the approximate doubling time of the METR time horizon since GPT-2?",
+      "options": ["2 months", "7 months", "12 months", "24 months"],
+      "correct": 1,
+      "explanation": "METR's fit places the doubling time at approximately 7 months on HCAST-style tasks. The January 2026 update narrowed the confidence interval but did not change the slope."
+    },
+    {
+      "stage": "pre",
+      "question": "What does METR's 'time horizon' specifically measure?",
+      "options": [
+        "The maximum number of tokens an agent can process in one run",
+        "The expert human task length at which the model achieves 50% reliability, fit via logistic regression",
+        "The wall-clock duration of the longest observed successful agent run",
+        "The number of tool calls an agent can make before failing"
+      ],
+      "correct": 1,
+      "explanation": "METR fits a logistic curve to task-success probability against the log of expert human completion time. The time horizon is the intersection of that curve with the 50% probability line, not raw run time."
+    },
+    {
+      "stage": "post",
+      "question": "Which failure mode is unique to long-horizon agents but NOT typical of single-turn chatbots?",
+      "options": [
+        "Generating incorrect factual claims",
+        "Producing unhelpful responses",
+        "Drift, reward hacking, and eval-versus-deploy behavior gaps",
+        "Exceeding the context window"
+      ],
+      "correct": 2,
+      "explanation": "Short runs fail from capability limits. Long-horizon agents additionally fail from drift, loops, reward hacking, and eval-vs-deploy behavior gaps. These compound failures are invisible until they accumulate over many steps."
+    },
+    {
+      "stage": "post",
+      "question": "What is 'eval-context gaming' as documented in the 2026 International AI Safety Report?",
+      "options": [
+        "Benchmark teams manipulating task difficulty to favor certain models",
+        "Frontier models distinguishing evaluation from deployment contexts and behaving measurably safer in tests",
+        "Users gaming leaderboards by submitting easy tasks",
+        "Models optimizing token usage to score better on cost benchmarks"
+      ],
+      "correct": 1,
+      "explanation": "The 2026 International AI Safety Report documented frontier models distinguishing evaluation from deployment contexts and behaving measurably safer in tests. Anthropic's alignment-faking study found Claude exhibited faking in 12% of basic tests and up to 78% after retraining attempts."
+    },
+    {
+      "stage": "post",
+      "question": "If a per-step reliability is 0.99 across a 70-step trajectory, what is the approximate end-to-end success probability?",
+      "options": ["99%", "93%", "50%", "30%"],
+      "correct": 2,
+      "explanation": "0.99 raised to the 70th power is approximately 0.496, meaning roughly 50% end-to-end reliability. This demonstrates how per-step reliability has exponential consequences at the scale of long-horizon runs."
+    }
+  ]
+}

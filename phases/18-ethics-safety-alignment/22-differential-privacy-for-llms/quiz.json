@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "DP-SGD (Abadi et al., 2016) achieves differential privacy through which two operations on gradients?",
+      "options": [
+        "Gradient scaling and momentum clipping",
+        "Per-example gradient clipping to a threshold C, followed by adding Gaussian noise with std proportional to C",
+        "Batch gradient averaging and random sign flipping",
+        "Layer-wise gradient masking and stochastic depth"
+      ],
+      "correct": 1,
+      "explanation": "DP-SGD's two operations: (1) clip each per-example gradient to a maximum norm C (bounding each individual's influence), and (2) add Gaussian noise with std sigma * C to the sum of clipped gradients. The noise magnitude is calibrated so the output distribution is (epsilon, delta)-indistinguishable whether or not any single example is present."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is LoRA + DP-SGD the standard 2025 configuration for private LLM fine-tuning?",
+      "options": [
+        "LoRA produces lower-rank gradients that are inherently more private",
+        "Full DP-SGD of a frontier model is prohibitively expensive in per-example gradient storage; LoRA limits gradient updates to a small adapter, reducing storage requirements while DP guarantees apply to the adapter",
+        "LoRA checkpoints are smaller and easier to audit for privacy compliance",
+        "DP-SGD cannot be applied to self-attention layers; LoRA restricts updates to feed-forward layers only"
+      ],
+      "correct": 1,
+      "explanation": "Full DP-SGD requires storing per-example gradients for all model parameters — impractical for frontier-scale models. LoRA (Hu et al., 2022) constrains updates to a small low-rank adapter. DP-SGD applied to the adapter is computationally feasible; the base model is held fixed and its privacy guarantees are assumed from its original training."
+    },
+    {
+      "stage": "pre",
+      "question": "The 2024-2025 tension between canary-MIA results and training-data extraction results was resolved by what insight?",
+      "options": [
+        "Canary MIA was shown to be statistically invalid under the assumptions used in LLM training",
+        "The two measure different things: canary MIA asks 'is example e in D?' on inserted examples, while extraction asks what of D can be recovered — the 'most extractable' data matters for privacy and canaries under-report this",
+        "Training-data extraction only works on models without DP training; DP fully prevents extraction",
+        "Both results were found to have methodological flaws and were retracted"
+      ],
+      "correct": 1,
+      "explanation": "Kowalczyk et al. (arXiv:2503.06808, March 2025) resolved the tension: canary MIA inserts synthetic examples optimized for insertion, not extraction. The 'most extractable' naturally-occurring training examples have different properties. New canary designs enable loss-based MIA without shadow models, yielding the first nontrivial DP audit of an LLM on real data."
+    },
+    {
+      "stage": "post",
+      "question": "PMixED (arXiv:2403.15638) is an alternative to DP training. What is its key mechanism?",
+      "options": [
+        "It trains multiple private models on non-overlapping data shards and averages their outputs",
+        "It provides private prediction at inference time via mixture of experts on next-token distributions — each expert sees a shard of training data and aggregation adds noise for DP, avoiding DP training entirely",
+        "It trains a separate DP-protected summarization model that compresses training data before the main model sees it",
+        "It applies DP noise to the embedding layer rather than the gradients"
+      ],
+      "correct": 1,
+      "explanation": "PMixED provides inference-time DP without DP training: multiple expert models each trained on a shard of data produce next-token distributions, and the aggregation applies DP noise to the mixture. This sidesteps the utility cost of full DP-SGD training, at the cost of a different threat model and the need to deploy multiple expert models."
+    },
+    {
+      "stage": "post",
+      "question": "What is the Differential Privacy Reversal via LLM Feedback attack?",
+      "options": [
+        "An attack that reverses DP-SGD noise by using multiple queries to reconstruct training gradients",
+        "An attack that uses a DP-trained model's confidence scores as an oracle to re-identify individuals — even when outputs do not leak, confidence distributions can",
+        "An attack that breaks DP guarantees by training a shadow model on model outputs",
+        "An attack that exploits the DP accountant's rounding to recover exact training data"
+      ],
+      "correct": 1,
+      "explanation": "The DP Reversal attack exploits a gap between formal DP guarantees and deployment: even a model trained with proper (epsilon, delta)-DP can leak information through its confidence scores over outputs. An adversary who queries the model with known-membership examples can use the confidence distribution as a membership signal, even when the raw outputs do not reveal training data."
+    },
+    {
+      "stage": "post",
+      "question": "The (epsilon, delta)-DP definition states that for any two datasets differing in one example and any event S: P(M(D) in S) <= e^epsilon * P(M(D') in S) + delta. What does epsilon control in practice?",
+      "options": [
+        "The maximum number of queries an adversary can make",
+        "How close the output distributions are for neighboring datasets — smaller epsilon means more noise, stronger privacy guarantee, typically at greater utility cost",
+        "The proportion of training examples that can be identified by a membership inference attacker",
+        "The probability that any single training example is included in a given batch"
+      ],
+      "correct": 1,
+      "explanation": "Epsilon bounds the log-odds ratio of any output event between neighboring datasets. Smaller epsilon means the output is less distinguishable whether or not any individual example is present — stronger privacy. This typically requires more Gaussian noise in DP-SGD, which increases utility cost. The epsilon-utility trade-off is the central practical challenge."
+    }
+  ]
+}

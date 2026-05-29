@@ -1,0 +1,66 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why is round-robin load balancing actively harmful for cached LLM inference?",
+      "options": [
+        "Round-robin cannot handle GPU nodes with different memory capacities",
+        "It routes requests to replicas that do not hold the request's prefix, forcing a full prefill instead of a cache hit",
+        "Round-robin creates hot spots by concentrating traffic on the first replica alphabetically",
+        "It does not support multi-region deployments across availability zones"
+      ],
+      "correct": 1,
+      "explanation": "Cache-aware routing depends on landing each request on the replica holding its prefix KV blocks. Round-robin ignores this, so most requests miss the cache and pay full prefill cost (~800 ms) instead of the cache-hit cost (~80 ms) — a 10x TTFT penalty."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the approximate TTFT difference between a cache hit and a cache miss on a long prompt in production?",
+      "options": [
+        "~10 ms hit vs ~20 ms miss (2x)",
+        "~80 ms hit vs ~800 ms miss (10x)",
+        "~200 ms hit vs ~400 ms miss (2x)",
+        "~500 ms hit vs ~5,000 ms miss (10x)"
+      ],
+      "correct": 1,
+      "explanation": "The lesson cites: cache hit ~80 ms, cache miss (full cold prefill) ~800 ms — approximately 10x gap. This is the production penalty for routing that ignores KV cache locality."
+    },
+    {
+      "stage": "post",
+      "question": "What percentage of LLM disaster-recovery failures are caused by teams backing up model weights but forgetting tokenizer files or quantization configs?",
+      "options": ["8%", "15%", "32%", "51%"],
+      "correct": 2,
+      "explanation": "The lesson cites 32% of LLM DR failures occur because teams backed up weights but forgot tokenizer files or quantization configs. The three-file DR checklist includes tokenizer.json/tokenizer.model, quantization configs, and engine config files."
+    },
+    {
+      "stage": "post",
+      "question": "What approach do commercial cross-region inference offerings like Bedrock cross-region inference and GKE multi-cluster gateways optimize for?",
+      "options": [
+        "KV cache locality and TTFT optimization across regions",
+        "Availability and failover, not TTFT or cache hit rate",
+        "Cost optimization by routing to the cheapest available region",
+        "Compliance by ensuring requests stay within data-residency boundaries"
+      ],
+      "correct": 1,
+      "explanation": "The lesson distinguishes commercial offerings from KV-aware routing: Bedrock CRI and GKE multi-cluster gateways treat inference as opaque. They handle availability and failover but have no knowledge of KV cache state — they cannot improve TTFT via locality."
+    },
+    {
+      "stage": "post",
+      "question": "How long did it take JPMorgan and Mayo Clinic to complete a us-east-1 failover in November 2024?",
+      "options": ["~5 minutes", "~22 minutes", "~2 hours", "~8 hours"],
+      "correct": 1,
+      "explanation": "JPMorgan and Mayo Clinic ran a us-east-1 failover in November 2024 at approximately 22 minutes — meeting their 30-minute SLA. This is cited as a real-world DR reference point."
+    },
+    {
+      "stage": "pre",
+      "question": "A cache-aware router uses prefix-hash matching to route requests. What is the tie-breaker when two replicas hold the same prefix?",
+      "options": [
+        "Alphabetical order by replica ID",
+        "GPU utilization — route to the less loaded replica",
+        "Request queue depth — route to the shorter queue",
+        "Network latency — route to the nearest replica"
+      ],
+      "correct": 1,
+      "explanation": "The lesson describes the cache-aware router algorithm: primary routing is prefix-hash match; when two replicas both hold the prefix, the tie-breaker is GPU utilization — route to the less loaded replica to avoid creating a hot spot."
+    }
+  ]
+}

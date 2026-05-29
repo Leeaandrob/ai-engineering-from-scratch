@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are CrewAI's four primitives?",
+      "options": [
+        "Model, Prompt, Tool, Memory",
+        "Agent (role+goal+backstory+tools), Task (unit of work), Crew (container), Process (execution strategy)",
+        "Actor, Message, Router, Aggregator",
+        "Node, Edge, State, Checkpoint"
+      ],
+      "correct": 1,
+      "explanation": "CrewAI's four primitives are: Agent (role + goal + backstory + tools), Task (description + expected_output + assigned agent), Crew (container sequencing agents and tasks with a Process), and Process (Sequential, Hierarchical, or Consensual)."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the key difference between CrewAI Crews and Flows?",
+      "options": [
+        "Crews are free, Flows require a paid license",
+        "Crews are autonomous LLM-driven collaboration for exploration; Flows are event-driven, code-owned, deterministic workflows for production",
+        "Crews support multiple models; Flows only support one",
+        "Crews run in parallel; Flows run sequentially"
+      ],
+      "correct": 1,
+      "explanation": "Crews are autonomous and LLM-driven — good for open-ended tasks like research and brainstorming. Flows are event-driven with code-owned graphs — deterministic, testable, and observable, making them the recommended starting point for production."
+    },
+    {
+      "stage": "post",
+      "question": "What does CrewAI's 2026 documentation recommend as the starting point for production applications?",
+      "options": [
+        "Start with Crews for maximum autonomy",
+        "Start with a Flow; fold Crews in as sub-steps only when autonomy earns its cost",
+        "Start with the Hierarchical process for maximum control",
+        "Start with a single Agent and scale up"
+      ],
+      "correct": 1,
+      "explanation": "CrewAI's 2026 docs explicitly recommend: 'for any production-ready application, start with a Flow.' Crews are for exploration and creative collaboration; Flows are for observable, auditable, production-grade deployments."
+    },
+    {
+      "stage": "post",
+      "question": "What are the four built-in memory types CrewAI ships?",
+      "options": [
+        "RAM, disk, cache, archive",
+        "Short-term (within run), long-term (across runs), entity (per-entity facts), contextual (retrieval-time assembly)",
+        "Episodic, semantic, procedural, working",
+        "User, session, agent, global"
+      ],
+      "correct": 1,
+      "explanation": "CrewAI ships four memory types out of the box: short-term (within the current run), long-term (persists across runs), entity (per-entity facts about customers, accounts, etc.), and contextual (assembled at retrieval time)."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'backstory bloat' anti-pattern in CrewAI?",
+      "options": [
+        "Using the same backstory for multiple agents",
+        "Writing 2000-word backstories that push out context budget without adding useful guidance",
+        "Not writing any backstory at all",
+        "Including code examples in the backstory"
+      ],
+      "correct": 1,
+      "explanation": "Backstory bloat is the anti-pattern of writing very long agent backstories (2000+ words) that push context budget without proportional gains in agent quality. Keep backstories tight — they are tone and judgment shapers, not encyclopedias."
+    },
+    {
+      "stage": "pre",
+      "question": "When should you use a Hierarchical process in CrewAI?",
+      "options": [
+        "For any task with more than one step",
+        "Only when you have 4+ specialist agents where a manager Agent needs to route dynamically",
+        "For all production deployments",
+        "When task ordering is unknown in advance"
+      ],
+      "correct": 1,
+      "explanation": "The Hierarchical process adds a manager Agent that routes between specialist agents. Use it only when you have 4+ specialists — adding a manager for fewer agents adds complexity without benefit."
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the standard batch API discount across OpenAI, Anthropic, and Google in 2026?",
+      "options": [
+        "10% off synchronous pricing",
+        "25% off synchronous pricing",
+        "50% off synchronous pricing",
+        "70% off synchronous pricing"
+      ],
+      "correct": 2,
+      "explanation": "Every major provider ships async batch APIs with a 50% flat discount on both input and output tokens. The turnaround SLA is 24 hours guaranteed, with a typical P50 of 2-6 hours."
+    },
+    {
+      "stage": "pre",
+      "question": "When you stack batch processing with prompt caching on an overnight workload, what fraction of synchronous-uncached cost can you achieve?",
+      "options": ["~50%", "~25%", "~10%", "~5%"],
+      "correct": 2,
+      "explanation": "Stacking batch (50% discount) with cached input (~10x cheaper reads) brings overnight pipelines to approximately 10% of synchronous-uncached cost. The lesson calls this the target for non-interactive workloads."
+    },
+    {
+      "stage": "post",
+      "question": "The lesson prescribes triaging workloads into three lanes. Which lane is correct for a document classification pipeline that runs once per hour?",
+      "options": [
+        "Interactive (synchronous with caching)",
+        "Semi-interactive (async queue with fallback)",
+        "Batch (overnight, cached input stacked)",
+        "Streaming (real-time with chunked responses)"
+      ],
+      "correct": 2,
+      "explanation": "An hourly classification pipeline tolerates well over 24 hours of latency and is not user-facing. The batch lane applies: async submission, 50% discount stacked with prompt caching. The semi-interactive lane is for workloads with minute-level latency tolerance."
+    },
+    {
+      "stage": "post",
+      "question": "What is the output-schema trap with batch APIs?",
+      "options": [
+        "Batch responses arrive out of order so you cannot rely on sequence position",
+        "Each provider uses a different JSONL format, so you cannot use a single parser across OpenAI, Anthropic, and Vertex",
+        "Batch jobs have lower priority than synchronous requests and may be deprioritized",
+        "The 50% discount does not apply to structured-output requests"
+      ],
+      "correct": 1,
+      "explanation": "OpenAI returns JSONL with one request per line; Anthropic returns JSONL with embedded message format; Vertex uses BigQuery tables or GCS TFRecord prefixes. Provider-specific format differences require separate parsing logic for each."
+    },
+    {
+      "stage": "post",
+      "question": "A team runs a user-facing report-generation feature that takes up to 5 minutes. They route it to the batch lane for the 50% discount. What failure mode does the lesson warn about?",
+      "options": [
+        "Batch jobs cannot return streaming responses, so the UI breaks",
+        "The partial-interactivity trap: users expect results faster than 24h, making batch unsuitable",
+        "Batch jobs do not support function calling, so structured reports fail",
+        "The 50% discount does not apply to responses over 1,000 tokens"
+      ],
+      "correct": 1,
+      "explanation": "The partial-interactivity trap: the team routes a 5-minute workload to batch expecting the discount, but users expect results within minutes. The batch SLA is 24 hours. Workloads with minute-level user expectations belong in the semi-interactive async queue lane."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the typical P50 turnaround time for batch API jobs across major providers, even though the SLA guarantees 24 hours?",
+      "options": [
+        "30-60 minutes",
+        "2-6 hours",
+        "12-14 hours",
+        "Exactly 24 hours; the SLA is the actual turnaround"
+      ],
+      "correct": 1,
+      "explanation": "The 24-hour SLA is the guarantee, but in practice P50 turnaround is 2-6 hours. Teams should design for the SLA, not the typical case, when making product commitments."
+    }
+  ]
+}

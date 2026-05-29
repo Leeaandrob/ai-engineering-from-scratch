@@ -1,0 +1,71 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "When did RSP v3.0 go into effect, replacing Anthropic's 2023 policy?",
+      "options": ["January 1, 2026", "February 24, 2026", "April 17, 2026", "September 30, 2025"],
+      "correct": 1,
+      "explanation": "Anthropic's Responsible Scaling Policy v3.0 went into effect February 24, 2026, replacing the 2023 RSP v2. Key changes include the two-tier mitigation structure, the AI R&D-4 threshold, Frontier Safety Roadmaps and Risk Reports, and the removal of the 2023 pause commitment."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the 'AI R&D-4 threshold' introduced in RSP v3.0?",
+      "options": [
+        "The point at which AI systems achieve human-level performance on 4 out of 5 benchmark categories",
+        "The capability level where a model can automate a substantial fraction of AI research at competitive cost—once crossed, Anthropic must publish an affirmative case before continued scaling",
+        "The fourth version of Anthropic's AI research and development capability matrix",
+        "The threshold where AI systems require four separate safety reviews before deployment"
+      ],
+      "correct": 1,
+      "explanation": "AI R&D-4 is the capability level RSP v3.0 names as the next significant threshold: a model that could automate a substantial fraction of AI research at competitive cost. Once Anthropic believes a model crosses it, they must publish an affirmative case identifying misalignment risks and mitigations before continued scaling."
+    },
+    {
+      "stage": "pre",
+      "question": "What was SaferAI's rating change for Anthropic's RSP between v2 (2023) and v3.0 (2026)?",
+      "options": [
+        "Upgraded from 1.9 to 2.2",
+        "Downgraded from 2.2 to 1.9, moving Anthropic from 'moderate' to 'weak' category",
+        "Maintained at 2.2 with no change",
+        "Upgraded from 2.2 to 3.1 due to the new AI R&D threshold"
+      ],
+      "correct": 1,
+      "explanation": "SaferAI downgraded Anthropic from 2.2 (v2, 'moderate') to 1.9 (v3.0, 'weak'), putting Anthropic in the same 'weak' RSP category as OpenAI and DeepMind. The downgrade was driven by qualitative thresholds replacing quantitative ones, removal of the pause commitment, and limited independent oversight."
+    },
+    {
+      "stage": "post",
+      "question": "What is the key distinction between 'Anthropic unilateral actions' and 'industry-wide recommendations' in RSP v3.0's two-tier structure?",
+      "options": [
+        "Unilateral actions apply to Claude models; industry recommendations apply to all AI models",
+        "Unilateral actions are what Anthropic commits to doing regardless of other labs; industry recommendations are policy advocacy that Anthropic hopes others will follow but are not Anthropic's own commitments",
+        "Unilateral actions are public commitments; industry recommendations are internal guidelines",
+        "Unilateral actions cover safety measures; industry recommendations cover capability development"
+      ],
+      "correct": 1,
+      "explanation": "A security measure in the 'industry-wide recommendation' column is not Anthropic's promise; it is Anthropic's hope. The two-tier structure means readers must check which column each commitment lives in to understand whether it is binding on Anthropic."
+    },
+    {
+      "stage": "post",
+      "question": "What specific phrasing in RSP v3.0's discussion of the AI R&D-4 threshold signals its proximity as a concern?",
+      "options": [
+        "The document says 'this threshold will not be crossed within 10 years'",
+        "The document says 'confidently ruling this out is becoming difficult'",
+        "The document says 'Claude Opus 4.6 has already crossed this threshold'",
+        "The document says 'this threshold requires further research before it can be defined precisely'"
+      ],
+      "correct": 1,
+      "explanation": "RSP v3.0 states that Claude Opus 4.6 does not cross AI R&D-4, then adds: 'confidently ruling this out is becoming difficult.' This phrasing concedes the threshold is close enough to be a live concern, not a speculative future limit. Lessons 6 and 7 (AAR, RSI) feed directly into this threshold."
+    },
+    {
+      "stage": "post",
+      "question": "What was the sharpest regression in RSP v3.0 compared to the 2023 policy, according to SaferAI's analysis?",
+      "options": [
+        "The removal of specific quantitative capability benchmarks from the tracked category definitions",
+        "The removal of the explicit pause commitment—replaced with a softer requirement to publish an affirmative case and proceed if mitigations are adequate",
+        "The reduction in the number of independent oversight organizations required",
+        "The narrowing of the AI R&D threshold compared to the 2023 version"
+      ],
+      "correct": 1,
+      "explanation": "SaferAI and other analysts called out removing the explicit pause commitment as the strongest regression. The 2023 RSP committed to pausing training if a model crossed specific capability thresholds. v3.0 replaces this with 'publish an affirmative case and proceed if mitigations are adequate'—removing the credibility function of the pause clause."
+    }
+  ]
+}

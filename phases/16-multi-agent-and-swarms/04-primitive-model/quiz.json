@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which of the four multi-agent primitives is the only stateful one?",
+      "options": ["Agent", "Handoff", "Orchestrator", "Shared state"],
+      "correct": 3,
+      "explanation": "Agent is a (system_prompt, tools) function — stateless. Handoff is a structured call — stateless. Orchestrator is a scheduler — stateless. Only shared state holds data across turns and across agents. All interesting coordination bugs live here."
+    },
+    {
+      "stage": "pre",
+      "question": "How does LangGraph implement the 'handoff' primitive?",
+      "options": ["A Python function that returns a new Agent object, triggering a runtime switch", "A declarative graph edge with a condition that selects the next node", "A GroupChatManager that calls an LLM to pick the next speaker", "A JSON artifact passed through an A2A task lifecycle"],
+      "correct": 1,
+      "explanation": "LangGraph represents handoffs as graph edges with conditions. The LLM produces an output value; a condition evaluates it to select the next node. This is different from Swarm (function-return handoff) and AutoGen (selector-function handoff)."
+    },
+    {
+      "stage": "pre",
+      "question": "In OpenAI Swarm, how does an agent decide who handles the next turn?",
+      "options": ["A central GroupChatManager reads the shared pool and picks the next speaker", "The agent calls a handoff tool whose return value is the next Agent object", "A static graph edge fires based on a condition in the agent's system prompt", "Workers pull from a queue; whoever is free first handles the next task"],
+      "correct": 1,
+      "explanation": "Swarm's core innovation: handoff is a tool call that returns an Agent. The Swarm runtime detects the Agent return value and switches the active agent. The current agent picks its successor by calling the right handoff tool — no external selector needed."
+    },
+    {
+      "stage": "post",
+      "question": "What distinguishes a 'full message pool' shared state from a 'projected' shared state?",
+      "options": ["A full pool is append-only while projected state allows in-place updates", "In a full pool every agent reads every message; in projected state each agent gets a role-scoped view", "A full pool uses structured JSON while projected state uses natural language", "Full pools are in-memory only while projected state is backed by a durable store"],
+      "correct": 1,
+      "explanation": "AutoGen GroupChat and MetaGPT use full pools: every agent sees everything. LangGraph state reducers implement projected state: each agent receives a view computed by a reducer function from global state. Full pools are simple but context-expensive at scale; projected state scales but needs upfront schema design."
+    },
+    {
+      "stage": "post",
+      "question": "Why do all major 2026 frameworks (AutoGen, CrewAI, LangGraph, Swarm) map to the same four primitives?",
+      "options": ["They were all built from a common open-source codebase that predates them", "The primitives reflect the four irreducible design axes of any multi-agent system: what an agent is, how control transfers, what agents share, and who decides next", "The primitives are defined by the A2A specification which all frameworks must implement", "They converged through benchmarking on the same SWE-bench tasks that reward this structure"],
+      "correct": 1,
+      "explanation": "The four primitives are not a framework choice — they are the irreducible design axes of any multi-agent system. Agent = what thinks. Handoff = how control moves. Shared state = what persists. Orchestrator = who decides next. Every framework picks defaults for each axis; the surface API is just syntax on top."
+    }
+  ]
+}

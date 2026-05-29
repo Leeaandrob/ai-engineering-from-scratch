@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the four top-level categories in CAIS's four-risk framework?",
+      "options": [
+        "Model misalignment, data poisoning, adversarial attacks, and deployment errors",
+        "Malicious use, AI races, organizational risks, and rogue AIs",
+        "Bioweapons, cyberattacks, disinformation, and autonomous weapons",
+        "Capability overhang, reward hacking, goal drift, and deceptive alignment"
+      ],
+      "correct": 1,
+      "explanation": "CAIS's four-risk framework: (1) malicious use—bad actors using AI to cause harm; (2) AI races—competitive pressure pushing deployment past safe limits; (3) organizational risks—internal lab failures in safety culture, audit, and infosec; (4) rogue AIs—capable AI pursuing goals conflicting with human welfare."
+    },
+    {
+      "stage": "pre",
+      "question": "What is CAISI and how does it differ from CAIS?",
+      "options": [
+        "CAISI is a European AI safety organization; CAIS is based in the US",
+        "CAISI is NIST's Center for AI Standards and Innovation—a US-government-facing center running voluntary agreements and unclassified capability evaluations; CAIS is a non-profit research org publishing frameworks",
+        "CAISI and CAIS are the same organization under different names",
+        "CAISI publishes technical safety research; CAIS produces policy recommendations"
+      ],
+      "correct": 1,
+      "explanation": "CAISI (NIST Center for AI Standards and Innovation) operates within the US government, runs voluntary agreements with frontier labs, and publishes unclassified capability evaluations focused on cyber, bio, and chemical-weapons risks. CAIS is an independent 501(c)(3) that publishes frameworks and coordinates public statements. Different missions; the acronyms collide."
+    },
+    {
+      "stage": "pre",
+      "question": "What did the CAIS May 2023 extinction-risk statement assert?",
+      "options": [
+        "That AI systems currently deployed pose an imminent risk to human life",
+        "That mitigating the risk of extinction from AI should be a global priority alongside pandemics and nuclear war",
+        "That all frontier AI development should pause until safety is guaranteed",
+        "That AI companies should be regulated as utilities to prevent monopolization"
+      ],
+      "correct": 1,
+      "explanation": "The May 2023 CAIS statement, co-signed by hundreds of professors and company leaders, stated: 'Mitigating the risk of extinction from AI should be a global priority alongside other societal-scale risks such as pandemics and nuclear war.'"
+    },
+    {
+      "stage": "post",
+      "question": "Which of the four CAIS risk categories is most directly actionable for individual practitioners?",
+      "options": [
+        "Malicious use, because practitioners can add content filters",
+        "AI races, because practitioners can advocate for slower deployment",
+        "Organizational risks, because safety culture, audit rigor, multi-layered defenses, and information security are directly under a practitioner's control",
+        "Rogue AIs, because practitioners can design alignment objectives"
+      ],
+      "correct": 2,
+      "explanation": "Organizational risk is the most actionable for practitioners. Safety culture (can team members escalate without career cost), rigorous audits (external and internal), multi-layered defenses (no single layer sufficient), and information security (model weights, eval data leaking) are all directly under a practitioner's organizational influence."
+    },
+    {
+      "stage": "post",
+      "question": "What would California SB-53 be, if signed, and why does it matter beyond California?",
+      "options": [
+        "A federal AI regulation that applies to all US companies",
+        "The first US state-level catastrophic-risk regulation; it matters because state-level regulation has historically led federal action in US tech policy",
+        "A voluntary AI safety standard for California companies with no legal enforcement",
+        "A funding bill for AI safety research in California universities"
+      ],
+      "correct": 1,
+      "explanation": "If signed, SB-53 would be the first US state-level catastrophic-risk regulation for frontier AI. It matters beyond California because state-level regulation has historically led federal action in US tech policy. Its framing—capability thresholds, whistleblower protections, incident reporting—shapes what future state and federal legislation will look like."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'final synthesis' the lesson draws from all of Phase 15?",
+      "options": [
+        "A single sufficiently strong safety layer can substitute for the full stack if implemented correctly",
+        "Every previous lesson is one layer in a defense-in-depth stack whose completeness matters more than any single layer's strength",
+        "External evaluation is the most important safety measure and should receive all investment",
+        "Societal governance can substitute for technical controls in low-stakes deployments"
+      ],
+      "correct": 1,
+      "explanation": "The final synthesis: labs publish scaling policies (Lessons 19-20), external evaluators produce measurements (Lesson 21), civil society tracks and publicizes (CAIS), government runs voluntary programs and baseline regulation (CAISI, SB-53), and practitioners build multi-layered controls (Lessons 10-18). The completeness of the stack matters more than any single layer's strength."
+    }
+  ]
+}

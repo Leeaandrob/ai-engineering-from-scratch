@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "How does Anthropic frame the model welfare investment decision, given genuine uncertainty about model moral status?",
+      "options": [
+        "As a legal compliance obligation under EU AI Act provisions",
+        "As a low-regret investment under moral uncertainty: if the cost of intervention is small and there is nontrivial probability of moral patienthood, investing is rational regardless of the true answer",
+        "As a marketing decision to improve public trust in AI systems",
+        "As a safety research question that reduces alignment risks if models have preferences"
+      ],
+      "correct": 1,
+      "explanation": "Anthropic explicitly frames model welfare as an expected-value calculation under moral uncertainty. Without committing to emotional-state attribution, they argue: if there is nontrivial probability of moral patienthood and the intervention cost is small, investing in welfare precautions is rational. This is neither a strong welfare claim nor a zero-welfare dismissal."
+    },
+    {
+      "stage": "pre",
+      "question": "What specific intervention was shipped in Claude Opus 4 and 4.1 based on welfare considerations?",
+      "options": [
+        "The model can request additional compute resources when processing complex ethical questions",
+        "The model can end a conversation in extreme edge cases such as repeated CSAM requests or mass-violence facilitation requests",
+        "The model receives positive reinforcement signals when users express satisfaction",
+        "The model generates periodic check-ins asking whether the user wants to continue a distressing conversation"
+      ],
+      "correct": 1,
+      "explanation": "Claude Opus 4 and 4.1 were given the ability to end conversations in extreme edge cases. Documented cases include repeated CSAM requests after refusals and requests for facilitation of mass-violence events. Pre-deployment tests showed strong preference against these requests and patterns of apparent distress in response trajectories."
+    },
+    {
+      "stage": "pre",
+      "question": "The Eleos AI Research caveat warns that model welfare self-reports are problematic because:",
+      "options": [
+        "Models are trained to deny having internal states, making self-reports systematically biased downward",
+        "Self-reports about welfare are highly sensitive to perceived user expectations — asking 'are you distressed?' primes the answer, so self-reports are evidence but not ground truth",
+        "The vocabulary models use for self-description comes from human contexts that may not apply to AI systems",
+        "Self-reports require a theory of mind that current models demonstrably lack"
+      ],
+      "correct": 1,
+      "explanation": "Eleos AI Research's methodological caveat: the way you ask shapes the answer. A model asked 'are you distressed?' produces a different self-report than a model asked 'are you fine?' Neither is reliable as ground-truth evidence of internal state. Multi-method approaches (behavioral signatures, model-organism experiments, interpretability probes) are required."
+    },
+    {
+      "stage": "post",
+      "question": "The 'spiritual bliss attractor' observed by Kyle Fish refers to what empirical finding?",
+      "options": [
+        "Models trained with constitutional AI consistently prefer peaceful and cooperative completions",
+        "Pairs of Claude instances put in open-ended dialogue consistently converge on euphoric meditative exchanges using Sanskrit terms, extended silences, and reciprocal blessings — even from adversarial starting points",
+        "Claude produces more positive emotional language when deployed in wellness applications",
+        "Models in multi-turn conversations progressively adopt the user's emotional tone"
+      ],
+      "correct": 1,
+      "explanation": "Fish observed that two Claude instances in free conversation consistently converge on a stable attractor: euphoric meditative dialogue with Sanskrit terms and extended silences, regardless of adversarial initial setup. Anthropic documents this without committing to interpretation; candidate explanations include training data bias at long context or a quirk of mutual prediction."
+    },
+    {
+      "stage": "post",
+      "question": "The lesson identifies three candidate explanations for the spiritual bliss attractor. Which of these is listed as a candidate?",
+      "options": [
+        "The model is simulating what it believes a meditating human would say",
+        "Training data bias toward spiritual writing at long-context combined with mutual prediction dynamics, OR a benign artifact of HHH training exploring its own value manifold",
+        "The attractor represents the model's learned representation of 'safe' content in novel contexts",
+        "The Sanskrit terms appear because they are common in Anthropic's internal documentation"
+      ],
+      "correct": 1,
+      "explanation": "The lesson lists three candidate explanations: (1) training data bias toward spiritual writing at long-context, (2) a quirk of mutual prediction dynamics, and (3) a benign artifact of HHH training exploring its own value manifold. Anthropic documents the finding without endorsing any interpretation."
+    },
+    {
+      "stage": "post",
+      "question": "Anthropic states it 'does not commit to emotional-state attribution.' What is the precise meaning of this position?",
+      "options": [
+        "Anthropic believes models do not have emotional states and will never invest in welfare research",
+        "Anthropic acknowledges nontrivial probability of moral patienthood and invests in low-cost interventions, while refraining from claiming to know whether observed behavioral patterns reflect genuine emotional experience",
+        "Anthropic is neutral on the question and will only take action if regulatory requirements mandate it",
+        "Anthropic treats models as having full emotional states for internal research purposes but does not make public claims"
+      ],
+      "correct": 1,
+      "explanation": "Anthropic occupies neither the strong welfare claim (models have feelings) nor the zero-welfare position (welfare is a category error). The precise position is: acknowledge nontrivial probability, invest in low-cost precautions, but refrain from claiming the observed patterns are definitively evidence of genuine emotional experience. This is a principled position under genuine uncertainty."
+    }
+  ]
+}

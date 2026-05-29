@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the core generation strategy of Visual Autoregressive (VAR) modeling?",
+      "options": [
+        "Predict image tokens one by one in raster scan order, like GPT predicts words",
+        "Predict a whole image at each of K increasing resolution scales, conditioning on all previous (coarser) scales",
+        "Predict image patches in random order to avoid generation-order bias",
+        "Denoise the image across T timesteps, starting from pure noise at scale 1"
+      ],
+      "correct": 1,
+      "explanation": "VAR predicts the entire set of tokens at scale k in one parallel transformer pass, conditioning on all tokens from scales 1 through k-1. This coarse-to-fine ordering aligns with natural image statistics and eliminates the raster-scan generation-order bias."
+    },
+    {
+      "stage": "pre",
+      "question": "What type of tokenizer does VAR require, and how does it differ from a standard VQ-VAE?",
+      "options": [
+        "A continuous VAE tokenizer identical to Stable Diffusion's",
+        "A multi-scale residual VQ tokenizer that produces K token grids of increasing resolution, where each scale encodes the residual left by coarser scales",
+        "A single-scale VQ tokenizer with a much larger codebook than standard VQ-VAE",
+        "A differentiable tokenizer that allows gradient flow through discrete codes during generation"
+      ],
+      "correct": 1,
+      "explanation": "VAR's multi-scale tokenizer produces token grids z_1 (1x1), z_2 (2x2), ... z_K (final resolution). Each scale's tokens encode the residual that lower-resolution scales could not capture. The decoder sums all scale embeddings after upsampling. This is a residual VQ variant trained jointly end-to-end."
+    },
+    {
+      "stage": "post",
+      "question": "How does VAR achieve parallel-within-scale generation while still being autoregressive?",
+      "options": [
+        "VAR uses bidirectional attention at every scale, predicting all tokens simultaneously",
+        "VAR is causal across scales (scale k attends only to scales 1..k) but predicts all spatial positions within scale k simultaneously in one transformer pass",
+        "VAR uses a GAN discriminator to verify scale-level token consistency in parallel",
+        "VAR caches all previous scale tokens in a KV-cache and generates the next scale autoregressively token by token"
+      ],
+      "correct": 1,
+      "explanation": "The scale-level causal mask allows token at scale k to attend to all of scales 1..k-1 (causal across scales) but within scale k there is no positional causal ordering — all positions in the scale are predicted in a single forward pass. For K=10 scales this means 10 total transformer passes, not thousands."
+    },
+    {
+      "stage": "post",
+      "question": "What key scaling property did Tian et al. demonstrate for VAR that had not been shown for previous image generation architectures?",
+      "options": [
+        "VAR training loss decreases linearly with model size, matching the scaling behavior of convolutional networks",
+        "VAR follows a power-law scaling curve for FID on ImageNet — the same predictable compute-vs-quality scaling seen in language model perplexity",
+        "VAR achieves lower FID than all diffusion models at every model size tested",
+        "VAR's inference latency decreases logarithmically with model size due to scale-level pruning"
+      ],
+      "correct": 1,
+      "explanation": "Tian et al. showed VAR FID follows a clean power law in compute budget, just like GPT perplexity. Doubling parameters or compute reliably halves error. This predictability had not been demonstrated for image generation models before VAR, making it the first image generative model with language-model-like scaling laws."
+    },
+    {
+      "stage": "post",
+      "question": "How does VAR's next-scale prediction relate conceptually to diffusion's iterative denoising?",
+      "options": [
+        "They are mathematically equivalent; both can be viewed as solving the same SDE",
+        "Both decompose generation into a sequence of easier conditional problems: diffusion adds/removes noise gradually in time, VAR adds resolution gradually in scale",
+        "VAR is a special case of diffusion where the noise schedule is defined in frequency space",
+        "They are unrelated: diffusion uses continuous distributions while VAR uses discrete tokens"
+      ],
+      "correct": 1,
+      "explanation": "Both are 'decompose a hard problem into a sequence of easier subproblems.' Diffusion: condition on a noisy version of the data at timestep t and predict the less noisy version. VAR: condition on a coarser resolution of the image and predict the next finer resolution. Different axes through the same core idea."
+    },
+    {
+      "stage": "pre",
+      "question": "Why does next-scale prediction outperform next-token prediction in raster order for image generation?",
+      "options": [
+        "Raster-order models use twice as many parameters for the same generation quality",
+        "In raster order, early corner tokens must commit without seeing the rest of the image; in next-scale prediction, every token at scale k has full context from all coarser scales before being generated",
+        "Raster-order models cannot be conditioned on class labels without separate classifier networks",
+        "Next-scale prediction eliminates the need for positional embeddings, which are noisy in raster order"
+      ],
+      "correct": 1,
+      "explanation": "Raster-order AR generates top-left before bottom-right, so early tokens cannot attend to late context. This forces the model to commit to coarse structure before seeing the full image extent. VAR's coarse-to-fine order means every scale k token has the complete image summary from scales 1..k-1, eliminating this generation-order bias."
+    }
+  ]
+}

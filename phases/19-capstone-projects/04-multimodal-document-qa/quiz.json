@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What fundamental difference distinguishes vision-first late-interaction retrieval from OCR-then-text approaches?",
+      "options": [
+        "Vision-first skips the embedding step by using full-page cosine similarity",
+        "Each PDF page is treated as an image and embedded as per-patch vectors; query tokens score against page patches directly",
+        "Vision-first converts all document text to markdown before embedding",
+        "The VLM answerer reads raw pixel arrays without any intermediate representation"
+      ],
+      "correct": 1,
+      "explanation": "In late-interaction (ColPali-style) retrieval, each page is rendered as an image and yields roughly 2048 patch embeddings. Query token vectors score against every page patch independently via MaxSim, not a single pooled vector."
+    },
+    {
+      "stage": "pre",
+      "question": "What does MaxSim compute in the late-interaction scoring process?",
+      "options": [
+        "The cosine similarity between the mean query embedding and the mean document embedding",
+        "For every query token, the maximum dot-product over all document patch vectors, then summed",
+        "The cross-encoder score for each (query, document-page) pair",
+        "The reciprocal rank of the highest-scoring patch in a page"
+      ],
+      "correct": 1,
+      "explanation": "MaxSim takes each query token and finds its maximum dot-product against all page patch vectors, then sums these per-token maxima. This allows fine-grained matching without a single pooled vector."
+    },
+    {
+      "stage": "post",
+      "question": "What is DocPruner's role in the 2026 document QA pipeline?",
+      "options": [
+        "It removes duplicate pages from the PDF corpus before indexing",
+        "It reduces the 2048 per-page patch vectors by 50% while retaining high-signal patches at negligible accuracy loss",
+        "It runs OCR on equation-heavy pages to supplement the vision embeddings",
+        "It partitions the index across multiple shards for horizontal scaling"
+      ],
+      "correct": 1,
+      "explanation": "DocPruner (2026) keeps only the highest-variance (highest-signal) 50% of patch embeddings per page, halving storage requirements with less than 0.5% accuracy loss on ViDoRe."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is an OCR fallback used alongside the vision-first pipeline for some pages?",
+      "options": [
+        "OCR is cheaper than running ColQwen on every page",
+        "Equation-dense and table-heavy pages benefit from an additional text channel that vision models struggle to render accurately",
+        "OCR is required to satisfy GDPR citation requirements",
+        "The multi-vector index cannot store image-derived vectors directly"
+      ],
+      "correct": 1,
+      "explanation": "For pages identified as equation-dense (by image variance heuristics), tools like Nougat or dots.ocr provide an extra text channel alongside the image, improving answering accuracy on mathematical and tabular content."
+    },
+    {
+      "stage": "post",
+      "question": "What are 'evidence regions' in the document QA viewer, and how are they produced?",
+      "options": [
+        "Highlighted sentences extracted from an OCR text layer and overlaid on the PDF",
+        "Bounding boxes on the source page that localize the answer span, emitted by the VLM and rendered as overlays in the UI",
+        "Confidence scores attached to each retrieved chunk in the index",
+        "Color-coded histogram bars showing retrieval score distributions"
+      ],
+      "correct": 1,
+      "explanation": "When the VLM (e.g., Qwen3-VL) emits bounding boxes alongside its answer, the viewer renders them as highlighted overlays on the source PDF page, letting users see exactly which region the answer came from."
+    },
+    {
+      "stage": "post",
+      "question": "On which two dimensions does the evaluation matrix in this capstone measure retrieval approaches?",
+      "options": [
+        "Model size vs. document count",
+        "Content type (plain text, tables, charts, handwriting, equations) vs. retrieval approach (vision-first vs. OCR-then-text vs. hybrid)",
+        "Index latency vs. storage cost",
+        "Query length vs. number of retrieved pages"
+      ],
+      "correct": 1,
+      "explanation": "The evaluation is a two-dimensional matrix: one axis is content type (plain paragraphs, dense tables, charts, handwritten notes, equations) and the other is the retrieval approach being compared, with nDCG@5 and answer accuracy in each cell."
+    }
+  ]
+}

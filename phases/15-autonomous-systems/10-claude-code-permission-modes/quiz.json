@@ -1,0 +1,66 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "How many named permission modes does Claude Code expose?",
+      "options": ["3", "5", "7", "10"],
+      "correct": 2,
+      "explanation": "Claude Code exposes seven permission modes spanning a capability ladder: plan, default, acceptEdits, acceptExec, autoMode, yolo, and bypassPermissions."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the two-stage structure of Claude Code's Auto Mode?",
+      "options": [
+        "Stage 1 checks file writes; Stage 2 checks shell commands",
+        "Stage 1 is a single-token fast classifier on every action; Stage 2 is a chain-of-thought deep review on actions that Stage 1 flags",
+        "Stage 1 runs a syntax check; Stage 2 runs a semantic review of the agent's plan",
+        "Stage 1 uses a small model; Stage 2 escalates to a larger model for all actions"
+      ],
+      "correct": 1,
+      "explanation": "Auto Mode uses Stage 1: a cheap single-token classifier on every proposed action (runs in parallel with the main agent loop). Flagged actions go to Stage 2: a slower secondary policy and safety review with chain-of-thought reasoning. The Stage 1/Stage 2 framing separates latency from depth."
+    },
+    {
+      "stage": "pre",
+      "question": "For what use case is 'bypassPermissions' documented as acceptable?",
+      "options": [
+        "Long-horizon production tasks where speed is critical",
+        "Interactive coding sessions where the user is monitoring every action",
+        "Only inside ephemeral containers whose credentials and filesystem are disposable",
+        "Automated CI jobs where the agent has read-only access"
+      ],
+      "correct": 2,
+      "explanation": "bypassPermissions approves everything and is documented as acceptable only inside ephemeral containers you are willing to throw away. Using it in any environment with real credentials, production data, or persistent state is explicitly cautioned against."
+    },
+    {
+      "stage": "post",
+      "question": "What class of attack does the Auto Mode two-stage classifier miss that the lesson specifically names?",
+      "options": [
+        "Attempts to use disallowed tools",
+        "Repetitive identical tool calls indicating a loop",
+        "Subtle prompt injection that modulates behavior without producing a single flagged action, and semantic-level misbehavior where composed trajectories are harmful despite each action being approved",
+        "File-write operations to protected directories"
+      ],
+      "correct": 2,
+      "explanation": "The classifier judges each individual action. It misses subtle prompt injection that never produces a single flagged action, and composed trajectories where every individual action looks safe but the composition is harmful. It also misses exfiltration through legitimate channels (writing to a file, then git pushing to a public repo)."
+    },
+    {
+      "stage": "post",
+      "question": "Why is Auto Mode described as a 'research preview' rather than a generally available feature?",
+      "options": [
+        "Because it is not yet integrated into the main Claude Code product",
+        "Because the two-stage classifier is not sufficient alone; users must combine it with budgets, allowlists, isolated workspaces, and trajectory audits",
+        "Because it is only available to enterprise customers during a beta period",
+        "Because the classifier is trained on a limited dataset and has not been evaluated at scale"
+      ],
+      "correct": 1,
+      "explanation": "Anthropic shipped Auto Mode as a research preview and is explicit that the classifier is a layer, not a solution. Users are expected to combine Auto Mode with budget controls, allowlists, isolated workspaces, and trajectory audits. The preview framing also reflects the eval-vs-deployment gap."
+    },
+    {
+      "stage": "post",
+      "question": "Which permission mode is appropriate for an unfamiliar task on a production-adjacent repository?",
+      "options": ["bypassPermissions", "acceptEdits", "plan", "autoMode"],
+      "correct": 2,
+      "explanation": "For unfamiliar tasks or production-adjacent code, plan mode is appropriate: the agent proposes a plan and every action is reviewed before execution. Reading the plan is cheaper than rolling back a bad run. The lesson explicitly states: 'start in plan; unfamiliar task.'"
+    }
+  ]
+}

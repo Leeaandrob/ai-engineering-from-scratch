@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In DDPM, the forward process q(x_t | x_0) is Gaussian. What property makes the training tractable?",
+      "options": [
+        "The noise is added in a single large step, simplifying the posterior",
+        "A closed-form exists to sample x_t at any timestep t directly from x_0 without iterating through all previous steps",
+        "The model only needs to denoise from x_T to x_{T-1} in one pass",
+        "The forward process is deterministic, so no sampling is needed during training"
+      ],
+      "correct": 1,
+      "explanation": "The key tractability comes from alpha_bar_t = prod(1-beta_s), giving q(x_t|x_0) = N(sqrt(alpha_bar_t)*x_0, (1-alpha_bar_t)*I). This closed form lets you jump to any noise level in one step, enabling efficient training by sampling random timesteps."
+    },
+    {
+      "stage": "pre",
+      "question": "What does the simplified DDPM training loss L_simple compute?",
+      "options": [
+        "The KL divergence between the forward and reverse processes at each timestep",
+        "The mean squared error between the true noise added at step t and the network's predicted noise",
+        "The binary cross-entropy between the denoised image and the original",
+        "The ELBO summed over all 1000 timesteps"
+      ],
+      "correct": 1,
+      "explanation": "L_simple = E[||eps - eps_theta(x_t, t)||^2], a simple regression on the Gaussian noise eps that was added during the forward process. Ho et al. showed that dropping the variational weighting coefficients improved sample quality over the full ELBO."
+    },
+    {
+      "stage": "post",
+      "question": "What is the relationship between DDPM noise prediction and score matching?",
+      "options": [
+        "They are unrelated; DDPM uses a classification-based objective while score matching uses a regression objective",
+        "Predicting the noise is equivalent to estimating the gradient of the log-density (score) of the noisy distribution, as proven by Vincent (2011)",
+        "Score matching is only used in diffusion models with continuous-time formulations, not DDPM",
+        "DDPM discards the score matching framework to simplify the loss to plain MSE"
+      ],
+      "correct": 1,
+      "explanation": "Vincent (2011) proved that denoising score matching and noise prediction are equivalent. The network eps_theta(x_t, t) estimates the score nabla_x log q(x_t|x_0), scaled by -1/sqrt(1-alpha_bar_t). The reverse process walks up the density gradient using this score."
+    },
+    {
+      "stage": "post",
+      "question": "What is v-prediction and why is it preferred over eps-prediction by models like SDXL and SD3?",
+      "options": [
+        "V-prediction outputs the latent variable directly, bypassing the need for a VAE decoder",
+        "V-prediction predicts the velocity v = alpha*eps - sigma*x, which has better signal-to-noise ratio at extreme noise levels (very small or very large t)",
+        "V-prediction is a faster sampler that reduces the number of inference steps from 1000 to 50",
+        "V-prediction replaces the U-Net with a transformer for better scaling"
+      ],
+      "correct": 1,
+      "explanation": "At very small t, the noisy image is almost clean and eps has poor signal. At very large t, the signal is buried in noise. V-prediction v = alpha*eps - sigma*x maintains more consistent SNR across the full schedule, improving stability at extreme timesteps."
+    },
+    {
+      "stage": "post",
+      "question": "In classifier-free guidance (CFG), how is the conditional noise estimate computed at inference?",
+      "options": [
+        "eps_cfg = eps_cond + w * eps_uncond",
+        "eps_cfg = (1 + w) * eps_cond - w * eps_uncond",
+        "eps_cfg = eps_cond / (1 + w)",
+        "eps_cfg = softmax(w * eps_cond, eps_uncond)"
+      ],
+      "correct": 1,
+      "explanation": "CFG combines conditional and unconditional noise predictions as eps_cfg = (1+w)*eps_cond - w*eps_uncond. Higher w amplifies the conditioning signal. The typical range is w=3-7; values above 10 produce oversaturated, over-sharp outputs."
+    },
+    {
+      "stage": "pre",
+      "question": "Which production strategy reduces DDPM's 1000-step reverse process to 10-20 steps without retraining the model?",
+      "options": [
+        "Knowledge distillation into a smaller student model",
+        "Using DDIM or DPM-Solver, which are drop-in deterministic samplers that reuse the same trained weights",
+        "Switching to flow matching, which requires retraining with a new objective",
+        "Applying tensor parallelism across GPUs to parallelize the denoising steps"
+      ],
+      "correct": 1,
+      "explanation": "DDIM (Song et al., 2021) and DPM-Solver are non-Markovian samplers that skip timesteps using the same trained eps_theta. They are drop-in replacements for the DDPM sampler and reduce inference from 1000 to 20-50 steps without touching model weights."
+    }
+  ]
+}

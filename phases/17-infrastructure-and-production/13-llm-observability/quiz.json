@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the key architectural difference between development platforms (LangSmith, Langfuse, Opik) and gateway/instrumentation tools (Helicone, Phoenix, OpenLLMetry)?",
+      "options": [
+        "Development platforms are cloud-only while gateway tools are self-hosted only",
+        "Development platforms bundle evals, prompt management, and session replays; gateway tools focus on telemetry traces and metrics",
+        "Development platforms support only Python while gateway tools are language-agnostic",
+        "Development platforms charge per seat while gateway tools charge per request"
+      ],
+      "correct": 1,
+      "explanation": "The lesson draws a clear distinction: development platforms bundle monitoring with evals, prompt management, and session replays. Gateway and instrumentation tools focus on telemetry — traces and metrics — without the eval workflow layer."
+    },
+    {
+      "stage": "pre",
+      "question": "Langfuse is described as the alternative to LangSmith for teams that must self-host. What is its licensing model?",
+      "options": [
+        "Commercial with source-available code",
+        "Apache / MIT licensed core with a paid cloud tier",
+        "AGPL-3.0 requiring open-sourcing of modifications",
+        "Proprietary with a 30-day trial"
+      ],
+      "correct": 1,
+      "explanation": "Langfuse has an Apache/MIT licensed core — you can self-host via Docker for free. The cloud tier starts at $29/month for teams. LangSmith requires an Enterprise contract for self-hosting."
+    },
+    {
+      "stage": "post",
+      "question": "What makes Arize AX's approach approximately 100x cheaper than monolithic observability platforms at scale?",
+      "options": [
+        "It samples only 1% of traces and extrapolates the rest",
+        "It uses zero-copy Iceberg/Parquet integration — traces are stored in your own data lake and Arize reads them directly",
+        "It compresses traces with a custom LLM-aware codec before storage",
+        "It runs on spot instances with 95% discount and restores from checkpoints"
+      ],
+      "correct": 1,
+      "explanation": "Arize AX uses zero-copy Iceberg/Parquet integration: traces are stored in your own S3/GCS as Parquet, and Arize reads directly from your data lake. This avoids ingesting into Arize's managed storage, eliminating the storage and transfer costs that make Datadog-scale observability expensive."
+    },
+    {
+      "stage": "post",
+      "question": "What is the recommended production observability pattern from the lesson?",
+      "options": [
+        "Single tool for everything: pick LangSmith or Langfuse and use it exclusively",
+        "Gateway (Helicone/Portkey) + eval platform (Phoenix/TruLens) connected via OpenTelemetry",
+        "Datadog for metrics and a separate vector database for prompt search",
+        "Self-hosted ELK stack for logs and Grafana for dashboards"
+      ],
+      "correct": 1,
+      "explanation": "The lesson describes the common production pattern as: a gateway tool (Helicone or Portkey) for traces and rate limiting, combined with a separate eval platform (Phoenix or TruLens) for quality monitoring, glued together via OpenTelemetry."
+    },
+    {
+      "stage": "post",
+      "question": "Helicone is described as a proxy-based minimum viable observability solution. What is its free tier limit?",
+      "options": [
+        "10,000 requests per month",
+        "50,000 events per month",
+        "100,000 requests per month",
+        "1,000,000 tokens per month"
+      ],
+      "correct": 2,
+      "explanation": "Helicone offers 100,000 requests per month on the free tier with a 15-30 minute setup. It works by swapping your OPENAI_API_BASE to the Helicone proxy endpoint."
+    },
+    {
+      "stage": "pre",
+      "question": "Phoenix is described as excellent for which specific use case, and why is it not recommended as a persistent production backend?",
+      "options": [
+        "High-throughput streaming; not recommended because it lacks Kafka integration",
+        "RAG pipeline development and drift visualization; not designed as a persistent production log store",
+        "Multi-cloud cost attribution; not recommended because it only supports OpenAI",
+        "Agent trace visualization; not recommended because it requires LangChain"
+      ],
+      "correct": 1,
+      "explanation": "Phoenix (Arize) is OpenTelemetry-native and excellent for RAG and drift visualization with embedding-space scatter plots as first-class features. However, it is primarily development-time observability — not designed as a persistent backend for production log retention."
+    }
+  ]
+}

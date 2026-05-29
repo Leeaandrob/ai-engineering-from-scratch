@@ -1,0 +1,46 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which generative model family produces samples without ever writing down a closed-form expression for the data density p(x)?",
+      "options": ["Normalizing flows", "VAEs", "GANs", "Autoregressive models"],
+      "correct": 2,
+      "explanation": "GANs are implicit-density models: they learn a generator G(z) that produces samples, but there is no way to evaluate p(x) for a given point. The other three families all provide (or bound) an explicit log p(x)."
+    },
+    {
+      "stage": "pre",
+      "question": "A VAE optimizes which objective as a proxy for log p(x)?",
+      "options": ["The Wasserstein distance", "The Evidence Lower BOund (ELBO)", "Binary cross-entropy between real and fake", "The score function of the data distribution"],
+      "correct": 1,
+      "explanation": "VAEs optimize the ELBO, a tractable lower bound on log p(x) composed of a reconstruction term minus a KL divergence. This puts VAEs in the 'explicit density, approximate' family."
+    },
+    {
+      "stage": "post",
+      "question": "According to the lesson taxonomy, diffusion models belong to which density family?",
+      "options": ["Explicit density, tractable", "Explicit density, approximate", "Implicit density", "Score-based / continuous-time"],
+      "correct": 1,
+      "explanation": "Diffusion models (DDPM) optimize a weighted ELBO — a lower bound on log p(x) — placing them in the 'explicit density, approximate' category alongside VAEs."
+    },
+    {
+      "stage": "post",
+      "question": "Which family is described as the dominant backbone for image, video, and 3D generation in 2026?",
+      "options": ["Normalizing flows", "GANs", "Token-based autoregressive", "Score-based / flow matching"],
+      "correct": 3,
+      "explanation": "Score-based and flow-matching models (Stable Diffusion 3, Flux, AudioCraft 2) are described as the 2024-2026 standard for image, video, and 3D, offering faster sampling than DDPM via straighter ODE paths."
+    },
+    {
+      "stage": "post",
+      "question": "What is the primary inference-cost advantage of GAN-based models over diffusion-based models in production?",
+      "options": ["GANs require no training data", "GANs use a single forward pass with no iterative sampling", "GANs produce higher-resolution outputs", "GANs support text conditioning natively"],
+      "correct": 1,
+      "explanation": "GANs generate a sample with one forward pass through G(z), so TTFT equals total latency. Diffusion models require num_steps x step_cost, making GANs far cheaper for narrow-domain, latency-sensitive tasks."
+    },
+    {
+      "stage": "pre",
+      "question": "Which year did the DDPM paper by Ho, Jain, and Abbeel make diffusion models practical for image generation?",
+      "options": ["2017", "2019", "2020", "2022"],
+      "correct": 2,
+      "explanation": "Ho, Jain, Abbeel published DDPM in 2020, simplifying the training loss to plain MSE on noise prediction and demonstrating state-of-the-art sample quality."
+    }
+  ]
+}

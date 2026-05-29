@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does 'Performance Gap Recovered' (PGR) measure in the Burns et al. weak-to-strong generalization study?",
+      "options": [
+        "The fraction of the strong model's parameters that are active after fine-tuning on weak labels",
+        "(fine-tuned performance - weak baseline) / (strong ceiling - weak baseline); 1.0 means weak supervision fully closed the gap",
+        "The ratio of the strong model's accuracy to the weak model's accuracy on the same task",
+        "The reduction in loss between the first and last epoch of fine-tuning on weak labels"
+      ],
+      "correct": 1,
+      "explanation": "PGR = (fine-tuned - weak) / (ceiling - weak). A PGR of 1.0 means the strong model fine-tuned on weak labels achieved the same performance as the strong model fine-tuned on gold labels. PGR of 0 means weak supervision provided no benefit beyond the weak model's own accuracy."
+    },
+    {
+      "stage": "pre",
+      "question": "In Burns et al.'s W2SG setup, which models played the roles of weak and strong?",
+      "options": [
+        "GPT-3.5 (weak) and GPT-4 (strong)",
+        "GPT-2 class (weak) and GPT-4 class (strong)",
+        "A 7B parameter model (weak) and a 70B parameter model (strong)",
+        "A single-layer transformer (weak) and a full-depth model (strong)"
+      ],
+      "correct": 1,
+      "explanation": "Burns et al. used GPT-2 class as the weak supervisor and GPT-4 class as the strong model. The weak model's zero-shot predictions were used as labels to fine-tune the strong model. The empirically measured PGR was consistently positive, showing the strong model generalized beyond the weak supervisor's errors."
+    },
+    {
+      "stage": "pre",
+      "question": "What assumption does the Debate scalable oversight mechanism rely on?",
+      "options": [
+        "That the judge is always more knowledgeable than either debater",
+        "That finding a convincing true argument is easier than finding a convincing false argument, allowing a weak judge to identify the honest debater",
+        "That the strong model will never argue for a false position when monitored",
+        "That both debaters have equal access to information and cannot collude"
+      ],
+      "correct": 1,
+      "explanation": "Debate (Irving et al. 2018) assumes finding a convincing true argument is easier than finding a convincing false argument. A weak judge who cannot evaluate the object-level claim may still be able to evaluate which argument is more consistent and harder to rebut. Recent work shows this holds for some task structures but not universally."
+    },
+    {
+      "stage": "post",
+      "question": "Why are scalable oversight and W2SG described as complementary rather than competing approaches?",
+      "options": [
+        "They target different model sizes — scalable oversight for large models, W2SG for small models",
+        "Scalable oversight increases the quality of the weak supervisor's signal; W2SG closes the gap from whatever imperfect signal the overseer provides",
+        "They are used in different phases of training — scalable oversight during pre-training, W2SG during RLHF",
+        "Scalable oversight is a theoretical framework; W2SG provides the empirical evidence"
+      ],
+      "correct": 1,
+      "explanation": "They address adjacent problems: scalable oversight gives the weak supervisor better tools so they can provide higher-quality signal on harder tasks. W2SG then ensures the strong model generalizes correctly even from whatever imperfect signal the improved overseer provides. Lang et al. (2025) demonstrated the combination outperforms either alone."
+    },
+    {
+      "stage": "post",
+      "question": "Burns et al. note a key limitation of their W2SG framing. What is it?",
+      "options": [
+        "GPT-4 class models are too capable for W2SG to show any PGR improvement",
+        "The weak-to-strong gap in their setup is capability, not alignment — a truly superhuman model might require aligning a misaligned strong model with a weak but aligned supervisor, which is different",
+        "The PGR metric is not monotone and therefore cannot rank oversight methods reliably",
+        "The results only hold for NLP tasks and do not generalize to math or coding"
+      ],
+      "correct": 1,
+      "explanation": "Burns et al. are explicit that their setup measures capability supervision: the weak model is aligned but less capable. The harder superalignment problem is when the strong model might not be aligned and the weak supervisor must detect this. Their proxy is informative but does not directly test the alignment-supervision scenario."
+    },
+    {
+      "stage": "post",
+      "question": "The OpenAI Superalignment team dissolved in May 2024. What happened to the research agenda?",
+      "options": [
+        "The agenda was abandoned; subsequent AI development proceeded without superalignment research",
+        "The agenda continued at Anthropic, academic labs (MATS, Redwood, Apollo, METR), and at OpenAI under reorganized teams — the organizational structure changed but the research questions remained active",
+        "The agenda was merged into standard AI capabilities research at major labs",
+        "The agenda was absorbed entirely by the UK AI Safety Institute"
+      ],
+      "correct": 1,
+      "explanation": "After Jan Leike's departure to Anthropic in May 2024, the Superalignment team dissolved. The research agenda — scalable oversight, W2SG, automated alignment research — continued at Anthropic, MATS, Redwood Research, Apollo, and METR. The organizational wrapper changed; the questions were not abandoned."
+    }
+  ]
+}

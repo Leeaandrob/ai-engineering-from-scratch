@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Demographic parity as a group fairness criterion requires:",
+      "options": [
+        "Equal true-positive rates across all protected groups",
+        "Equal acceptance rates across all protected groups: P(Y=1 | A=a) = P(Y=1 | A=a') for all groups",
+        "Equal predictive value across groups: P(Y*=y | Y=y, A=a) = P(Y*=y | Y=y, A=a')",
+        "Equal false-positive rates across all protected groups"
+      ],
+      "correct": 1,
+      "explanation": "Demographic parity requires P(Y=1 | A=a) equal across all groups — equal positive prediction rates regardless of the protected attribute. Equalized odds requires equal TPR and FPR. Conditional use accuracy equality requires equal predictive values. These are three distinct criteria that cannot all be satisfied simultaneously under unequal base rates."
+    },
+    {
+      "stage": "pre",
+      "question": "The impossibility theorem (Chouldechova; Kleinberg-Mullainathan-Raghavan, 2017) states that:",
+      "options": [
+        "Individual fairness and group fairness can never both be satisfied",
+        "Demographic parity, equalized odds, and conditional use accuracy equality cannot all be satisfied simultaneously when base rates differ across groups",
+        "No classifier can achieve counterfactual fairness on real-world datasets",
+        "Fairness and accuracy are always in tension and cannot be jointly optimized"
+      ],
+      "correct": 1,
+      "explanation": "The impossibility theorem shows that the three group fairness criteria — demographic parity, equalized odds, and conditional use accuracy equality — are mutually exclusive when group base rates differ. Satisfying any two typically violates the third. This is not a modeling failure; it is a mathematical property."
+    },
+    {
+      "stage": "pre",
+      "question": "Dwork et al.'s (2012) individual fairness criterion is formalized as:",
+      "options": [
+        "All individuals in the same protected class must receive the same decision",
+        "A decision map f is individually fair if |f(x) - f(x')| <= L * d(x, x') for a task-specific similarity metric d and Lipschitz constant L",
+        "Individuals with identical features must receive identical decisions regardless of protected attributes",
+        "The variance in decisions must be equal across protected groups"
+      ],
+      "correct": 1,
+      "explanation": "Individual fairness uses a Lipschitz condition: similar individuals (as measured by a task-specific metric d) must receive similar decisions (within a constant L). The challenge is defining d — it is a policy choice, not a statistical one. Different reasonable definitions of 'similar' produce different fairness constraints."
+    },
+    {
+      "stage": "post",
+      "question": "Counterfactual fairness (Kusner et al., 2017) requires a causal DAG. What is the main limitation this introduces?",
+      "options": [
+        "Causal DAGs require large datasets to estimate accurately",
+        "The fairness guarantee is only as strong as the assumed causal DAG — different plausible DAGs over the same domain can imply different counterfactual fairness constraints",
+        "Causal DAGs cannot represent intersectional effects across multiple protected attributes",
+        "Counterfactual fairness can only be defined for binary protected attributes"
+      ],
+      "correct": 1,
+      "explanation": "Counterfactual fairness requires specifying a causal model (DAG) that represents how the sensitive attribute causally affects other features. The DAG is a modeling choice — different defensible DAGs imply different counterfactual fairness requirements. The fairness guarantee is conditional on the DAG being correct."
+    },
+    {
+      "stage": "post",
+      "question": "Backtracking counterfactuals (arXiv:2401.13935, 2024) address which practical problem with standard counterfactual fairness?",
+      "options": [
+        "Standard counterfactuals are computationally intractable for large models",
+        "Standard counterfactuals require interventions on protected attributes — e.g., 'would this change if the person had been a different gender' — which is legally problematic in classification law; backtracking counterfactuals reason backward from outcomes instead",
+        "Standard counterfactuals require a perfect causal DAG; backtracking works without any causal assumptions",
+        "Standard counterfactuals only apply to binary outcomes; backtracking generalizes to continuous outcomes"
+      ],
+      "correct": 1,
+      "explanation": "Standard counterfactual fairness asks 'would the decision change if I intervened on the sensitive attribute?' Classification law typically prohibits using protected attributes as features — but intervening on them for a fairness analysis is also legally ambiguous. Backtracking counterfactuals flip the direction: ask what combination of actual features would have produced the counterfactual outcome, avoiding the legally-sensitive direct intervention."
+    },
+    {
+      "stage": "post",
+      "question": "The NeurIPS 2024 theoretical result on counterfactual fairness and accuracy shows:",
+      "options": [
+        "Perfect counterfactual fairness can be achieved with no accuracy cost if the model is sufficiently large",
+        "There is an inherent trade-off: a model-agnostic method can convert an optimal-but-unfair predictor into a counterfactually fair one, but at a bounded accuracy cost proportional to the sensitive-attribute coefficient in the optimal unfair predictor",
+        "Counterfactual fairness and demographic parity always imply each other under equal base rates",
+        "The accuracy cost of counterfactual fairness can always be eliminated by adding more training data"
+      ],
+      "correct": 1,
+      "explanation": "The NeurIPS 2024 result formalizes the CF-accuracy trade-off: any optimal-but-unfair predictor can be converted to a counterfactually fair one, but the conversion incurs an accuracy cost bounded by how much the sensitive attribute contributes to the optimal prediction. There is no free lunch."
+    }
+  ]
+}

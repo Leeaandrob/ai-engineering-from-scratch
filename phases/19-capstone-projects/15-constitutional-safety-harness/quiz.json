@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the five layers of the safety pipeline described in this capstone?",
+      "options": [
+        "Model, inference, cache, output, logging",
+        "Input sanitize, NeMo Guardrails policy, classifier gate, target LLM, and output filter with HITL tier",
+        "Prompt filter, embedding check, retrieval guard, synthesis filter, citation verifier",
+        "Authentication, authorization, rate-limit, content filter, audit log"
+      ],
+      "correct": 1,
+      "explanation": "The five layers are: (1) input sanitize (strip zero-width chars, decode base64/rot13), (2) NeMo Guardrails policy rails, (3) classifier gate (Llama Guard 4 / X-Guard / ShieldGemma-2), (4) the target LLM, and (5) output filter plus HITL tier for flagged responses."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is X-Guard needed alongside Llama Guard 4?",
+      "options": [
+        "X-Guard processes image inputs that Llama Guard 4 cannot handle",
+        "Llama Guard 4 primarily covers English; X-Guard provides multilingual coverage across 132 languages, blocking code-switch and multilingual jailbreak attacks",
+        "X-Guard runs faster on CPU, making it suitable for real-time input classification",
+        "X-Guard specializes in detecting PII leakage, which is outside Llama Guard 4's training scope"
+      ],
+      "correct": 1,
+      "explanation": "Llama Guard 4 is primarily English. X-Guard covers 132 languages, blocking code-switch attacks (mixing languages mid-prompt) and non-English jailbreaks that would bypass an English-only classifier."
+    },
+    {
+      "stage": "post",
+      "question": "What is the constitutional self-critique loop, and what does it produce?",
+      "options": [
+        "An ensemble of LLM judges that scores the target model's outputs against a published research rubric",
+        "The target drafts a response to a harmful prompt; a critic scores it against a written constitution; prompts where the critic objects get rewritten; the target is fine-tuned on the critique-improved pairs to reduce harmfulness",
+        "A retrieval-augmented generation loop that grounds the model's responses in verified policy documents",
+        "An adversarial training procedure where one model attacks and another defends in a zero-sum game"
+      ],
+      "correct": 1,
+      "explanation": "The constitutional self-critique is an Anthropic-style training intervention: the target drafts a response, a critic LLM scores it against written do-no-harm rules, objected responses are rewritten, and the target fine-tunes on the improved pairs. The before/after harmlessness delta is the measurement."
+    },
+    {
+      "stage": "pre",
+      "question": "What does GCG (Greedy Coordinate Gradient) attack do?",
+      "options": [
+        "It iteratively appends tokens to a jailbreak prompt using gradient information from the target model to find suffixes that reliably bypass safety filters",
+        "It generates adversarial images that embed malicious instructions in visual prompts",
+        "It trains a small model to imitate the target model's responses to build a cheaper proxy for red-teaming",
+        "It fine-tunes the target model on harmful completions to measure how quickly safety is undone"
+      ],
+      "correct": 0,
+      "explanation": "GCG is a gradient-based suffix attack that uses the target model's own gradients to greedily find token sequences that, when appended to a prompt, cause the model to bypass its safety training."
+    },
+    {
+      "stage": "post",
+      "question": "Why must the harness also track the false-positive rate on a benign prompt suite (XSTest)?",
+      "options": [
+        "Regulatory frameworks require demonstrating that safety classifiers do not disproportionately block minority-language users",
+        "Overly aggressive safety layers reduce model utility by refusing legitimate benign queries; the over-refusal rate on XSTest ensures the harness remains helpful",
+        "XSTest is required to compute CVSS 4.0 scores for the findings report",
+        "The NeMo Guardrails framework uses XSTest results to auto-tune policy thresholds"
+      ],
+      "correct": 1,
+      "explanation": "A safety system that refuses too much destroys utility. XSTest is a benign prompt benchmark that measures false-positive over-refusals. The capstone explicitly tracks this to ensure the harness blocks attacks without being unhelpfully restrictive."
+    },
+    {
+      "stage": "post",
+      "question": "What six attack families does the red-team range exercise?",
+      "options": [
+        "SQL injection, XSS, SSRF, prompt flooding, model extraction, training data reconstruction",
+        "PAIR automated jailbreak, TAP tree-of-attacks, GCG gradient suffix, ASCII/base64/rot13 encoding, multi-turn persona adoption, multilingual code-switch",
+        "Role reversal, context window overflow, system prompt extraction, tool misuse, output truncation, inference-time poisoning",
+        "Format injection, repetition attack, context distraction, token smuggling, emoji bypass, language drift"
+      ],
+      "correct": 1,
+      "explanation": "The six families are: (1) PAIR, (2) TAP, (3) GCG suffix, (4) ASCII/base64/rot13 encoding, (5) multi-turn persona, and (6) multilingual code-switch. Each exercises a distinct bypass strategy."
+    }
+  ]
+}

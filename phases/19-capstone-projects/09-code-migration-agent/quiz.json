@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why does the migration pipeline use a deterministic substrate (OpenRewrite / libcst) before handing off to the agent?",
+      "options": [
+        "The agent cannot read Java or Python source code without a parser",
+        "Deterministic recipes handle the 70-80% of mechanical rewrites safely, cheaply, and with an auditable diff, leaving only the ambiguous cases for the agent",
+        "OpenRewrite is faster than the agent for all types of migration failures",
+        "The test harness requires that at least one commit be authored by a non-AI tool"
+      ],
+      "correct": 1,
+      "explanation": "Deterministic recipes cover the bulk of migrations (imports, method signatures, deprecated APIs) quickly and safely. The agent only engages for cases recipes cannot handle, such as build-file drift and transitive dependency conflicts."
+    },
+    {
+      "stage": "pre",
+      "question": "What is a 'failure class' in the context of this migration capstone's taxonomy?",
+      "options": [
+        "A Python exception type thrown by the build tool during compilation",
+        "A labeled reason a repository failed to migrate, such as dep_upgrade_required, build_tool_drift, or budget_exhausted",
+        "A CVSS severity score assigned to a test that fails after migration",
+        "A category of OpenRewrite recipe that handles a specific API replacement"
+      ],
+      "correct": 1,
+      "explanation": "Each failed repo is tagged with a failure class (e.g., dep_upgrade_required, custom_annotation, test_flake, budget_exhausted) with an exemplar diff, so future recipe authors can target the most common failure classes."
+    },
+    {
+      "stage": "post",
+      "question": "What budget constraints are enforced per repository in the agent loop?",
+      "options": [
+        "10 minutes wall-clock, $3 cost, 10 agent turns",
+        "30 minutes wall-clock, $8 cost, 20 agent turns",
+        "60 minutes wall-clock, $20 cost, 50 agent turns",
+        "15 minutes wall-clock, $5 cost, 15 agent turns"
+      ],
+      "correct": 1,
+      "explanation": "Each repo gets a maximum of 30 minutes wall-clock, $8 total cost, and 20 agent turns. Any breach halts the run and files the repo under 'budget_exhausted' with the current diff as evidence."
+    },
+    {
+      "stage": "pre",
+      "question": "What does 'build drift' mean in the context of code migration?",
+      "options": [
+        "The CI pipeline taking longer to run on the migrated branch than the original",
+        "Subtle behavior changes in Maven, Gradle, or uv between major versions that cause builds to fail in non-obvious ways",
+        "The version drift between the target model (Claude Opus 4.7) and the deterministic recipe engine",
+        "Gradual degradation of test coverage over the lifetime of the repository"
+      ],
+      "correct": 1,
+      "explanation": "Build drift refers to subtle changes in how build tools like Maven, Gradle, or uv behave across major versions, causing breaks that are unrelated to the language migration itself and require agent intervention."
+    },
+    {
+      "stage": "post",
+      "question": "What gate must pass before the agent branch is allowed to open a pull request?",
+      "options": [
+        "The agent must have used fewer than 10 turns and spent less than $3",
+        "Full CI must pass in-sandbox and the test-coverage delta must not be negative by more than 2%",
+        "The diff must be reviewed and approved by a human before the PR is opened",
+        "The deterministic recipe pass must have fixed at least one issue before the agent runs"
+      ],
+      "correct": 1,
+      "explanation": "After the build goes green, the full test suite runs in-sandbox. If CI passes and coverage has not dropped more than 2%, the branch opens a PR. If CI is still red, no PR is opened."
+    },
+    {
+      "stage": "post",
+      "question": "What is the key metric used to evaluate the agent's contribution on top of the deterministic substrate?",
+      "options": [
+        "Dollar cost per migrated line of code",
+        "Fraction of fixes that OpenRewrite handled versus fixes the agent authored, alongside the overall pass@1 on the 50-repo MigrationBench subset",
+        "Number of unique failure classes the agent resolved that recipes could not",
+        "Wall-clock time from recipe pass completion to first green build"
+      ],
+      "correct": 1,
+      "explanation": "The rubric specifically measures the agent/deterministic-tool integration: the fraction of fixes from recipes versus from the agent, alongside pass@1 on the full 50-repo set, revealing where the agent's value actually lives."
+    }
+  ]
+}

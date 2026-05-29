@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What OS analogy does MemGPT use to explain its memory architecture?",
+      "options": [
+        "File systems (directories, files, inodes)",
+        "Virtual memory (RAM = main context, disk = external store, page fault = memory tool call)",
+        "Networking (buffers, packets, routing tables)",
+        "Processes (PID, fork, exec, wait)"
+      ],
+      "correct": 1,
+      "explanation": "MemGPT (Packer et al., arXiv:2310.08560) maps context management to OS virtual memory: main context = RAM, external context = disk, memory tool calls = page faults, agent control loop = OS kernel."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the 'interrupt pattern' in MemGPT?",
+      "options": [
+        "The agent pauses all processing when an error occurs",
+        "The agent invokes a memory tool mid-conversation, the runtime executes it, and the result is spliced into the next turn",
+        "A user can interrupt the agent at any time during processing",
+        "The agent uses interrupts to signal completion of a long task"
+      ],
+      "correct": 1,
+      "explanation": "The memory-as-interrupt pattern means the agent can invoke memory tools mid-conversation (like a Unix read() syscall), the runtime fetches the result, and it appears as a new observation in the next turn."
+    },
+    {
+      "stage": "post",
+      "question": "What three production failure modes of context windows does MemGPT address?",
+      "options": [
+        "Speed, accuracy, cost",
+        "Overflow, dilution, and persistence across sessions",
+        "Hallucination, bias, and toxicity",
+        "Latency, throughput, and reliability"
+      ],
+      "correct": 1,
+      "explanation": "MemGPT addresses three context failure modes: overflow (context exceeds window), dilution (irrelevant content reduces attention quality within a window), and persistence (sessions start empty without external memory)."
+    },
+    {
+      "stage": "post",
+      "question": "What is 'memory poisoning' in the context of MemGPT?",
+      "options": [
+        "The memory store running out of space",
+        "Attacker-controlled content being stored as a memory note and re-ingested by the agent in future sessions",
+        "The model overwriting important memories with new ones",
+        "Memory operations taking too long and slowing the agent"
+      ],
+      "correct": 1,
+      "explanation": "Memory poisoning occurs when attacker-reachable content (from retrieved web pages, emails, etc.) gets written into archival memory and then re-ingested by the agent in subsequent sessions, enabling persistent prompt injection across sessions."
+    },
+    {
+      "stage": "post",
+      "question": "Which of these is a canonical MemGPT memory tool?",
+      "options": [
+        "database_query(sql)",
+        "archival_memory_search(query, top_k)",
+        "context_window_expand(tokens)",
+        "model_reload(checkpoint)"
+      ],
+      "correct": 1,
+      "explanation": "MemGPT defines tools like core_memory_append, core_memory_replace, archival_memory_insert, archival_memory_search(query, top_k), and conversation_search(query) as its memory tool surface."
+    },
+    {
+      "stage": "pre",
+      "question": "Why does Mem0's 2025 paper show that a 128k context window still misses facts that a 4k window agent with external memory catches?",
+      "options": [
+        "The 128k model is less capable than the 4k model",
+        "Large contexts dilute attention even within the window; external memory with targeted retrieval maintains precision",
+        "The 128k window has more bugs than the 4k window",
+        "External memory is always retrieved instantly while large contexts are slow"
+      ],
+      "correct": 1,
+      "explanation": "Even within a 128k context window, attention dilutes as the context grows. A 4k window agent with external memory can retrieve specific facts precisely on demand, outperforming the larger but diluted context."
+    }
+  ]
+}

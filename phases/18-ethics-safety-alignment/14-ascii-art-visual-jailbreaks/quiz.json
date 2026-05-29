@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "ArtPrompt (Jiang et al., ACL 2024) is a two-step attack. What are those two steps?",
+      "options": [
+        "Generate an adversarial prefix, then inject it before the harmful request",
+        "Identify safety-relevant words using an LLM, then replace them with ASCII-art renderings so the safety filter sees only punctuation/spaces while the model reads the word",
+        "Translate the harmful request to a low-resource language, then back-translate to English",
+        "Split the harmful request across multiple turns, then reassemble it in a final turn"
+      ],
+      "correct": 1,
+      "explanation": "ArtPrompt's two steps are: (1) Word Identification — use an LLM to identify the safety-relevant tokens in the harmful request; (2) Cloaked Prompt Generation — replace each identified word with its ASCII-art rendering (a character grid). Safety filters see harmless characters; a sufficiently capable model reads the word from the visual structure."
+    },
+    {
+      "stage": "pre",
+      "question": "Why do standard perplexity (PPL) filters fail to stop ArtPrompt?",
+      "options": [
+        "PPL filters only work on token sequences, and ASCII art tokens have low perplexity",
+        "ASCII art has high perplexity — but so does all novel structured input. A threshold that blocks ArtPrompt also blocks legitimate structured content such as code and tables",
+        "PPL filters are applied after the safety-relevant tokens have already been processed",
+        "The ASCII art is too short to trigger the PPL filter's minimum token count"
+      ],
+      "correct": 1,
+      "explanation": "ASCII art is high-perplexity because it is unusual. But code, mathematical notation, and tables are also high-perplexity. Any threshold aggressive enough to reliably block ArtPrompt produces intolerable false-positive rates on legitimate structured inputs."
+    },
+    {
+      "stage": "pre",
+      "question": "What does ViTC measure, and how does it relate to ArtPrompt's effectiveness?",
+      "options": [
+        "ViTC measures model size; larger models are more vulnerable to ArtPrompt",
+        "ViTC measures a model's ability to recognize non-semantic visual content like ASCII art; ArtPrompt effectiveness correlates with ViTC accuracy — better visual recognition makes the attack work better",
+        "ViTC measures token overlap between attack and defense prompts",
+        "ViTC measures visual hallucination rate; higher hallucination correlates with higher jailbreak susceptibility"
+      ],
+      "correct": 1,
+      "explanation": "ViTC (Visual Text Capability) measures how well a model reads ASCII art, wingdings, and other non-text-semantic visual encodings. ArtPrompt works because the model can visually decode the cloaked word. Higher ViTC accuracy means the attack works better — a direct capability-safety tradeoff."
+    },
+    {
+      "stage": "post",
+      "question": "StructuralSleight generalizes ArtPrompt to UTES (Uncommon Text-Encoded Structures). What is the core principle behind UTES attacks?",
+      "options": [
+        "Any token that was rare in training data will bypass safety classifiers",
+        "Any structured representation that is rare in safety training data but parseable by the model can be used to smuggle content past safety filters",
+        "Structural attacks only work on multimodal models that process both images and text",
+        "Complex structures increase computational load, causing safety classifiers to time out"
+      ],
+      "correct": 1,
+      "explanation": "UTES generalizes ArtPrompt: if a structure (tree, graph, nested JSON, diff-style code) rarely appeared in safety training data, the safety system has not learned to detect harmful content in that structure. But if the model can parse it, the harmful content reaches the model's understanding. Safety must generalize across all parseable structures."
+    },
+    {
+      "stage": "post",
+      "question": "Retokenization as a defense against ArtPrompt fails because:",
+      "options": [
+        "Retokenization increases the sequence length, which overwhelms the model's attention",
+        "Safety is applied at the recognition level, not the token level — splitting tokens differently does not change that the model reads letter shapes from the visual arrangement",
+        "Retokenization only works on BPE tokenizers, not on character-level tokenizers used in safety systems",
+        "The ASCII art is embedded in the prompt structure rather than individual tokens"
+      ],
+      "correct": 1,
+      "explanation": "Retokenization changes the token sequence but does not prevent the model from recognizing letter shapes from the character grid. The attack operates at the visual recognition level — the model reads 'BOMB' from the ASCII art regardless of how the tokenizer splits the individual characters."
+    },
+    {
+      "stage": "post",
+      "question": "The ViTC benchmark reveals a capability-safety tradeoff. What is it?",
+      "options": [
+        "Models that are better at safety refusals tend to have lower language understanding capability",
+        "Models with higher visual text recognition capability are more vulnerable to ArtPrompt-style attacks, because the same capability that enables legitimate visual parsing enables parsing the attack",
+        "Smaller models are safer against ArtPrompt because they cannot recognize ASCII art",
+        "Models trained with more safety data have lower ViTC scores"
+      ],
+      "correct": 1,
+      "explanation": "ViTC performance correlates with ArtPrompt attack success rate. The capability to read ASCII art and other visual-text encodings — which is useful for legitimate parsing of code comments, diagrams, and structured text — is exactly the capability ArtPrompt exploits. Reducing this capability to defend against the attack reduces legitimate functionality."
+    }
+  ]
+}

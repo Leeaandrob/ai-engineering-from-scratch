@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What belongs in repo memory (agent_state.json) vs what should go in telemetry?",
+      "options": [
+        "All data goes in repo memory; nothing goes in telemetry",
+        "Repo memory: active task, touched files, assumptions, blockers, next action. Telemetry: raw chat transcripts, token-level traces, sampled completions",
+        "Telemetry: all agent decisions. Repo memory: user preferences only",
+        "Both contain the same data for redundancy"
+      ],
+      "correct": 1,
+      "explanation": "The test is durability: would this be useful 3 months from now in a CI rerun? If yes, repo. Repo memory holds: active task, touched files, assumptions, blockers, next action. Telemetry holds: raw chat transcripts, token-level reasoning, sampled completions, vendor-specific model IDs."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is atomic write (temp-and-rename) required for state files?",
+      "options": [
+        "For performance reasons",
+        "Partial writes leave the state file corrupt, which is worse than no file — write to temp, fsync, rename atomically",
+        "To prevent concurrent access by multiple agents",
+        "To enable rollback to previous versions"
+      ],
+      "correct": 1,
+      "explanation": "A partial write (crash mid-write) leaves the state file corrupt — the next session resumes against corrupt state with no signal. Mitigation: write to a tempfile in the same directory, fsync, then os.replace() (atomic rename on POSIX and Windows)."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'idempotency keys on tool calls' pattern and when is it critical?",
+      "options": [
+        "Using unique IDs for all tool calls to enable logging",
+        "Log every tool call ID before execution into pending_calls.jsonl; on retry, check for the ID and skip if present — critical for non-idempotent tools like email sends, DB inserts, and file uploads",
+        "A pattern for deduplicating tool call results",
+        "A way to cache tool call results for faster re-execution"
+      ],
+      "correct": 1,
+      "explanation": "If an agent crashes after calling a tool but before checkpointing the result, recovery retries the tool call. For idempotent calls (reads) this is safe. For non-idempotent calls (email sends, DB inserts, uploads), log the call ID first; on retry, check and skip if already executed."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'event sourcing + snapshots' pattern for agent state?",
+      "options": [
+        "Using both event logs and snapshots simultaneously for redundancy",
+        "Append to an event log (state.events.jsonl) on every mutation; periodically snapshot to state.json; resume reads the snapshot then replays events after it",
+        "Events for writes, snapshots for reads",
+        "A way to compress state by replaying events"
+      ],
+      "correct": 1,
+      "explanation": "Event sourcing: append every mutation to state.events.jsonl; periodically snapshot to state.json. Resume reads the snapshot then replays any events after the snapshot's timestamp. Enables verbatim replay of agent decisions for debugging long-horizon runs — same shape as Postgres WAL."
+    },
+    {
+      "stage": "post",
+      "question": "What must happen when the state schema changes (schema_version bump)?",
+      "options": [
+        "Delete all existing state files and start fresh",
+        "Ship a migration script that runs idempotently; the manager refuses to load files from unknown versions",
+        "Ask the agent to interpret the old schema",
+        "Manually update all state files to the new schema"
+      ],
+      "correct": 1,
+      "explanation": "When the schema changes, ship a migration script (e.g., tools/migrate_state.py) that transforms vN state to v(N+1). The state manager refuses to load a file from an unknown version. The schema_version field is the contract."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the 'separate large artifacts from state' pattern?",
+      "options": [
+        "Store all agent output in a separate database",
+        "Don't store CSVs, long transcripts, or generated files in agent_state.json — save them as separate files and keep only the path in state",
+        "Split the state file into multiple smaller files",
+        "Archive large state files after each session"
+      ],
+      "correct": 1,
+      "explanation": "Large artifacts (CSVs, transcripts, generated files) don't belong in agent_state.json — they slow checkpoints and bloat the state file. Instead, save the artifact separately (or in object storage) and store only the path in state. State stays small and fast."
+    }
+  ]
+}

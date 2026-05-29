@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the mapping network in StyleGAN and what problem does it solve?",
+      "options": [
+        "A U-Net that maps the synthesis network outputs to pixel space",
+        "An 8-layer MLP that maps the input noise z to an intermediate latent w, decoupling the latent geometry from the data statistics",
+        "A network that maps style codes to class labels for conditional generation",
+        "A transformer that converts text descriptions into image features"
+      ],
+      "correct": 1,
+      "explanation": "The mapping network f: Z -> W transforms the initial noise into a disentangled w space. Because W is not forced to be Gaussian, it learns the shape that matches the training data's statistics, resulting in roughly orthogonal axes for independent attributes like pose and identity."
+    },
+    {
+      "stage": "pre",
+      "question": "How does AdaIN (Adaptive Instance Normalization) inject style into StyleGAN's synthesis network?",
+      "options": [
+        "By concatenating the style vector w directly to each layer's input",
+        "By normalizing each feature map and then scaling and shifting it with affine projections of w",
+        "By replacing the generator's input noise with w at every resolution level",
+        "By computing a cross-attention between w and the image feature maps"
+      ],
+      "correct": 1,
+      "explanation": "AdaIN normalizes each conv feature map (subtract mean, divide by std), then re-styles it using a w-derived scale and bias. This separates the content (handled by normalization) from the style (injected through w), enabling independent control at each resolution."
+    },
+    {
+      "stage": "post",
+      "question": "What artifact in StyleGAN1 did StyleGAN2's weight demodulation fix?",
+      "options": [
+        "Checkerboard patterns from transposed convolutions",
+        "Blobby droplet artifacts caused by AdaIN zeroing out mean statistics",
+        "Color saturation from spectral normalization",
+        "Texture sticking to pixel coordinates during interpolation"
+      ],
+      "correct": 1,
+      "explanation": "StyleGAN1's AdaIN operation zero-mean-normalized feature maps, which caused the network to produce a persistent blobby droplet artifact in generated images. StyleGAN2 replaced AdaIN with weight demodulation, normalizing the convolution weights instead of the activations."
+    },
+    {
+      "stage": "post",
+      "question": "What is the truncation trick in StyleGAN and what trade-off does it make?",
+      "options": [
+        "Clipping gradient magnitudes to prevent exploding gradients, trading training speed for stability",
+        "Interpolating w toward the mean w, trading sample diversity for higher visual quality",
+        "Reducing the synthesis network's resolution, trading image detail for faster inference",
+        "Dropping layers from the mapping network, trading disentanglement for faster encoding"
+      ],
+      "correct": 1,
+      "explanation": "The truncation trick computes w' = w_mean + psi*(w - w_mean) where psi < 1. This pulls w toward the learned mean of the W space, sampling from a narrower, higher-quality region of the distribution at the cost of less diverse outputs."
+    },
+    {
+      "stage": "post",
+      "question": "What problem with StyleGAN1 and StyleGAN2 did StyleGAN3 address with alias-free convolutions?",
+      "options": [
+        "Mode collapse when generating images outside the training domain",
+        "Texture features sticking to fixed pixel coordinates rather than moving with the object during interpolation",
+        "Posteriors collapsing to the prior when using inversion",
+        "Droplet artifacts caused by incorrect feature normalization"
+      ],
+      "correct": 1,
+      "explanation": "In StyleGAN1/2, textures were effectively baked to the pixel grid, so rotating or translating an object caused the texture to slide unnaturally. StyleGAN3's alias-free convolutions using windowed sinc filters enforce translation equivariance, making textures follow the object."
+    },
+    {
+      "stage": "pre",
+      "question": "Why does StyleGAN remain competitive for narrow-domain photorealism tasks in 2026 despite diffusion models achieving higher quality on open-domain generation?",
+      "options": [
+        "StyleGAN supports more conditioning modalities than diffusion",
+        "StyleGAN generates images with a single forward pass in under 10ms, which is 300x faster than a 50-step SDXL pipeline",
+        "StyleGAN produces higher FID scores than diffusion on all benchmarks",
+        "StyleGAN requires no training data because it uses a fixed mathematical prior"
+      ],
+      "correct": 1,
+      "explanation": "StyleGAN3 on a 4090 generates a 1024px face in under 10ms versus roughly 3 seconds for 50-step SDXL at the same resolution. For narrow-domain products where the answer is always a photo of a person's face, this 300x latency advantage wins on TCO and UX."
+    }
+  ]
+}

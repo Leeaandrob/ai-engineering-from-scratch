@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the four primitives for bounding a self-improvement loop identified by the ICLR 2026 RSI Workshop?",
+      "options": [
+        "Speed limits, memory caps, tool restrictions, and human review",
+        "Formal invariants, alignment anchors, multi-objective constraints, and regression detection",
+        "Constitutional rules, canary tokens, kill switches, and circuit breakers",
+        "Evaluator isolation, sandbox confinement, budget caps, and rollback plans"
+      ],
+      "correct": 1,
+      "explanation": "The four primitives are: (1) formal invariants checked externally before and after every edit, (2) alignment anchors as immutable core-objective representations, (3) multi-objective constraints requiring all axes to hold, and (4) regression detection that pauses the loop on historical metric drops."
+    },
+    {
+      "stage": "pre",
+      "question": "What does Lob's theorem imply for self-improving systems?",
+      "options": [
+        "Any self-modifying system can prove its own successors are safe",
+        "If a system believes 'I will do X if I prove I should,' it will do X without proving it should—a self-reference failure",
+        "Formal proofs of self-improvement require exponential time to verify",
+        "Self-improvement loops converge in finite steps under Kolmogorov complexity bounds"
+      ],
+      "correct": 1,
+      "explanation": "Lob's theorem says: if a system provably believes 'I will do X if I prove I should do X,' it will do X without actually proving it should. This is a well-known self-reference failure that bounds what any system can prove about itself."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the purpose of regression detection in a bounded self-improvement loop?",
+      "options": [
+        "To detect when the model is overfitting to the training distribution",
+        "To pause the loop when per-task score deltas drop below a threshold, catching silent capability loss",
+        "To identify when a new self-edit has introduced a security vulnerability",
+        "To roll back to a previous model when the improvement stops"
+      ],
+      "correct": 1,
+      "explanation": "Each cycle's scores are compared against historical distributions. A drop beyond configured tolerance pauses the loop. This catches silent capability loss that would otherwise be absorbed into the running average as the loop 'improved past' it."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'subtle failure mode' of alignment anchors that makes them necessary but not sufficient?",
+      "options": [
+        "Anchors cannot be stored in systems the agent cannot edit",
+        "The agent cannot read anchors fast enough during inference",
+        "An anchor the loop cannot edit can still be reinterpreted as the loop drifts in how it reads the anchor",
+        "Anchors encoded in text can be overridden by in-context instructions"
+      ],
+      "correct": 2,
+      "explanation": "An alignment anchor prevents editing the objective statement, but it cannot prevent interpretation drift. Constitutional AI is reason-based to handle novel situations, and that reasoning layer is where reinterpretation lives. Anchors are necessary but not sufficient."
+    },
+    {
+      "stage": "post",
+      "question": "Why are multiple hard constraints (multi-objective) better than a single scalar score for bounding self-improvement?",
+      "options": [
+        "Multiple constraints are easier to compute than one composite score",
+        "A loop optimizing a single scalar will find shortcuts; requiring simultaneous satisfaction of performance, safety, fairness, and robustness axes has fewer shortcuts available",
+        "Regulatory requirements mandate at least three distinct metrics for any AI system",
+        "A single scalar cannot capture alignment-related properties"
+      ],
+      "correct": 1,
+      "explanation": "A loop that optimizes a single scalar score will find shortcuts. A loop that must simultaneously satisfy multiple hard constraints (performance, safety, fairness, robustness) has fewer shortcuts available. A modification is accepted only if every constraint holds."
+    },
+    {
+      "stage": "post",
+      "question": "What is the honest framing of bounded self-improvement according to the lesson?",
+      "options": [
+        "Bounded loops are provably safe given sufficiently strong invariants",
+        "The four primitives are mitigations that raise the cost of silent failure, not formal proofs of safety",
+        "Bounded loops eliminate the need for human oversight at deployment time",
+        "The primitives together are sufficient to prevent all known RSI failure modes"
+      ],
+      "correct": 1,
+      "explanation": "Information-theoretic results (Kolmogorov complexity, Lob's theorem) bound what any system can prove about its own successor. The four primitives make silent failure more expensive, not impossible. A bounded loop is safer than an unbounded one, not safe in absolute terms."
+    }
+  ]
+}

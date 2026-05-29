@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why do multi-agent software teams use parallel git worktrees per coder rather than having all coders work on the same branch?",
+      "options": [
+        "Parallel worktrees reduce GitHub API rate limits",
+        "Each coder works on an isolated branch without interfering with others; the branches are merged by a coordinator after all subtasks complete",
+        "git worktrees are required by the A2A protocol for agent isolation",
+        "Parallel branches are cheaper to test in Daytona sandboxes"
+      ],
+      "correct": 1,
+      "explanation": "Each coder gets a fresh `git worktree add` branch plus a Daytona sandbox. This isolates implementation, prevents mid-work conflicts, and allows all coders to run simultaneously before a merge coordinator integrates the branches."
+    },
+    {
+      "stage": "pre",
+      "question": "What is 'token amplification' and why is it the key efficiency metric for multi-agent systems?",
+      "options": [
+        "The number of LLM API calls needed to complete a task vs. a single-agent baseline",
+        "Total tokens across all roles for a task divided by single-agent tokens; measures the overhead cost of role boundaries and handoff context",
+        "The compression ratio achieved by summarizing subtask outputs before passing them to the reviewer",
+        "The fraction of tokens in the architect's plan that the coders actually act on"
+      ],
+      "correct": 1,
+      "explanation": "Token amplification is (coder + reviewer + tester + architect tokens) / single-agent tokens for the same task. Every role boundary adds summary prompts and handoff context; the multi-agent system only wins per dollar if the efficiency gain exceeds this overhead."
+    },
+    {
+      "stage": "post",
+      "question": "What constraint prevents the reviewer from approving diffs it authored?",
+      "options": [
+        "The reviewer runs on a different LLM provider than the coders",
+        "The task-board schema marks each diff with the authoring agent; the reviewer cannot emit 'approved' on messages it sent",
+        "GitHub branch protection prevents the reviewer's GitHub App token from merging its own PRs",
+        "The tester role automatically re-runs tests if it detects the reviewer approved its own code"
+      ],
+      "correct": 1,
+      "explanation": "The design explicitly states the reviewer cannot approve diffs it authored or changes it proposed. The task-board typed messages track authorship, enforcing this conflict-of-interest guard."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the A2A protocol and how is it used in this capstone?",
+      "options": [
+        "An Anthropic API specification for chaining Claude model calls in a single session",
+        "Google's 2025 spec for typed inter-agent messages; used to define structured message types (plan_request, subtask, diff_ready, approved, etc.) across role boundaries",
+        "An AWS IAM policy framework for restricting agent service account permissions",
+        "An OpenAI streaming protocol that allows partial function-call results"
+      ],
+      "correct": 1,
+      "explanation": "A2A is Google's 2025 inter-agent messaging protocol used here to define typed task-board messages. Each crossing of a role boundary is a structured A2A message (e.g., subtask, diff_ready, review_feedback), making handoffs explicit and traceable."
+    },
+    {
+      "stage": "post",
+      "question": "What does the post-mortem handoff-failure histogram track after a 50-issue SWE-bench run?",
+      "options": [
+        "Per-coder token spending and the number of Daytona sandbox timeouts",
+        "The distribution of failed issues by the role-boundary failure type (plan too vague, merge conflict, reviewer false-approve, tester flake)",
+        "Per-model API error rates grouped by provider",
+        "The number of issues where the merge coordinator introduced a regression"
+      ],
+      "correct": 1,
+      "explanation": "For each failed issue, the post-mortem identifies the handoff that broke it and bins the issue under a failure type. This histogram tells the team which coordination mechanism needs the most improvement."
+    },
+    {
+      "stage": "post",
+      "question": "What model is assigned to each role in the default configuration of this multi-agent team?",
+      "options": [
+        "All roles use Claude Sonnet 4.7 for consistency and comparable cost analysis",
+        "Architect uses Opus 4.7, coders use Sonnet 4.7, reviewer uses GPT-5.4, tester uses Gemini 2.5 Pro",
+        "Architect uses GPT-5.4, coders use Opus 4.7, reviewer uses Gemini 2.5 Pro, tester uses Sonnet 4.7",
+        "All roles use a locally hosted Llama 3.3 70B to minimize API cost"
+      ],
+      "correct": 1,
+      "explanation": "The capstone assigns the most capable model (Opus 4.7) to the architect for planning, Sonnet 4.7 to the N coders, GPT-5.4 to the reviewer, and Gemini 2.5 Pro to the tester. This leverages model strengths per role."
+    }
+  ]
+}

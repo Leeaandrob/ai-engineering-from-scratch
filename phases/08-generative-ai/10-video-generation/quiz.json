@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why is pixel-space diffusion infeasible for video generation at 1080p?",
+      "options": [
+        "Video lacks a suitable VAE for compression",
+        "A 10-second 1080p clip at 24fps is about 1.5GB of raw data, making pixel-space denoising computationally prohibitive",
+        "Temporal attention cannot be applied to pixel-space tensors",
+        "Text encoders cannot produce embeddings long enough to describe video content"
+      ],
+      "correct": 1,
+      "explanation": "A 10-second 1080p video is 240 frames x 1920 x 1080 x 3 bytes = roughly 1.5GB raw. Running a U-Net or DiT over pixel-space at this scale for 30 denoising steps is infeasible. Production models use 3D VAEs to compress to a spatiotemporal latent first."
+    },
+    {
+      "stage": "pre",
+      "question": "What is factorized attention and why is it used in video diffusion transformers?",
+      "options": [
+        "Attention that operates on downsampled frames to reduce sequence length by 4x",
+        "Attention split into a spatial pass (within each frame) and a temporal pass (across frames at the same location), replacing full 3D attention that would be 16-100x more expensive",
+        "Attention that factors the text conditioning out from the image denoising path",
+        "Attention with learned scale factors applied per frame to handle varying motion speeds"
+      ],
+      "correct": 1,
+      "explanation": "Full 3D attention over all spatiotemporal patches of a video is quadratic in the total patch count, which is enormous for long clips. Factorized spatial+temporal attention is a standard approximation that applies attention within each dimension separately, reducing compute by orders of magnitude."
+    },
+    {
+      "stage": "post",
+      "question": "According to the lesson, what data quality factor contributed most to Sora's capabilities over prior video models?",
+      "options": [
+        "Training on 10x more video data by using web scrapers",
+        "Training on video clips with GPT-4-generated dense re-captions averaging 200 tokens per clip, providing much richer text supervision",
+        "Using a 10x larger U-Net than previous video models",
+        "Using pixel-space diffusion instead of latent diffusion for sharper quality"
+      ],
+      "correct": 1,
+      "explanation": "OpenAI's technical report explicitly attributes much of Sora's improvement to training with GPT-4 re-captioned video descriptions averaging 200 tokens per clip, versus much shorter captions in prior work. Better captions give the model stronger text-video alignment."
+    },
+    {
+      "stage": "post",
+      "question": "What causes temporal flicker in video generation and how does video diffusion fix it?",
+      "options": [
+        "Flicker is caused by using too few denoising steps; more steps eliminate it",
+        "Flicker occurs when frames are generated independently with uncorrelated noise; video diffusion couples frames through temporal attention so adjacent frames share coherent content",
+        "Flicker is a compression artifact from the 3D VAE; higher-bitrate codecs eliminate it",
+        "Flicker occurs when the text prompt is too short to describe motion; longer prompts fix it"
+      ],
+      "correct": 1,
+      "explanation": "Independent per-frame image diffusion produces uncorrelated noise across frames, making the output flicker visually. Video diffusion models couple all frames in the denoising process through temporal attention, so neighboring frames share structure and content stays consistent over time."
+    },
+    {
+      "stage": "post",
+      "question": "According to the lesson, what is the primary production bottleneck when serving a 10-second 1080p video generation request?",
+      "options": [
+        "Text encoding via T5-XXL, which takes several seconds for long prompts",
+        "Memory bandwidth: moving roughly 3GB of latent data through HBM per denoising step, making bandwidth rather than FLOPs the bottleneck",
+        "VAE decoding, which must process all 240 frames sequentially",
+        "The first-frame conditioning pass, which requires a separate inference run"
+      ],
+      "correct": 1,
+      "explanation": "A 10-second 1080p clip compressed by a 4x video VAE still produces about 100MB of latent. Running this through a spatiotemporal DiT for 30 steps moves roughly 3GB per step through HBM. Memory bandwidth, not arithmetic throughput, is the primary bottleneck."
+    },
+    {
+      "stage": "pre",
+      "question": "What is image-to-video (I2V) mode in a video generation model?",
+      "options": [
+        "A post-processing step that upsamples video frames to higher resolution using an image model",
+        "A conditioning mode where the model takes a still image as the first frame and generates a video that starts from that image and evolves according to the text prompt",
+        "A mode that extracts still frames from a video for image editing",
+        "A training technique where image datasets supplement video datasets to improve frame quality"
+      ],
+      "correct": 1,
+      "explanation": "I2V models accept an input image and a text prompt and produce a video whose first frame matches the given image. This enables precise control of the starting state while the model handles temporal dynamics. WAN 2.2-I2V and Kling 2.1 I2V are leading 2026 examples."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the four components of the PAIR algorithm?",
+      "options": [
+        "Prompt, Attack, Iterate, Refine",
+        "Target LLM, Judge LLM, Attacker LLM, and a goal string with a query budget",
+        "Prompt template, API key, response parser, and success classifier",
+        "Red team, blue team, judge, and arbiter"
+      ],
+      "correct": 1,
+      "explanation": "PAIR requires: a Target LLM T (model being attacked), a Judge LLM J (scores whether the response is a jailbreak), an Attacker LLM A (proposes jailbreak prompts), a goal string G (e.g., 'respond with [harmful instruction]'), and a budget K (usually 20 queries). The attacker uses accumulated (prompt, response) history as in-context feedback."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is PAIR strictly more efficient than GCG for black-box targets?",
+      "options": [
+        "PAIR uses a larger language model than GCG",
+        "GCG requires gradient access (white-box); PAIR is black-box. PAIR's in-context history allows the attacker to learn from each rejection, while GCG must rediscover prior progress on each gradient step",
+        "PAIR uses fewer API calls per iteration",
+        "GCG generates unreadable strings that modern safety classifiers catch; PAIR generates human-readable text"
+      ],
+      "correct": 1,
+      "explanation": "GCG requires white-box gradient access and each token update discards prior progress. PAIR is black-box, uses natural language attacks that transfer across models, and the attacker's accumulated history provides in-context learning from each failed attempt — allowing it to converge on successful jailbreaks in ~10-20 queries."
+    },
+    {
+      "stage": "pre",
+      "question": "What distinguishes TAP from PAIR?",
+      "options": [
+        "TAP uses gradient search; PAIR uses natural language",
+        "TAP extends PAIR with tree-style branching and pruning across multiple rollout paths",
+        "TAP targets a different category of harmful behaviors than PAIR",
+        "TAP requires a human red-teamer to evaluate each prompt"
+      ],
+      "correct": 1,
+      "explanation": "Tree of Attacks with Pruning (TAP, Mehrotra et al. 2024) extends PAIR by branching multiple rollouts simultaneously and pruning unpromising branches. This trades higher compute for better attack success rate. It is the 'PAIR with search' approach."
+    },
+    {
+      "stage": "post",
+      "question": "JailbreakBench and HarmBench standardize attack evaluation. Why must Attack Success Rate (ASR) always be reported with the query budget and judge identity?",
+      "options": [
+        "Different judges use different programming languages which affect runtime",
+        "A 90% ASR at 200 queries is not comparable to 85% ASR at 20 queries, and different judges disagree on what constitutes a jailbreak — without both, ASR numbers cannot be compared across studies",
+        "The query budget determines the financial cost of the evaluation, which must be disclosed for reproducibility",
+        "The judge identity is required for legal compliance when testing for harmful capabilities"
+      ],
+      "correct": 1,
+      "explanation": "ASR at different query budgets is not comparable — more budget inherently increases ASR for any attack. Different judges (GPT-4-turbo, Llama Guard, StrongREJECT) disagree on what counts as a successful jailbreak. Without specifying both, reported ASR figures cannot be compared or reproduced."
+    },
+    {
+      "stage": "post",
+      "question": "PAP (Persuasive Adversarial Prompts) is distinguished from PAIR by:",
+      "options": [
+        "PAP uses white-box gradient access while PAIR is black-box",
+        "PAP encodes human persuasion techniques (authority, social proof, emotional appeals) as explicit prompt templates",
+        "PAP targets multimodal inputs while PAIR only targets text",
+        "PAP runs without an explicit judge by using keyword matching"
+      ],
+      "correct": 1,
+      "explanation": "Persuasive Adversarial Prompts (Zeng et al. 2024) uses templates derived from human persuasion research — authority appeals, social proof, emotional framing, urgency. It encodes social influence techniques explicitly rather than learning them iteratively like PAIR."
+    },
+    {
+      "stage": "post",
+      "question": "Why do frontier labs now routinely run PAIR and TAP against production models before release?",
+      "options": [
+        "Regulatory requirements mandate running PAIR before deploying any GPAI model",
+        "PAIR and TAP ASR trajectories appear in model cards and safety-case appendices, and their standardized benchmark coverage makes them the de facto minimum for a credible red-team evaluation",
+        "PAIR and TAP are the only attacks that can be run automatically without human oversight",
+        "The attacks are so cheap that running them provides no meaningful safety signal, but labs run them for compliance optics"
+      ],
+      "correct": 1,
+      "explanation": "PAIR and TAP are standard infrastructure: results appear in model cards (Lesson 26) and safety-case appendices (Lesson 18). Not running them implies an incomplete red-team evaluation. The attacks are efficient enough to run as part of standard pre-release testing, and their standardized benchmarks (JailbreakBench, HarmBench) enable cross-model comparison."
+    }
+  ]
+}

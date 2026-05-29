@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why does traditional FinOps (tags on resource assets) break when applied to LLM spend?",
+      "options": [
+        "LLM providers do not support resource tagging in their billing systems",
+        "LLM costs are token-transactions, not resource-uptime; an API call is a transaction, not an asset",
+        "LLM costs are too variable to budget reliably using traditional FinOps models",
+        "Traditional FinOps requires dedicated infrastructure which conflicts with serverless LLM APIs"
+      ],
+      "correct": 1,
+      "explanation": "Traditional FinOps models costs as resource uptime (compute, storage, network hours). LLM costs are transaction costs: each API call consumes tokens. Tags on resources do not map to which request, feature, user, or tenant consumed which tokens."
+    },
+    {
+      "stage": "pre",
+      "question": "What are the three attribution dimensions the lesson prescribes instrumenting on day one?",
+      "options": [
+        "Model version, region, and time of day",
+        "Per-user (user_id), per-task (task_id + route), per-tenant (tenant_id)",
+        "Per-request, per-session, per-user",
+        "Per-GPU, per-model, per-datacenter"
+      ],
+      "correct": 1,
+      "explanation": "The three attribution dimensions: per-user (user_id) for seat pricing and expansion; per-task (task_id + route) for product surface cost and prioritization; per-tenant (tenant_id) for unit economics and renewal discussions."
+    },
+    {
+      "stage": "post",
+      "question": "What are the four token layers that must be tracked separately to avoid hidden spend?",
+      "options": [
+        "Input tokens, output tokens, cache tokens, embedding tokens",
+        "Prompt, tool calls, memory, response",
+        "System, user, assistant, function",
+        "Prefill, decode, verification, sampling"
+      ],
+      "correct": 1,
+      "explanation": "The four token layers: prompt (the user's query and system message), tool calls (tool invocation tokens), memory (context retrieved from long-term memory), response (output tokens). Putting all four in one billing bucket hides which layer is driving cost growth."
+    },
+    {
+      "stage": "post",
+      "question": "What is the correct unit metric for FinOps on LLMs, and what is the wrong metric?",
+      "options": [
+        "Correct: $/M tokens; Wrong: cost per request",
+        "Correct: cost per resolved query or cost per generated artifact; Wrong: $/M tokens",
+        "Correct: GPU-hours consumed; Wrong: API calls",
+        "Correct: $/request; Wrong: $/day"
+      ],
+      "correct": 1,
+      "explanation": "$/M tokens is a provider pricing metric, not a unit economics metric. The business metric is cost per resolved query (support ticket, article generated, agent task completed). This connects infrastructure cost to business value and enables price-to-serve calculations."
+    },
+    {
+      "stage": "post",
+      "question": "The enforcement ladder for multi-tenant products has three tiers. In order from first to last, what are they?",
+      "options": [
+        "Kill switch → spend cap → rate limit",
+        "Rate limit → daily spend cap → kill switch on z-score > 4",
+        "Monitoring → alerting → remediation",
+        "Soft quota → hard quota → account suspension"
+      ],
+      "correct": 1,
+      "explanation": "The enforcement ladder: rate limits first (2-3x expected peak, clear 429 + retry-after header); daily spend cap second (1.5-3x contracted ceiling, triggers rate tightening + alert); kill switch third (spend z-score > 4, auto-pause + page on-call)."
+    },
+    {
+      "stage": "pre",
+      "question": "Which attribution pattern provides the highest accuracy by joining trace IDs to billing records?",
+      "options": [
+        "Tag-and-aggregate: stamp metadata headers and aggregate later",
+        "Telemetry joiner: join traces to billing via trace IDs",
+        "Sampling + extrapolation: sample 5-10% and multiply up",
+        "Model-based allocation: regression to infer cost drivers"
+      ],
+      "correct": 1,
+      "explanation": "The telemetry joiner pattern — joining distributed traces to billing records via trace IDs — provides the highest attribution accuracy. Every token consumed is tied to a specific trace, which is tied to a specific user/task/tenant. The lesson calls this what mature teams do."
+    }
+  ]
+}

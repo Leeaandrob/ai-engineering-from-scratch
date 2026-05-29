@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the Shapley value and which axioms make it the 'fair' credit attribution choice?",
+      "options": ["The average contribution of each agent across all coalition subsets, justified by Pareto efficiency and individual rationality", "The unique credit allocation satisfying efficiency (credits sum to total value), symmetry (equal contributors receive equal credit), linearity, and the null player axiom", "The contribution of each agent when added last to the grand coalition, chosen for computational simplicity", "A weighted average of each agent's individual performance scores across multiple runs, normalized to sum to 1"],
+      "correct": 1,
+      "explanation": "Shapley value: for each of the N! orderings of agents, compute each agent's marginal contribution when it joins the existing coalition. Average across all orderings. The result satisfies four axioms: efficiency (sum of values = total), symmetry (swappable agents get equal credit), linearity (linear value functions give linear Shapley), and null (zero-contribution agents get zero credit)."
+    },
+    {
+      "stage": "pre",
+      "question": "Why do the Bittensor TAO reward model and Gonka differ from Fetch.ai's FET token model?",
+      "options": ["Bittensor and Gonka reward task-specific output quality and verifiable compute respectively; Fetch.ai rewards utility measured by paying users of the ASI-1 Mini LLM", "Bittensor and Gonka use proof-of-work while Fetch.ai uses proof-of-stake for validator selection", "Bittensor and Gonka operate only within their own networks while Fetch.ai allows cross-network token transfers", "Bittensor and Gonka require human validators while Fetch.ai uses fully automated quality scoring"],
+      "correct": 0,
+      "explanation": "Bittensor: miners submit model outputs; validators rank quality relative to the subnet task; stake-weighted scoring distributes TAO. Gonka: transformer forward passes are the work; miners earn by running inference on tasks with known correct outputs (productive proof-of-work). Fetch.ai/ASI: users pay FET for ASI-1 Mini LLM inference; utility is measured by paying users. Three different incentive models, all in production."
+    },
+    {
+      "stage": "post",
+      "question": "What is a 'second-price auction' and why is it useful for aggregating LLM outputs?",
+      "options": ["An auction where the highest bidder wins but pays the price they bid, creating honest competition", "An auction where the highest bidder wins but pays the second-highest bid price, making truthful bidding the dominant strategy under monotone aggregation", "An auction where the second-highest bidder wins as a tie-breaking mechanism to prevent single agents from dominating", "An auction format where all agents bid simultaneously and the auctioneer splits the work proportionally to bid amounts"],
+      "correct": 1,
+      "explanation": "Vickrey/second-price auction: winner pays the second-highest bid, not their own. This makes truthful bidding the dominant strategy — overbidding risks winning and paying more than you value; underbidding risks losing to someone you outvalued. Under monotone aggregation (value depends on which output is chosen, not how many bids), this mechanism is truthful for LLM completion markets."
+    },
+    {
+      "stage": "post",
+      "question": "What is the primary risk of self-reported quality scores for agent credit attribution, and what attack does it enable?",
+      "options": ["Self-reported scores may be too conservative, leading to under-rewarding of high-quality agents", "Sybil attacks — one operator spins up many fake agents that self-report high quality, inflating their own credit allocation without doing proportional work", "Self-reported scores introduce latency because each agent must compute and validate its own score before receiving payment", "Self-reporting creates circular dependencies where an agent's reward affects its future quality scores"],
+      "correct": 1,
+      "explanation": "Without independent verification, self-reported quality is trivially gameable: create N fake agents, have them all report high-quality contributions. Shapley value then attributes most of the credit to your N agents. DIDs slow this by making each identity costly to establish, but do not fully prevent it. Independent verification of contributions before reward distribution is the necessary mitigation."
+    },
+    {
+      "stage": "post",
+      "question": "For most corporate multi-agent systems in 2026, why does the full 5-layer agent economy stack typically not apply?",
+      "options": ["Corporate systems lack the technical expertise to implement DID-based identity and on-chain settlement", "Corporate systems are closed with single-team operators, internal allocation metrics, and no need for tokenized payments or decentralized governance", "The regulatory environment prohibits corporate use of blockchain-based token systems in most jurisdictions", "Corporate systems process too many tasks per second for Shapley-value credit attribution to be computationally feasible"],
+      "correct": 1,
+      "explanation": "The 5-layer agent economy stack (DePIN, DID identity, cognition, settlement, governance) is designed for open networks with heterogeneous operators, verifiable outputs, and legally viable tokenized payments. Corporate systems typically have a single controlling team, internal accounting, and no need for decentralized consensus on credit. Agent economies primarily apply to open multi-operator networks."
+    }
+  ]
+}

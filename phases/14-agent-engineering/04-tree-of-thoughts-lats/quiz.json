@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What was GPT-4's accuracy on Game of 24 with chain-of-thought versus Tree of Thoughts?",
+      "options": [
+        "CoT: 50%, ToT: 80%",
+        "CoT: 4%, ToT: 74%",
+        "CoT: 20%, ToT: 60%",
+        "CoT: 10%, ToT: 92%"
+      ],
+      "correct": 1,
+      "explanation": "GPT-4 with chain-of-thought hit only 4% on Game of 24, while Tree of Thoughts (Yao et al., NeurIPS 2023) achieved 74% by enabling search with self-evaluation at each node."
+    },
+    {
+      "stage": "pre",
+      "question": "What does LATS unify under Monte Carlo Tree Search?",
+      "options": [
+        "RLHF, SFT, and DPO",
+        "Tree of Thoughts, ReAct, and Reflexion",
+        "ReWOO, Chain-of-Thought, and RAG",
+        "MemGPT, Voyager, and AutoGen"
+      ],
+      "correct": 1,
+      "explanation": "LATS (Zhou et al., ICML 2024) unifies Tree of Thoughts (tree search with self-eval), ReAct (environment-grounded tool use), and Reflexion (failure-driven verbal reflection) under one MCTS framework."
+    },
+    {
+      "stage": "post",
+      "question": "What are the four phases of MCTS per iteration in LATS?",
+      "options": [
+        "Plan, Execute, Verify, Reflect",
+        "Select, Expand, Simulate, Backpropagate",
+        "Explore, Exploit, Evaluate, Update",
+        "Propose, Score, Prune, Accept"
+      ],
+      "correct": 1,
+      "explanation": "Each MCTS iteration in LATS runs: Select (walk the tree using UCT), Expand (generate K children via policy), Simulate (rollout and score with value function), Backpropagate (update visit counts and Q values up the path)."
+    },
+    {
+      "stage": "post",
+      "question": "What token cost does ToT impose on Game of 24 compared to chain-of-thought?",
+      "options": [
+        "5-10x more tokens",
+        "100-1000x more tokens",
+        "2-3x more tokens",
+        "Same token count"
+      ],
+      "correct": 1,
+      "explanation": "Tree of Thoughts on Game of 24 uses 100-1000x the tokens of chain-of-thought. Search is expensive; it should be reserved for tasks where a single trajectory is demonstrably insufficient."
+    },
+    {
+      "stage": "post",
+      "question": "What pass@1 accuracy did LATS achieve on HumanEval with GPT-4?",
+      "options": [
+        "74%",
+        "82.5%",
+        "92.7%",
+        "99%"
+      ],
+      "correct": 2,
+      "explanation": "LATS achieved 92.7% pass@1 on HumanEval with GPT-4 at paper time, which was state-of-the-art, by using MCTS with tests as the value function."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the UCT formula used in LATS for node selection?",
+      "options": [
+        "Q(s,a) * N(s)",
+        "Q(s,a) + c * sqrt(ln N(s) / N(s,a))",
+        "max(Q(s,a)) / N(s)",
+        "Q(s,a) - c * N(s,a)"
+      ],
+      "correct": 1,
+      "explanation": "UCT (upper confidence bound for trees) balances exploitation (Q(s,a)) with exploration (c * sqrt(ln N(s) / N(s,a))). The constant c controls the exploration-exploitation tradeoff."
+    }
+  ]
+}

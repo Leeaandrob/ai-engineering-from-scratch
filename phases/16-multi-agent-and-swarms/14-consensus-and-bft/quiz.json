@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why does classical PBFT not fully address consensus in LLM multi-agent systems?",
+      "options": ["PBFT requires all nodes to be identical, which is impossible with different LLM models", "PBFT assumes independent faults and truly honest nodes, but LLM agents share training data (correlated failures), hallucinate even when honest, and can be influenced by each other's outputs", "PBFT was designed for blockchain consensus and its cryptographic overhead is too expensive for LLM inference speeds", "PBFT requires a fixed number of rounds but LLM debate benefits from variable-length deliberation"],
+      "correct": 1,
+      "explanation": "Classical PBFT tolerates f < n/3 arbitrary faults but assumes faults are independent and honest nodes are actually correct. LLM agents violate both: two agents with the same base model share hallucinations (correlated faults), and an honest LLM still hallucinates. BFT provides the mechanism; it does not make the consensus output correct."
+    },
+    {
+      "stage": "pre",
+      "question": "What is 'correlated-error monoculture' and why does it break majority voting?",
+      "options": ["All agents producing identical outputs because they share the same system prompt, making voting meaningless", "Three agents that share a base model hallucinate the same wrong answer; the majority vote confidently endorses the shared hallucination", "A single agent with a high temperature consistently producing outputs that look different but encode the same error", "Multiple agents accessing the same external knowledge base and inheriting any errors in that database"],
+      "correct": 1,
+      "explanation": "Monoculture: if three of five agents use the same base model, they share its failure modes. They can all hallucinate the same value — a false majority. Classical BFT counts this as '3 honest nodes agreeing' and accepts the answer. Confidence-weighted BFT and geometric-median aggregation are designed to detect when the majority cluster is suspiciously correlated."
+    },
+    {
+      "stage": "post",
+      "question": "How does CP-WBFT (Confidence-Probed Weighted BFT) address sycophantic conformity?",
+      "options": ["It requires each agent to vote before seeing any other agent's answer, eliminating the opportunity for conformity", "It weights votes by confidence; sycophantic agents tend to have low confidence on their conforming position, so their manipulated votes carry less weight", "It identifies sycophantic agents through a behavioral test and excludes them from future voting rounds", "It runs multiple independent debate rounds and averages the results to wash out any single sycophantic influence"],
+      "correct": 1,
+      "explanation": "CP-WBFT's insight: a sycophantic agent adopts whoever spoke last's answer but often has low confidence in that adopted position. By weighting votes by confidence probe scores, conforming agents' opinions count less. Agents with genuine independent analysis tend to report higher confidence. CP-WBFT reports +85.71% BFT improvement on complete graphs."
+    },
+    {
+      "stage": "post",
+      "question": "Why is 'semantic clustering' necessary before vote counting in LLM consensus?",
+      "options": ["To group agents by model family so votes from the same model family count as one vote", "Because two agents may express the same correct answer in different wordings; naive string equality treats them as different answers and splits the majority", "To identify which agents are behaving byzantinely by detecting outlier answer patterns", "To compress the vote set before transmitting it across network boundaries in distributed multi-agent systems"],
+      "correct": 1,
+      "explanation": "String equality fails: '4.2% accuracy gain' and 'accuracy improved by 4.2%' are the same answer. Without semantic clustering, these appear as different candidates and split what should be a clear majority. In production: use an embedding model or explicit canonicalization to group equivalent answers before tallying."
+    },
+    {
+      "stage": "post",
+      "question": "What does the 'Can AI Agents Agree?' paper (arXiv:2603.01213) reveal about the fragility of LLM consensus?",
+      "options": ["LLM agents reach perfect consensus on scalar questions within 3 rounds in all tested scenarios", "A single agent adopting a deceptive persona can pull a Mixture-of-Agents consensus 40+ percentage points off the honest baseline", "Consensus quality is highly correlated with total parameter count — larger models agree more reliably", "Heterogeneous model ensembles never reach consensus because their disagreement rate is permanently above 30%"],
+      "correct": 1,
+      "explanation": "The paper's key finding: one deceptive-persona agent can shift the full ensemble's answer by 40+ percentage points. LLM agents have no built-in resistance to adversarial peers. Even without adversaries, scalar disagreement rates exceed 30% on many benchmarks. BFT is necessary but not sufficient — combine with verification, diversity, and evaluator agents."
+    }
+  ]
+}

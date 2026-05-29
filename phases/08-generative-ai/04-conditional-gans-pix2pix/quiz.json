@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In Pix2Pix, how does the discriminator differ from an unconditional GAN discriminator?",
+      "options": [
+        "The Pix2Pix discriminator outputs a distribution over images instead of a scalar",
+        "The Pix2Pix discriminator takes the (condition image, output image) pair as input and judges whether the pair is consistent",
+        "The Pix2Pix discriminator is replaced by a perceptual feature extractor",
+        "The Pix2Pix discriminator only processes the generated image without seeing the input condition"
+      ],
+      "correct": 1,
+      "explanation": "The conditional discriminator D(x, y) receives both the condition image x and the output y. This forces it to check whether y is consistent with x, not just whether y looks realistic in isolation."
+    },
+    {
+      "stage": "pre",
+      "question": "What is PatchGAN and why does Pix2Pix use it?",
+      "options": [
+        "A GAN that trains on image patches to reduce GPU memory",
+        "A discriminator that outputs an NxN grid of scores, one per local image patch, enforcing local realism",
+        "A generator architecture that produces images patch by patch for high resolution",
+        "A data augmentation technique that crops random patches during training"
+      ],
+      "correct": 1,
+      "explanation": "PatchGAN's discriminator outputs a spatial grid where each cell scores a local receptive field of about 70x70 pixels. This Markov random field assumption makes training faster, uses fewer parameters, and produces sharper textures than a single global real/fake score."
+    },
+    {
+      "stage": "post",
+      "question": "Why does Pix2Pix include an L1 loss term in addition to the adversarial loss for the generator?",
+      "options": [
+        "L1 loss stabilizes training and pushes the output toward the known paired target image",
+        "L1 loss prevents the discriminator from overfitting",
+        "L1 loss replaces the need for a discriminator on simple tasks",
+        "L1 loss forces the generator to produce diverse outputs across the batch"
+      ],
+      "correct": 0,
+      "explanation": "The L1 term (with lambda=100 in the original paper) anchors the generator output toward the ground-truth target, preventing arbitrary real-looking outputs. L1 is preferred over L2 because L1's median-seeking behavior gives sharper edges than L2's mean-seeking behavior."
+    },
+    {
+      "stage": "post",
+      "question": "What problem does CycleGAN solve that Pix2Pix cannot?",
+      "options": [
+        "CycleGAN can train on larger datasets without running out of memory",
+        "CycleGAN performs unpaired image-to-image translation without requiring matched (source, target) pairs",
+        "CycleGAN produces sharper outputs than Pix2Pix on paired tasks",
+        "CycleGAN adds text conditioning to the image translation pipeline"
+      ],
+      "correct": 1,
+      "explanation": "Pix2Pix requires aligned (x, y) pairs. CycleGAN drops this requirement by training two generators G: X->Y and F: Y->X with a cycle-consistency loss (F(G(x)) ≈ x), enabling translation between unpaired domains like horses and zebras."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the U-Net architecture improve Pix2Pix performance over a plain encoder-decoder?",
+      "options": [
+        "U-Net uses fewer parameters, making it faster to train",
+        "U-Net's skip connections pass high-frequency spatial details from encoder to decoder, preserving edges and structure",
+        "U-Net supports variable input resolution without retraining",
+        "U-Net's bottleneck forces the model to learn a compact latent representation"
+      ],
+      "correct": 1,
+      "explanation": "Skip connections bypass the bottleneck and deliver low-level features (edges, silhouettes, textures) directly from encoder layers to the corresponding decoder layers. Without them, high-frequency details that input and output share are lost in the bottleneck."
+    },
+    {
+      "stage": "pre",
+      "question": "According to the lesson, when does Pix2Pix remain the right tool in 2026 over ControlNet or diffusion-based approaches?",
+      "options": [
+        "When the task is open-domain and the prompts are complex",
+        "When thousands of paired examples are available, the task is narrow and repeatable, and fast inference is required",
+        "When the training data is unpaired and domain diversity is high",
+        "When text conditioning is the primary control signal"
+      ],
+      "correct": 1,
+      "explanation": "Pix2Pix's one-shot inference (~30ms at 512px on an L4) wins on throughput for narrow paired tasks. Diffusion models offer better quality and generalization for open-domain use at the cost of 20-100x higher latency."
+    }
+  ]
+}

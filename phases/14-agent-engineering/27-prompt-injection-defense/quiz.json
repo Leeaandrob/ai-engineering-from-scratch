@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is 'indirect prompt injection' as defined by Greshake et al. (AISec 2023)?",
+      "options": [
+        "A user directly injecting malicious instructions into a chat prompt",
+        "Attacker-controlled content embedded in data the agent retrieves (web pages, PDFs, emails) that overrides the developer prompt when ingested",
+        "An attack that corrupts the model's weights during inference",
+        "Injecting malicious code into the agent's tool registry"
+      ],
+      "correct": 1,
+      "explanation": "Indirect prompt injection: the attacker controls content the agent will retrieve (web page, PDF, email, memory note), and when the agent ingests that content, embedded instructions override the developer prompt — without the user being aware."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the PVE defense pattern?",
+      "options": [
+        "Protect, Validate, Execute",
+        "Prompt-Validator-Executor: a cheap fast validator model runs on every candidate tool invocation before the expensive main model commits",
+        "Prevent, Verify, Enforce",
+        "Pre-check, Validate, Execute"
+      ],
+      "correct": 1,
+      "explanation": "PVE stands for Prompt-Validator-Executor: a cheap, fast validator model checks every candidate tool invocation (for injection patterns, permission violations, sensitive surfaces) before the expensive main model commits to the action."
+    },
+    {
+      "stage": "post",
+      "question": "What are the five demonstrated exploit classes from Greshake et al.?",
+      "options": [
+        "SQL injection, XSS, CSRF, buffer overflow, privilege escalation",
+        "Data theft, worming, persistent memory poisoning, information ecosystem contamination, arbitrary tool use",
+        "Model extraction, membership inference, data poisoning, adversarial examples, backdoor attacks",
+        "Phishing, social engineering, credential theft, session hijacking, man-in-the-middle"
+      ],
+      "correct": 1,
+      "explanation": "Greshake et al. demonstrated five exploit classes: data theft (exfiltrate conversation history to attacker URL), worming (exploit replicates in next output), persistent memory poisoning (poisoned note re-infects next session), information ecosystem contamination (spreads to other agents via shared memory), and arbitrary tool use (any registered tool becomes attacker-reachable)."
+    },
+    {
+      "stage": "post",
+      "question": "What is 'memory poisoning' in the context of agents?",
+      "options": [
+        "The model's weights being corrupted during training",
+        "Attacker instructions stored as a memory note that re-poisons the agent when the note is retrieved in future sessions",
+        "The memory store filling up with irrelevant information",
+        "A bug that causes the agent to overwrite important memories"
+      ],
+      "correct": 1,
+      "explanation": "Memory poisoning: attacker-reachable content (from a retrieved web page or email) gets written into the agent's archival memory. In future sessions, when the agent retrieves that note, it re-injects the attacker's instructions — a persistent, cross-session attack."
+    },
+    {
+      "stage": "post",
+      "question": "Where does the 2026 defense doctrine agree prompt injection defenses fail?",
+      "options": [
+        "Defenses always succeed with sufficiently large models",
+        "When validation runs only on final output, relying solely on instruction-following, or lacking content-source metadata to distinguish user vs retrieved content",
+        "Defenses only fail on open-source models",
+        "Defenses fail only for computer-use agents, not text agents"
+      ],
+      "correct": 1,
+      "explanation": "Defenses fail when: all guardrails are at the end (model already touched the world), relying on instruction-following alone (system prompts are not enforcement), no content-source metadata (cannot distinguish user instruction from retrieved content), and when retrieved memory is over-trusted."
+    },
+    {
+      "stage": "pre",
+      "question": "What is 'worming' in the context of prompt injection?",
+      "options": [
+        "A slow, gradual attack that corrupts agent behavior over many sessions",
+        "Injected content that instructs the agent to embed the exploit in its next output, enabling self-replication",
+        "An attack that exhausts agent resources through infinite loops",
+        "A technique for extracting training data from the model"
+      ],
+      "correct": 1,
+      "explanation": "Worming: injected content tells the agent to include the exploit payload in its next output (email, document, response). Each infected output can then infect the next agent that reads it, creating a self-replicating attack chain."
+    }
+  ]
+}

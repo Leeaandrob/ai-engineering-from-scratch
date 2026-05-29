@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why are PSO and ACO particularly suited for optimizing LLM-related parameters compared to gradient-based methods?",
+      "options": ["PSO and ACO are faster to execute than backpropagation for neural networks", "LLM outputs and routing decisions are not trivially differentiable; PSO and ACO only require an evaluator function — if you can score a candidate, you can optimize it", "PSO and ACO are more interpretable, making them easier to debug when optimization fails", "Gradient-based methods require labeled training data which is unavailable for most agent routing decisions"],
+      "correct": 1,
+      "explanation": "Gradient-based optimization needs a differentiable signal. Prompts are discrete strings; routing decisions are categorical. PSO and ACO are gradient-free — they only need a score function (can you evaluate a candidate output or a routing decision?). That low bar makes them practical for LLM optimization where backprop is blocked by discreteness."
+    },
+    {
+      "stage": "pre",
+      "question": "What does AMRO-S's 'quality-gated update' mean for pheromone trails?",
+      "options": ["Pheromones are only deposited on routes where the agent's confidence score exceeds a threshold", "Pheromone deposits happen only after a quality check confirms the routed output meets a minimum standard, preventing fast-but-wrong agents from accruing trail strength", "The quality gate limits how much pheromone a single run can deposit, preventing early routes from dominating indefinitely", "Quality gating runs pheromone updates only on weekdays to batch-process routing improvements"],
+      "correct": 1,
+      "explanation": "Without quality gating: a fast but wrong agent accumulates pheromone because it completes tasks quickly. The routing system locks onto it. Future tasks are routed to the bad agent and also fail quickly, reinforcing the bad trail. Quality gating: pheromone deposit only happens when an independent quality check passes. AMRO-S reports 4.7x speedup with this mechanism."
+    },
+    {
+      "stage": "post",
+      "question": "What is 'Model Swarms' (arXiv:2410.11163) and what did it achieve?",
+      "options": ["A framework for running hundreds of LLM agents in parallel on swarm optimization problems", "PSO applied to the model-weight space — treating each expert LLM as a particle on a shared parameter manifold; reported 13.3% average gain over 12 baselines on 9 datasets with just 200 instances", "A benchmark for comparing different swarm intelligence algorithms on language model tasks", "An architecture where PSO-optimized prompts are distilled back into model weights via fine-tuning"],
+      "correct": 1,
+      "explanation": "Model Swarms: each 'particle' is an expert LLM's adapter weights. PSO moves parameters on the low-dimensional adapter weight manifold toward the swarm's best solution. The LLM expert models are already nearby in parameter space (same base model, different LoRA deltas). The key result: 13.3% average gain over 12 baselines, with only 200 instances per iteration — gradient-free and sample-efficient."
+    },
+    {
+      "stage": "post",
+      "question": "What is 'catastrophic drift' in swarm optimization and how should it be handled?",
+      "options": ["When particles converge to a local optimum and cannot escape, requiring a restart with higher inertia", "When the fitness landscape shifts due to a new data distribution, making old p_best and pheromone trails stale and no longer pointing to good solutions", "When the swarm population grows too large and particles start interfering with each other's convergence", "When the LLM used to generate candidate solutions changes its behavior due to fine-tuning, invalidating the fitness function"],
+      "correct": 1,
+      "explanation": "Catastrophic drift: after convergence, the evaluation distribution changes (new user inputs, updated data). The swarm's accumulated best positions and the ACO's pheromone trails now point to solutions that were good on the old distribution. Mitigation: monitor best-fitness stability; on detected distribution shift, reset p_best and double ACO decay rate temporarily to allow rapid re-exploration."
+    },
+    {
+      "stage": "post",
+      "question": "When should you NOT use PSO or ACO for LLM optimization?",
+      "options": ["When the search space is very small and simple gradient descent would converge faster", "When fitness requires human review per iteration, making per-evaluation cost prohibitive, or when real-time decisions require strict sub-second latency", "When the optimization target is a routing decision rather than a prompt parameter", "When the LLM being optimized is larger than 70 billion parameters"],
+      "correct": 1,
+      "explanation": "PSO/ACO fail when: (1) fitness needs human review — N particles × T iterations at human review cost is prohibitive; (2) real-time decisions need strict latency — both algorithms converge slowly compared to single-pass heuristics; (3) the search space is purely discrete and combinatorial in ways PSO cannot represent. In all these cases, use alternatives (human-in-the-loop tuning, simpler routing heuristics)."
+    }
+  ]
+}

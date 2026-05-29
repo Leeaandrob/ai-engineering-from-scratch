@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is Self-Refine's average improvement across 7 tasks in the original paper?",
+      "options": [
+        "+5 absolute",
+        "+10 absolute",
+        "+20 absolute",
+        "+35 absolute"
+      ],
+      "correct": 2,
+      "explanation": "Self-Refine (Madaan et al., NeurIPS 2023) achieves +20 absolute improvement averaged across 7 tasks (math, code, acronym, dialog) including GPT-4, with no training and no external tools."
+    },
+    {
+      "stage": "pre",
+      "question": "What is CRITIC's key improvement over Self-Refine?",
+      "options": [
+        "CRITIC uses a larger model for critique",
+        "CRITIC routes the verification step through external tools like search engines, code interpreters, and test runners",
+        "CRITIC requires multiple critique rounds while Self-Refine uses one",
+        "CRITIC uses a separate model family for generation and critique"
+      ],
+      "correct": 1,
+      "explanation": "CRITIC (Gou et al., arXiv:2305.11738) replaces Self-Refine's LLM self-feedback with tool-grounded verification — using search engines for facts, code interpreters for code, calculators for math — producing more reliable critiques."
+    },
+    {
+      "stage": "post",
+      "question": "Why does Self-Refine require the refine prompt to include full history?",
+      "options": [
+        "To save tokens by not recomputing the context",
+        "Because dropping prior outputs and critiques causes quality to drop sharply",
+        "To satisfy API requirements for multi-turn conversations",
+        "To enable the model to learn from positive examples"
+      ],
+      "correct": 1,
+      "explanation": "The refine step in Self-Refine takes all prior outputs and critiques as context. The paper ablates this: dropping history causes quality to drop sharply because the model repeats previous mistakes without knowing what it already tried."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'rubber-stamp loop' failure mode in self-refine systems?",
+      "options": [
+        "The model generates the same output regardless of the critique",
+        "Same-prompt critique from the same model converges on 'looks good to me' without real improvement",
+        "The model applies feedback from the wrong task to the current task",
+        "The critique loop runs indefinitely without reaching convergence"
+      ],
+      "correct": 1,
+      "explanation": "When the same model critiques its own output with the same prompt style, it tends to approve its own work ('looks good to me'). Fix with structurally different prompts or a different model for critique."
+    },
+    {
+      "stage": "post",
+      "question": "How does Anthropic's 'evaluator-optimizer' workflow pattern map to Self-Refine and CRITIC?",
+      "options": [
+        "It is a completely different pattern with no relationship to Self-Refine or CRITIC",
+        "It is Self-Refine/CRITIC reframed: Evaluator scores + produces critique, Optimizer revises, loop until evaluator passes",
+        "It is only equivalent to CRITIC, not Self-Refine",
+        "It adds a third 'generator' component not present in Self-Refine"
+      ],
+      "correct": 1,
+      "explanation": "Anthropic's evaluator-optimizer is Self-Refine/CRITIC in Anthropic's framing: two roles (evaluator who scores and critiques, optimizer who revises) loop until the evaluator passes. The key engineering detail is using substantially different prompts for each role."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the recommended stop condition for a production Self-Refine/CRITIC loop?",
+      "options": [
+        "Stop after exactly one iteration",
+        "Stop when the model says it is done",
+        "Verifier passes OR model says fine AND iterations >= 2 OR iterations >= max_iterations",
+        "Stop only when external tests pass"
+      ],
+      "correct": 2,
+      "explanation": "The 2026 default combines multiple conditions: stop if the verifier passes OR the model says fine AND at least 2 iterations have run OR max iterations reached. Never use a single-condition stop."
+    }
+  ]
+}

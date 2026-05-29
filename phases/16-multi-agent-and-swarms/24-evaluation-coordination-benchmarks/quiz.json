@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the significance of SWE-bench Pro compared to SWE-bench Verified for evaluating multi-agent coding systems?",
+      "options": ["Pro is harder because it tests on enterprise codebases while Verified only tests on open-source repos", "Pro is designed to be contamination-resistant with later training cutoffs; frontier models score ~23% on Pro vs 70%+ on Verified, revealing that Verified scores are inflated by training data leakage", "Pro requires agents to pass all test cases while Verified allows partial credit", "Pro includes multi-agent coordination tasks while Verified only tests single-agent code generation"],
+      "correct": 1,
+      "explanation": "SWE-bench Verified became partially contaminated in training corpora by mid-2025; frontier scores inflated. Pro was released with problems from repositories not in training data. The ~47-point gap between Pro and Verified scores is the contamination signal. Pro is now the current gating test for meaningful capability claims in multi-agent coding."
+    },
+    {
+      "stage": "pre",
+      "question": "What uncomfortable finding did the COMMA benchmark reveal about multi-agent coordination?",
+      "options": ["Multi-agent systems are 3x more expensive than single-agent systems without any quality improvement", "Frontier models including GPT-4o struggle to beat a random baseline on agent-agent collaboration in multimodal asymmetric-information coordination tasks", "Multi-agent debate consistently produces worse results than single-agent chain-of-thought on factual questions", "Multi-agent systems fail completely when agents have different knowledge bases and cannot share memory"],
+      "correct": 1,
+      "explanation": "COMMA's null result: when agents have different observation modalities and must coordinate without full information sharing, current frontier models including GPT-4o cannot reliably beat random. LLMs handle single-modality cooperation reasonably; multi-modality coordination with asymmetric information collapses. This is a warning: measure before claiming multi-modal multi-agent coordination works."
+    },
+    {
+      "stage": "post",
+      "question": "What does MedAgentBoard's key finding imply about multi-agent system design?",
+      "options": ["Medical domains require more agents than other domains to achieve sufficient accuracy", "Multi-agent systems do not universally dominate single-LLM baselines; the advantage is narrow and depends on whether subtasks are clearly separable — coordination overhead may exceed specialization gain", "Multi-agent systems are always better for diagnosis but worse for patient communication", "The highest-performing multi-agent systems in medicine use specialized medical LLMs rather than general-purpose models"],
+      "correct": 1,
+      "explanation": "MedAgentBoard: multi-agent does NOT dominate on most of the four medical categories. Multi-agent helps when subtasks decompose cleanly (diagnosis + treatment as separable steps). It hurts when coordination overhead exceeds specialization gain (report generation). The lesson generalizes: do not assume multi-agent is better; measure against single-LLM baseline on your actual task distribution."
+    },
+    {
+      "stage": "post",
+      "question": "What six-point checklist does the lesson recommend for evaluating any multi-agent benchmark claim?",
+      "options": ["Model name, parameter count, benchmark year, test-set size, hardware used, and inference cost", "Which benchmark and split, contamination check, baseline comparison, statistical significance, task diversity, and cost disclosure", "Accuracy, precision, recall, F1 score, AUC, and calibration error", "Training data, fine-tuning method, inference temperature, number of agents, rounds of debate, and evaluation metric"],
+      "correct": 1,
+      "explanation": "The scrutiny checklist: (1) which benchmark and which split (Verified vs Pro matters enormously); (2) contamination check (was the benchmark released after training cutoff?); (3) baseline comparison (vs single-LLM and vs random, not just vs a worse version of itself); (4) statistical significance (N trials, p-value); (5) task diversity; (6) cost disclosure (tokens, wall-clock — 90% accuracy at 20x cost is a business decision)."
+    },
+    {
+      "stage": "post",
+      "question": "What does MultiAgentBench (MARBLE) find about 'cognitive planning' in multi-agent systems?",
+      "options": ["Cognitive planning reduces coordination overhead by 50% by front-loading all routing decisions", "Adding cognitive planning adds approximately 3% to milestone achievement across all tested topologies", "Cognitive planning only helps on research tasks; it degrades performance on coding and factual tasks", "Cognitive planning is necessary for graph topology but adds no value for star or chain topologies"],
+      "correct": 1,
+      "explanation": "MARBLE's measured result: adding cognitive planning (explicit goal-decomposition before task execution) adds approximately 3% to milestone achievement across all four topologies (star, chain, tree, graph). It is a consistent but modest improvement. The topology choice has a larger effect on performance than the presence or absence of planning."
+    }
+  ]
+}

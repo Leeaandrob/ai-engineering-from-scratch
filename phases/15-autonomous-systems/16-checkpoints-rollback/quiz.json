@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is a 'lease' in the context of durable workflow execution?",
+      "options": [
+        "A billing agreement between the operator and the cloud provider",
+        "A short-lived claim that a specific worker is executing a specific run; when the worker crashes, the lease expires and another worker resumes at the latest checkpoint",
+        "A permission token that authorizes an agent to write to the checkpoint backend",
+        "A time-limited approval for a proposed action that expires if not acted on"
+      ],
+      "correct": 1,
+      "explanation": "A lease is a short-lived claim that this worker is executing this run. When a worker crashes, its lease expires. Another worker picks up at the latest checkpoint and resumes. The lease mechanism lets production systems survive rolling deploys without losing in-flight work."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is an idempotency key alone not sufficient to prevent incorrect behavior on retry after crash?",
+      "options": [
+        "Because idempotency keys expire after a fixed time period",
+        "Because the state may have changed between the approval and the retry, making a precondition check necessary to confirm the action is still valid",
+        "Because idempotency keys only prevent duplicate writes, not duplicate reads",
+        "Because cloud providers do not support idempotency keys for LLM API calls"
+      ],
+      "correct": 1,
+      "explanation": "Consider a workflow approved to transfer $100 when balance > $1000. If balance drops to $500 between crash and resume, the idempotency key passes but the precondition fails. Without a precondition check, the transfer executes against an invalid state. Both idempotency key and precondition are required."
+    },
+    {
+      "stage": "pre",
+      "question": "What are the three types of rollback plans classified in the lesson?",
+      "options": [
+        "Automatic, manual, and escalated",
+        "In-band rollback (reverse the side effect directly), compensating transaction (SAGA-style new action that neutralizes), and out-of-band rollback (alert human, pause, leave for investigation)",
+        "Hot rollback, warm rollback, and cold rollback",
+        "Database rollback, filesystem rollback, and API rollback"
+      ],
+      "correct": 1,
+      "explanation": "In-band: reverse the side effect directly (DELETE after INSERT, send-correction-email after send). Compensating transaction: a new action that neutralizes the original (the SAGA pattern). Out-of-band: alert a human, pause the workflow, leave the bad state for investigation when neither of the above is possible."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'sharp failure mode' (double-execute) described in the lesson?",
+      "options": [
+        "An action that executes on two different workers simultaneously",
+        "A workflow that crashes before persisting 'committed' status after successful execution, then on resume sees 'approved but not committed' and re-executes the side effect twice",
+        "Two identical proposals being approved by different reviewers at the same time",
+        "A crash during the propose step that creates a duplicate pending proposal"
+      ],
+      "correct": 1,
+      "explanation": "The sharp failure mode: action executes and returns 200, workflow crashes before persisting 'committed' status, workflow resumes and sees 'approved but not committed,' re-executes the side effect (now twice). Mitigation: persist 'in-flight' intent before executing, then mark 'committed' only after post-action verification succeeds."
+    },
+    {
+      "stage": "post",
+      "question": "What does EU AI Act Article 14 require operationally for checkpoint systems?",
+      "options": [
+        "Checkpoints must be stored in EU-resident data centers",
+        "Checkpoints must be queryable by auditors, rollbacks must be rehearsed, audit trail must survive a deploy, and failed verifications must be alerted on rather than silently logged",
+        "Checkpoints must be retained for at least 7 years",
+        "Each checkpoint must be approved by a human before the workflow can proceed"
+      ],
+      "correct": 1,
+      "explanation": "Article 14 requires effective human oversight. In operational terms: checkpoints are queryable by an auditor, rollbacks are rehearsed end-to-end at least once, the audit trail survives a deploy (not ephemeral), and failed verifications are alerted on. A workflow that crashes mid-commit and completes without a verify+rollback pathway does not satisfy Article 14."
+    },
+    {
+      "stage": "post",
+      "question": "Why is 'persist every graph-state transition' better than 'persist only at specific commit points'?",
+      "options": [
+        "It is required by Temporal's API design and cannot be avoided",
+        "It allows replay to land at any point precisely, and lease recovery is precise—the cost (a few extra writes) is small relative to the reliability gain",
+        "It enables automatic debugging by providing a complete history of every decision",
+        "It satisfies GDPR requirements for data retention and audit trails"
+      ],
+      "correct": 1,
+      "explanation": "Persisting every transition allows a recovering worker to resume at exactly the right state, not at the nearest named commit point. The extra writes are small. The reliability gain—precise replay and precise lease recovery—is large. This is the LangGraph/Microsoft Agent Framework default."
+    }
+  ]
+}

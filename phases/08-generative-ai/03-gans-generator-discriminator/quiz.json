@@ -1,0 +1,66 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the GAN training objective written as a minimax game?",
+      "options": [
+        "min_G max_D  E_real[log D(x)] + E_fake[log(1 - D(G(z)))]",
+        "min_G min_D  ||x - G(z)||^2",
+        "max_G max_D  log D(x) + log D(G(z))",
+        "min_G max_D  KL[p_data || p_G]"
+      ],
+      "correct": 0,
+      "explanation": "The minimax objective has the discriminator D maximizing its ability to tell real from fake, and the generator G minimizing the discriminator's advantage. At equilibrium, D outputs 0.5 everywhere and G matches the data distribution."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is the non-saturating generator loss -log D(G(z)) preferred over the original log(1 - D(G(z)))?",
+      "options": [
+        "It is easier to compute and requires no logarithms",
+        "The original loss saturates when D is confident, giving G near-zero gradient; the non-saturating form blows up in that regime, providing a strong signal",
+        "The original loss is unbounded from above, causing training instability",
+        "The non-saturating loss allows G to be trained more steps than D per iteration"
+      ],
+      "correct": 1,
+      "explanation": "When D correctly classifies fakes with high confidence, log(1-D(G(z))) approaches 0 and gradients vanish. -log D(G(z)) has the opposite behavior: it grows large when D is confident, giving G a strong learning signal even early in training."
+    },
+    {
+      "stage": "post",
+      "question": "What is mode collapse in GAN training?",
+      "options": [
+        "The discriminator's loss collapses to zero and training stops",
+        "The generator produces a narrow range of nearly identical outputs despite diverse training data",
+        "Both networks converge to the Nash equilibrium simultaneously",
+        "The learning rate decays too fast, freezing both networks"
+      ],
+      "correct": 1,
+      "explanation": "Mode collapse occurs when the generator finds a small set of outputs that fool the discriminator and exploits them repeatedly, failing to cover the full data distribution. One mode of the real data is never generated."
+    },
+    {
+      "stage": "post",
+      "question": "Which GAN innovation replaced binary cross-entropy with the Wasserstein distance and a gradient penalty to fix vanishing gradients?",
+      "options": ["Progressive GAN", "DCGAN", "WGAN-GP", "StyleGAN"],
+      "correct": 2,
+      "explanation": "WGAN-GP (Wasserstein GAN with gradient penalty) replaced the BCE discriminator loss with Earth-Mover distance and used a gradient penalty instead of weight clipping to enforce the Lipschitz constraint on the discriminator, providing smoother gradient flow to the generator."
+    },
+    {
+      "stage": "post",
+      "question": "According to the lesson, what is the primary remaining advantage of GAN inference over diffusion models in 2026?",
+      "options": [
+        "GANs produce higher visual quality than diffusion on open-domain prompts",
+        "GANs support text conditioning more naturally than diffusion",
+        "GANs generate a sample in one forward pass with no iterative steps, giving the lowest possible inference latency",
+        "GANs require fewer training samples than diffusion models"
+      ],
+      "correct": 2,
+      "explanation": "A GAN generates samples with a single G(z) forward pass. No KV-cache, no schedule, no scheduler. StyleGAN3 generates a 1024x1024 face in under 10ms on a 4090, roughly 300x faster than a 50-step SDXL pipeline at the same resolution."
+    },
+    {
+      "stage": "pre",
+      "question": "Which technique introduced in 2018 constrains the discriminator's weight norms to stabilize GAN training and is still used in 2026 discriminators?",
+      "options": ["Batch normalization", "Dropout", "Spectral normalization", "Layer normalization"],
+      "correct": 2,
+      "explanation": "Spectral normalization (Miyato et al., 2018) constrains the discriminator's Lipschitz constant by dividing each weight matrix by its largest singular value, stabilizing training without the hyperparameter sensitivity of weight clipping."
+    }
+  ]
+}

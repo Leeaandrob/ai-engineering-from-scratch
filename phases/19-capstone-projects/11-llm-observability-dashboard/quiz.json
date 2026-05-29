@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the OpenTelemetry GenAI semantic convention (semconv), and why does it matter for this observability dashboard?",
+      "options": [
+        "A Langfuse-proprietary span format for LLM traces",
+        "The 2025 OTel standard for LLM span attributes (gen_ai.system, gen_ai.request.model, token counts, etc.) that allows spans from OpenAI, Anthropic, LangChain, and others to land in the same schema",
+        "A Prometheus metric naming convention for GPU utilization during inference",
+        "A JSON schema for storing prompt and completion text in S3"
+      ],
+      "correct": 1,
+      "explanation": "The GenAI semconv defines standard span attribute names (gen_ai.system, gen_ai.request.model, input_tokens, etc.) so any SDK using OpenLLMetry produces compatible spans. This means one ClickHouse schema works for all SDK families."
+    },
+    {
+      "stage": "pre",
+      "question": "Why does the collector use tail-sampling rather than head-sampling for this pipeline?",
+      "options": [
+        "Head-sampling is not supported by the OpenTelemetry Collector",
+        "Tail-sampling keeps 100% of errored traces because it makes the keep/drop decision after the trace completes, when error status is known",
+        "Tail-sampling is cheaper computationally because it processes only a subset of incoming spans",
+        "Head-sampling requires the application SDK to annotate each span at creation time"
+      ],
+      "correct": 1,
+      "explanation": "Tail-sampling decides whether to keep or drop a trace after it finishes, so it can inspect the final status and keep 100% of errored traces while sampling only 10% of successful ones, which is impossible with head-sampling."
+    },
+    {
+      "stage": "post",
+      "question": "What is PSI (Population Stability Index) used for in the drift detection component?",
+      "options": [
+        "Measuring the perplexity difference between consecutive model versions",
+        "Comparing the distribution of prompt embeddings from the current week against a 4-week baseline; PSI above 0.2 signals meaningful drift",
+        "Tracking the standard deviation of per-user token costs over time",
+        "Monitoring the fraction of traces with toxicity scores above 0.5"
+      ],
+      "correct": 1,
+      "explanation": "The drift detector computes PSI between this week's pooled prompt embeddings and the trailing 4-week baseline. PSI above 0.2 typically signals meaningful distributional shift, triggering an alert."
+    },
+    {
+      "stage": "pre",
+      "question": "What does the LLM-judge (custom PII-leak judge) do in the eval pipeline?",
+      "options": [
+        "It re-ranks retrieved chunks before synthesis to remove personal data",
+        "Given a model response, it calls a guard LLM to score the likelihood of PII leakage; high-scoring responses land in a triage queue",
+        "It scrubs PII from spans before they are written to ClickHouse",
+        "It monitors whether the LLM is using cached tokens by inspecting prompt hashes"
+      ],
+      "correct": 1,
+      "explanation": "The custom PII-leak judge is an LLM that scores each response for likelihood of containing personally identifiable information. Responses above the threshold are flagged and routed to a human triage queue."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'MTTR on injected regression' metric measuring in the dashboard evaluation?",
+      "options": [
+        "Mean time to restore the ClickHouse cluster after a storage failure",
+        "Time from deploying a deliberately injected bug (e.g., fake SSN leakage at 1% rate) to when the Slack alert fires",
+        "Average latency of the eval job pipeline from span ingest to score write-back",
+        "Time from a user reporting a problem to the engineering team acknowledging it"
+      ],
+      "correct": 1,
+      "explanation": "The regression probe injects a bug where the chatbot starts leaking fake SSNs 1% of the time, then measures how long it takes from deployment to when the dashboard detects it and fires a Slack alert. The target is under 5 minutes."
+    },
+    {
+      "stage": "post",
+      "question": "Why is ClickHouse chosen as the span storage backend rather than Postgres?",
+      "options": [
+        "ClickHouse supports multi-vector embeddings needed for prompt drift detection",
+        "ClickHouse is a columnar database optimized for analytical queries over large event tables, sustaining 1k+ spans/sec ingest with fast aggregation queries",
+        "Postgres cannot store JSON payloads larger than 64KB, which LLM prompts frequently exceed",
+        "ClickHouse provides built-in OpenTelemetry receiver support without an external collector"
+      ],
+      "correct": 1,
+      "explanation": "ClickHouse is a columnar store built for analytical workloads. High-throughput span ingest (target: 1k spans/sec) and aggregations over large trace tables (cost per user, latency percentiles, eval trends) are exactly the workloads columnar databases excel at."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why does AST-aware chunking outperform fixed-token-window chunking for code retrieval?",
+      "options": [
+        "It produces smaller chunks, reducing embedding cost",
+        "It cuts at tree-sitter node boundaries, keeping function and class units intact",
+        "It filters out comment lines, which poison vector search",
+        "It deduplicates identical functions across repos automatically"
+      ],
+      "correct": 1,
+      "explanation": "AST-aware chunking uses tree-sitter to split at function and class node boundaries rather than fixed windows, preserving semantic units and avoiding mid-function splits."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the purpose of adding a natural-language summary as a third retrievable modality alongside dense and BM25 representations?",
+      "options": [
+        "Summaries are cheaper to embed than raw code",
+        "They allow retrieval to match high-level intent when the code uses different vocabulary",
+        "Summaries replace the need for a cross-encoder reranker",
+        "They are required by the Qdrant multi-vector schema"
+      ],
+      "correct": 1,
+      "explanation": "A summary like 'check authorization' can be retrieved by a query about 'how is X authorized' even if the code only uses `check_permission`, bridging the vocabulary gap between natural-language queries and code."
+    },
+    {
+      "stage": "post",
+      "question": "In the hybrid search pipeline described here, what role does the cross-encoder reranker play?",
+      "options": [
+        "It embeds the query vector for the dense search pass",
+        "It merges BM25 and dense rankings using reciprocal rank fusion",
+        "It scores each (query, candidate) pair together, more accurately than cosine alone",
+        "It generates natural-language summaries for new code chunks"
+      ],
+      "correct": 2,
+      "explanation": "A cross-encoder (second-stage ranker) scores each query-document pair jointly, which is more accurate than cosine similarity from independent embeddings, and refines the merged top-k before synthesis."
+    },
+    {
+      "stage": "post",
+      "question": "What does 'citation faithfulness' measure in the RAG-over-codebase evaluation?",
+      "options": [
+        "Whether the model output is syntactically valid code",
+        "The fraction of answer claims the user can verify by reading the referenced file:line span",
+        "The recall of symbols from the repository in the retrieved chunks",
+        "The percentage of retrieval queries that return at least one relevant result"
+      ],
+      "correct": 1,
+      "explanation": "Citation faithfulness is the fraction of claims in the answer that have verifiable file:line anchors the user can click and read to confirm the claim."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the main purpose of the symbol graph in this codebase RAG architecture?",
+      "options": [
+        "Store BM25 term frequencies for faster sparse search",
+        "Enable retrieval expansion across repository boundaries via import and call edges",
+        "Replace the vector index for small repositories under 100k lines",
+        "Provide authentication context for multi-tenant deployments"
+      ],
+      "correct": 1,
+      "explanation": "The symbol graph records import, call, and inheritance edges across files and repos, allowing query-time expansion so a question about a function can surface callers or callees in other repositories."
+    },
+    {
+      "stage": "post",
+      "question": "What is the incremental re-indexing strategy described in this capstone, and why does it matter?",
+      "options": [
+        "Re-embed all chunks on every git push; necessary for consistency",
+        "Re-embed only chunks whose text changed and recompute symbol edges for affected imports; keeps freshness without processing the entire corpus",
+        "Schedule full re-index nightly; simpler than diff-based approaches",
+        "Re-embed only files modified in the last 24 hours using a time-based filter"
+      ],
+      "correct": 1,
+      "explanation": "The pipeline computes a symbol-level diff on each push and only re-embeds changed chunks and recomputes affected symbol edges, achieving freshness in under 60 seconds for a 2M-LOC fleet without reprocessing everything."
+    }
+  ]
+}

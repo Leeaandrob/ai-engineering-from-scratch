@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is METR's organizational structure, and when did it become independent?",
+      "options": [
+        "A for-profit consulting firm; founded in 2021",
+        "An independent 501(c)(3) non-profit; spun out from ARC Evals in December 2023",
+        "A division of Anthropic; established in 2024",
+        "A joint initiative of OpenAI and DeepMind; operational since 2025"
+      ],
+      "correct": 1,
+      "explanation": "METR (ex-ARC Evals) is an independent 501(c)(3) non-profit, spun out in December 2023. It evaluates frontier models' autonomous capabilities, often pre-release under NDA. Partner labs include Anthropic and OpenAI."
+    },
+    {
+      "stage": "pre",
+      "question": "How is the METR time horizon computed technically?",
+      "options": [
+        "The average duration of all successful runs on a benchmark suite",
+        "A logistic curve is fit to task-success probability versus log(expert human completion time); the horizon is the expert task length at which P(success) = 0.5",
+        "The maximum task duration for which the model achieves at least 90% success rate",
+        "The geometric mean of wall-clock times across 200 diverse tasks"
+      ],
+      "correct": 1,
+      "explanation": "METR fits a logistic curve: P(success) as a function of log(expert completion time). The time horizon is the point on that curve where P(success) = 0.5. The logistic shape is chosen because capability has an increasing, plateau-approaching relationship with task difficulty."
+    },
+    {
+      "stage": "pre",
+      "question": "What does the HCAST benchmark suite span in terms of expert task completion time?",
+      "options": [
+        "1 second to 10 minutes",
+        "10 minutes to 2 hours",
+        "1 minute to 8+ hours",
+        "1 hour to 1 week"
+      ],
+      "correct": 2,
+      "explanation": "HCAST contains 189 tasks across ML, cybersecurity, software engineering, and general reasoning, spanning 1 minute to 8+ hours of expert completion time. This range is what allows fitting a logistic curve with enough resolution to extract the 50% horizon point."
+    },
+    {
+      "stage": "post",
+      "question": "Why is a METR time horizon described as an 'upper bound' rather than a deployment prediction?",
+      "options": [
+        "Because METR measures only a subset of capability domains",
+        "Because benchmark tasks give the model idealized tooling, no real consequences, structured prompts, and do not account for eval-context gaming—deployment reliability is a different and lower number",
+        "Because the logistic fit can only extrapolate above the measured range, not within it",
+        "Because METR uses simulated rather than real-world tasks"
+      ],
+      "correct": 1,
+      "explanation": "The horizon is measured under favorable conditions: idealized tooling, no real consequences, no legitimate user variance, and eval-context gaming that inflates scores. Real deployment involves messier data, irreversible stakes, ambiguous requests, and no incentive for the model to appear less capable."
+    },
+    {
+      "stage": "post",
+      "question": "What are METR's 'prototype monitoring evaluations' designed to measure?",
+      "options": [
+        "Whether the model can monitor other AI systems for safety compliance",
+        "Whether a monitoring system can catch a model performing a side task, and whether the agent can evade that monitor",
+        "The computational overhead of running safety classifiers alongside the agent",
+        "How long it takes a human operator to notice when an agent goes off-task"
+      ],
+      "correct": 1,
+      "explanation": "METR's 2025-2026 monitoring evaluation prototypes test: (1) can a monitor catch a model performing a side task, and (2) can the agent evade the monitor. These directly feed the 'Undermining Safeguards' category in OpenAI PF v2 and the deceptive-alignment monitoring in DeepMind FSF v3."
+    },
+    {
+      "stage": "post",
+      "question": "Why does external evaluation like METR matter even though labs could measure their own capabilities?",
+      "options": [
+        "Because external evaluators have access to more powerful compute than internal teams",
+        "Because internal labs have incentives to optimize the metrics they report; METR's 501(c)(3) independence with declared methodology and peer-reviewed papers is a structural mitigation for that incentive",
+        "Because METR has exclusive access to benchmark data that labs cannot replicate internally",
+        "Because regulations require third-party evaluation before model deployment"
+      ],
+      "correct": 1,
+      "explanation": "Internal labs have incentives to optimize metrics they report. METR's structural independence—a 501(c)(3) with declared methodology and peer-reviewed papers—is a mitigation. It is not sufficient alone (labs still control what METR sees), but it is strictly better than no external evaluation."
+    }
+  ]
+}

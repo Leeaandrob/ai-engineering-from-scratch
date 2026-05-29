@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "How does SWE-bench evaluate whether an agent's patch is correct?",
+      "options": [
+        "Human reviewers grade each patch for code quality",
+        "Apply the patch, run the repo's test suite; patch must flip FAIL_TO_PASS tests without breaking PASS_TO_PASS tests",
+        "The patch is compared to the reference fix using string similarity",
+        "The patch is run on a static analyzer for correctness"
+      ],
+      "correct": 1,
+      "explanation": "SWE-bench evaluates by applying the agent's patch, running the repo's existing test suite, and checking: FAIL_TO_PASS tests (previously failing, now passing) and PASS_TO_PASS tests (previously passing, still passing). Both gates must be satisfied."
+    },
+    {
+      "stage": "pre",
+      "question": "Why was SWE-bench Verified created?",
+      "options": [
+        "To make the benchmark harder for modern models",
+        "To provide a human-curated 500-task subset removing ambiguous issues, unreliable tests, and tasks with unclear fixes",
+        "To add web search and memory categories",
+        "To create a faster-running version for CI integration"
+      ],
+      "correct": 1,
+      "explanation": "SWE-bench Verified (OpenAI, Aug 2024) is a human-curated 500-task subset that removes ambiguous issues, unreliable tests, and tasks where the fix was unclear. It is the primary benchmark for 'does your agent ship real patches?'"
+    },
+    {
+      "stage": "post",
+      "question": "What did the SWE-bench+ contamination audit find?",
+      "options": [
+        "0% of successful patches were contaminated",
+        "32.67% of successful patches leaked solutions from the issue text, and 31.08% were suspicious due to weak test coverage",
+        "Only 5% of patches had any contamination",
+        "Contamination was found only in the training set, not test set"
+      ],
+      "correct": 1,
+      "explanation": "SWE-bench+ found 32.67% of successful patches leaked solutions in the issue text (model saw the fix in the description), and 31.08% were suspicious due to weak test coverage. A model scoring 50% on SWE-bench may score only 35% on SWE-bench+."
+    },
+    {
+      "stage": "post",
+      "question": "What is GAIA's design philosophy and human vs AI performance at launch?",
+      "options": [
+        "Hard for humans (30%) but medium for AI (60%)",
+        "Conceptually simple for humans (92% success) but hard for AI (GPT-4 with plugins: 15%)",
+        "Equal difficulty for humans and AI",
+        "Easy for both humans and AI, used for baseline testing"
+      ],
+      "correct": 1,
+      "explanation": "GAIA (Mialon et al., Nov 2023) was designed to be 'conceptually simple for humans (92%) but hard for AI (GPT-4 with plugins: 15%)'. It tests reasoning, multi-modality, web use, and tool use."
+    },
+    {
+      "stage": "post",
+      "question": "What is AgentBench's primary finding about open-source LLMs vs commercial models?",
+      "options": [
+        "Open-source LLMs are now on par with commercial models",
+        "Long-term reasoning, decision-making, and instruction following are the blockers for OSS LLMs catching up",
+        "Open-source LLMs are better at simple tasks but worse at complex ones",
+        "Commercial models are only better due to better tool use, not reasoning"
+      ],
+      "correct": 1,
+      "explanation": "AgentBench's (Liu et al., ICLR 2024) primary finding across 8 environments: long-term reasoning, decision-making, and instruction following are the main blockers preventing open-source LLMs from matching commercial models."
+    },
+    {
+      "stage": "pre",
+      "question": "What do SWE-bench, GAIA, and AgentBench NOT measure?",
+      "options": [
+        "Code generation quality",
+        "Real-world operational cost, safety in adversarial conditions, performance on your specific domain, and tail failures",
+        "Multi-step reasoning",
+        "Tool use capability"
+      ],
+      "correct": 1,
+      "explanation": "These benchmarks do not measure: real-world operational cost (tokens, wall-clock), safety in adversarial conditions, performance on your specific domain (use your own evals), or tail failures (benchmarks average; production operators care about the worst 1%)."
+    }
+  ]
+}

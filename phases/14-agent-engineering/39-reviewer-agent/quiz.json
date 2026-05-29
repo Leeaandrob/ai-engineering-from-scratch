@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why can't the same agent that built the code reliably review it?",
+      "options": [
+        "It would take too long to review its own work",
+        "The builder is biased toward its own output — it produced the code and is likely to approve it, missing cases where the correct problem was not solved",
+        "It is technically impossible to review your own code",
+        "Reviewing requires more compute than building"
+      ],
+      "correct": 1,
+      "explanation": "The agent that wrote the code is biased toward approving it — it built a plausible solution to some problem and will likely judge its own work favorably. A separate reviewer role, with different inputs and posture, catches cases where the correct problem was not solved."
+    },
+    {
+      "stage": "pre",
+      "question": "What are the five dimensions in the reviewer rubric?",
+      "options": [
+        "Correctness, performance, security, readability, test coverage",
+        "Problem fit, scope discipline, assumptions, verification quality, handoff readiness",
+        "Completeness, accuracy, clarity, efficiency, maintainability",
+        "Build quality, test quality, documentation, code style, deployment readiness"
+      ],
+      "correct": 1,
+      "explanation": "The reviewer rubric has five 0-2 scored dimensions: Problem fit (solved the right task), Scope discipline (edits confined or contract grown deliberately), Assumptions (hidden assumptions documented), Verification quality (acceptance command proves the actual goal), Handoff readiness (next session can pick up cleanly)."
+    },
+    {
+      "stage": "post",
+      "question": "What does the reviewer agent NOT do, and why?",
+      "options": [
+        "The reviewer does not write tests — that is the builder's job",
+        "The reviewer does not patch the diff — it reads and reports; if it finds issues, the next builder turn makes the fix",
+        "The reviewer does not access the feedback log — only the diff",
+        "The reviewer does not score individual dimensions — only gives an overall grade"
+      ],
+      "correct": 1,
+      "explanation": "The reviewer reads the diff, state, feedback, and verdict — then writes a report. It never patches the diff. If the report says 'fix this,' the next builder turn makes the fix, and the reviewer then reviews that. Mixing roles defeats the role separation."
+    },
+    {
+      "stage": "post",
+      "question": "What score thresholds define soft fail vs hard fail?",
+      "options": [
+        "Soft fail: below 5, hard fail: below 3",
+        "Soft fail: total below 7 (builder gets findings to address), hard fail: total below 5 or any dimension at 0 (halt and surface to human)",
+        "Soft fail: below 8, hard fail: below 6",
+        "Soft fail: any warning, hard fail: any error"
+      ],
+      "correct": 1,
+      "explanation": "Reviewer rubric scoring (out of 10): total below 7 is a soft fail — builder gets findings to address. Total below 5 or any single dimension at 0 is a hard fail — halt and surface to human."
+    },
+    {
+      "stage": "post",
+      "question": "What four LLM-judge biases should be mitigated in reviewer agents?",
+      "options": [
+        "Recency bias, anchoring, framing, confirmation bias",
+        "Position bias (~40% inconsistent on ordering), verbosity bias (~15% inflation toward longer outputs), self-preference (same model family), authority (over-rates references to known authors)",
+        "Speed bias, cost bias, capability bias, safety bias",
+        "Language bias, domain bias, style bias, format bias"
+      ],
+      "correct": 1,
+      "explanation": "Adnan Masood's research (April 2026) identifies four reliable LLM-judge biases: position bias (GPT-4 ~40% inconsistent on A,B vs B,A ordering), verbosity bias (~15% score inflation for longer outputs), self-preference (same model family rated higher), and authority bias (over-rates citations to known authors)."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the key difference between the verification gate (Lesson 38) and the reviewer agent?",
+      "options": [
+        "The gate runs automatically; the reviewer requires manual invocation",
+        "The gate checks deterministic facts (did acceptance run, did tests pass, did scope hold); the reviewer makes qualitative judgments (was this the right work, is it documented, is the handoff usable)",
+        "The gate is for code; the reviewer is for documentation",
+        "The gate runs in CI; the reviewer runs locally"
+      ],
+      "correct": 1,
+      "explanation": "The verification gate checks deterministic facts with machine-checkable answers. The reviewer makes qualitative semantic judgments: was this the right work, are assumptions documented, is the handoff usable. Both are required — they answer different questions."
+    }
+  ]
+}

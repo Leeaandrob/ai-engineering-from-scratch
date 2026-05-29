@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "DPO's key insight is that the RLHF objective has a closed-form optimal policy. What does this allow?",
+      "options": [
+        "The policy can be trained without any human preference data",
+        "The reward model can be eliminated and the policy optimized directly using the preference data",
+        "The KL penalty can be set to zero without causing reward hacking",
+        "The reference policy can be continuously updated during training"
+      ],
+      "correct": 1,
+      "explanation": "Rafailov et al. showed the RLHF optimum has a closed form in terms of the policy-to-reference ratio. Substituting this into the Bradley-Terry preference likelihood and letting the partition function Z(x) cancel yields a loss in policy parameters alone — no reward model needed."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the 'Degraded Chosen Response' phenomenon in DPO?",
+      "options": [
+        "The chosen response's absolute log-probability increases faster than the rejected response's",
+        "The reward model assigns a higher score to the rejected response after training",
+        "DPO can push the chosen response's absolute log-probability down as long as the rejected response falls even faster",
+        "The model forgets the chosen response format during extended training"
+      ],
+      "correct": 2,
+      "explanation": "DPO's loss only constrains the relative gap between chosen and rejected log-probs. It can decrease the chosen response's absolute log-probability as long as the rejected falls faster, resulting in a model that has learned the ranking but assigns lower probability to the correct response."
+    },
+    {
+      "stage": "pre",
+      "question": "KTO (Kahneman-Tversky Optimization) is designed to address which specific limitation of DPO?",
+      "options": [
+        "DPO requires white-box access to the model's activations",
+        "DPO requires paired preference data; KTO works with single labeled outputs using binary desirable/undesirable signals",
+        "DPO cannot handle tasks with more than two possible responses",
+        "DPO's training is unstable when the reference policy is far from optimal"
+      ],
+      "correct": 1,
+      "explanation": "KTO drops the pairwise structure entirely. Instead of requiring (chosen, rejected) pairs, it accepts single outputs labeled as desirable or undesirable, mapping to a prospect-theory utility. Unpaired feedback data is far more plentiful in practice."
+    },
+    {
+      "stage": "post",
+      "question": "SimPO addresses DPO's length exploitation by:",
+      "options": [
+        "Adding a penalty term proportional to the difference in sequence lengths between chosen and rejected",
+        "Removing the reference policy and normalizing log-likelihood by sequence length with a margin",
+        "Training the reward model to be length-invariant using data augmentation",
+        "Using byte-pair encoding instead of token-level probability for length normalization"
+      ],
+      "correct": 1,
+      "explanation": "SimPO removes the reference policy and uses (beta / |y|) * log pi(y|x) — length-normalized log-likelihood plus a margin gamma. DPO's length bias arises because longer chosen responses produce larger log-prob gaps by construction; length normalization removes this incentive."
+    },
+    {
+      "stage": "post",
+      "question": "ORPO's key architectural difference from DPO is:",
+      "options": [
+        "ORPO uses a larger reference model than the policy being trained",
+        "ORPO trains from a base model in one stage by adding an odds-ratio term to the standard SFT NLL loss, eliminating the need for a separate SFT checkpoint",
+        "ORPO replaces the preference optimization objective with a contrastive loss",
+        "ORPO requires a separate critic model to estimate the policy's value function"
+      ],
+      "correct": 1,
+      "explanation": "ORPO adds a preference term (log odds-ratio of chosen over rejected) directly to the standard SFT negative log-likelihood. The SFT loss acts as its own regularizer, allowing training from a base model in a single stage without needing a separate SFT reference checkpoint."
+    },
+    {
+      "stage": "post",
+      "question": "Rafailov et al. (NeurIPS 2024) proved that Direct Alignment Algorithms (DAAs) like DPO:",
+      "options": [
+        "Completely avoid reward hacking because they have no explicit reward model to over-optimize",
+        "Still exhibit the same Gao et al. peak-and-collapse over-optimization curve, just with the implicit reward ratio instead of an explicit RM",
+        "Are immune to Goodhart's Law when the preference data is sufficiently large",
+        "Achieve lower gold-reward than standard RLHF at matched KL budgets"
+      ],
+      "correct": 1,
+      "explanation": "Rafailov et al. (NeurIPS 2024) demonstrated that DPO, IPO, and SLiC show the same peak-and-collapse shape on gold-reward-vs-KL curves. DAAs do not escape Goodhart; they shift where it bites from 'reward model over-optimized' to 'reference policy ratio over-optimized.'"
+    }
+  ]
+}

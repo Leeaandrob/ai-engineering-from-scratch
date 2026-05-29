@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the core model that LangGraph uses for agent orchestration?",
+      "options": [
+        "Neural network with attention mechanisms",
+        "State machine with immutable state, function nodes, conditional edges, and post-step checkpoints",
+        "Event-driven message passing with async handlers",
+        "Hierarchical task decomposition with backtracking"
+      ],
+      "correct": 1,
+      "explanation": "LangGraph models agents as state machines: immutable typed state, nodes as pure functions (state -> state_update), conditional or direct edges between nodes, and checkpoints persisted after every step."
+    },
+    {
+      "stage": "pre",
+      "question": "What is 'durable execution' in LangGraph and why does it matter?",
+      "options": [
+        "Execution that runs for a long time without stopping",
+        "State checkpointed after every node so a failed run can resume from the last successful step, not from the beginning",
+        "Execution that is protected from external interruption",
+        "Execution that uses persistent storage instead of RAM"
+      ],
+      "correct": 1,
+      "explanation": "Durable execution means the runtime serializes state after each node to a checkpointer (SQLite, Postgres, Redis). On failure at step N, the runtime can resume from step N+1 with exact state rather than restarting."
+    },
+    {
+      "stage": "post",
+      "question": "What are the three multi-agent topologies LangGraph supports?",
+      "options": [
+        "Sequential, Parallel, Conditional",
+        "Supervisor (central router), Swarm/peer-to-peer (direct handoffs), Hierarchical (nested subgraphs)",
+        "Star, Ring, Mesh",
+        "Master-slave, Leader-follower, Peer-to-peer"
+      ],
+      "correct": 1,
+      "explanation": "LangGraph supports three orchestration topologies: Supervisor (central router LLM dispatches to specialists), Swarm/peer-to-peer (agents hand off via shared tool surface, no central router), and Hierarchical (supervisors managing sub-supervisors via nested subgraphs)."
+    },
+    {
+      "stage": "post",
+      "question": "What does LangGraph's 'human-in-the-loop' capability allow?",
+      "options": [
+        "Having humans write the code for nodes",
+        "Inspecting and modifying state between nodes, pausing execution for human input, and resuming",
+        "Having humans manually route between nodes",
+        "Replacing LLM calls with human responses"
+      ],
+      "correct": 1,
+      "explanation": "Because state is already serialized to the checkpointer, LangGraph can pause before a critical node, surface the current state to a human for inspection and modification, then resume. The checkpointer makes this feasible without special code."
+    },
+    {
+      "stage": "post",
+      "question": "What is a 'reducer' in LangGraph's state graph?",
+      "options": [
+        "A function that reduces the size of the state to save tokens",
+        "A function that combines the current state with a node's update dict to produce the new state",
+        "A compression algorithm applied to state between nodes",
+        "A summarization function for long conversation histories"
+      ],
+      "correct": 1,
+      "explanation": "A reducer is the function that merges a node's output (state_update) with the current state. For example, a messages list might use an append reducer so new messages are added rather than the whole list being replaced."
+    },
+    {
+      "stage": "pre",
+      "question": "What failure mode occurs when LangGraph checkpoints are too small?",
+      "options": [
+        "The graph runs out of memory",
+        "Only checkpointing conversation turns leaves tool state and memory writes unrecoverable on resume",
+        "Checkpoints become too frequent and slow the graph",
+        "The checkpointer database grows too large"
+      ],
+      "correct": 1,
+      "explanation": "If only conversation turns are checkpointed, any tool state, memory writes, or intermediate results are lost on failure. Full state — including tool outputs and memory writes — must be serialized in the checkpoint for true resume capability."
+    }
+  ]
+}

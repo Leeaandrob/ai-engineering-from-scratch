@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the three evaluation layers in eval-driven agent development?",
+      "options": [
+        "Unit, Integration, End-to-end",
+        "Static benchmarks, Custom offline evals, Online production evals",
+        "Development, Staging, Production",
+        "Manual, Automated, Continuous"
+      ],
+      "correct": 1,
+      "explanation": "The three layers: static benchmarks (SWE-bench, GAIA, WebArena for cross-model comparison), custom offline evals (LLM-as-judge, execution-based, trajectory-based on your product shape), and online evals (session replays, guardrail alerts, per-step cost/latency)."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the 2026 best practice for where evals live?",
+      "options": [
+        "In a separate evaluation repository managed by the QA team",
+        "Next to the code, run in CI on every PR, gating merge on eval scores",
+        "In a shared Google Sheet updated weekly",
+        "Only in production monitoring, not in development"
+      ],
+      "correct": 1,
+      "explanation": "2026 best practice: evals live next to code, run in CI on every PR, gate merge on eval scores (e.g., no regression >5% vs main), map every guardrail to an eval case, map every learned rule to a failure case."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'no baseline' failure mode in eval-driven development?",
+      "options": [
+        "Not having any evals at all",
+        "Having evals without a last-known-good reference score, making regression detection impossible",
+        "Running evals only once per release",
+        "Using evals that are too easy"
+      ],
+      "correct": 1,
+      "explanation": "Without a baseline (last-known-good score), evals are unreadable — you cannot tell if a 75% pass rate is an improvement or a regression. Store baselines and compare every run against them."
+    },
+    {
+      "stage": "post",
+      "question": "What does Anthropic's guidance say about when to add multi-agent complexity?",
+      "options": [
+        "Add it from the start to avoid refactoring",
+        "Start with simple prompts, optimize with comprehensive evaluation, add multi-step agentic systems only when needed",
+        "Add it whenever team size exceeds 5 engineers",
+        "Only add it for tasks with user-facing latency requirements"
+      ],
+      "correct": 1,
+      "explanation": "Anthropic's guidance: 'start with simple prompts, optimize them with comprehensive evaluation, and add multi-step agentic systems only when needed.' Evaluation is the outer loop that drives every other choice — not the last step."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'over-fitting to evals' failure mode?",
+      "options": [
+        "Writing too many eval cases",
+        "Optimizing the system specifically for eval metrics in ways that diverge from production usefulness",
+        "Running evals too frequently",
+        "Using eval scores as the primary development metric"
+      ],
+      "correct": 1,
+      "explanation": "Over-fitting to evals means optimizing the agent specifically for the evaluation metrics in ways that don't transfer to production. Mitigation: rotate eval cases, add new cases from production failures, keep evals representative of real usage."
+    },
+    {
+      "stage": "pre",
+      "question": "What Phase 14 lesson connects to the eval case 'PVE refuses poisoned retrievals'?",
+      "options": [
+        "Lesson 05 (Self-Refine and CRITIC)",
+        "Lesson 27 (Prompt Injection Defense)",
+        "Lesson 06 (Tool Use)",
+        "Lesson 13 (LangGraph)"
+      ],
+      "correct": 1,
+      "explanation": "The eval case 'PVE refuses poisoned retrievals' connects to Lesson 27 (Prompt Injection Defense), which teaches the Prompt-Validator-Executor pattern for detecting and blocking prompt injection attempts in retrieved content."
+    }
+  ]
+}

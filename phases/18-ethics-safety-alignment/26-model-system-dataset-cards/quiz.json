@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Model Cards (Mitchell et al., 2019) were described using which analogy, and what key section is least adopted according to Oreamuno et al. (2023)?",
+      "options": [
+        "Analogous to drug package inserts; least adopted section is 'intended use'",
+        "Analogous to nutrition labels; only 0.3% of Hugging Face model cards document 'ethical considerations'",
+        "Analogous to safety data sheets (SDS); least adopted section is 'evaluation data'",
+        "Analogous to product manuals; only 1% document 'training data'"
+      ],
+      "correct": 1,
+      "explanation": "Mitchell et al. introduced model cards as nutrition labels for models. Oreamuno et al. (2023) audited Hugging Face and found only 0.3% of model cards document ethical considerations — the section most relevant for responsible deployment and most commonly skipped."
+    },
+    {
+      "stage": "pre",
+      "question": "Datasheets for Datasets (Gebru et al., 2018) uses which analogy to motivate structured dataset documentation?",
+      "options": [
+        "Food ingredient lists — every component must be disclosed",
+        "Electronics datasheets — standardized structured documentation that enables engineers to make informed decisions",
+        "Scientific methods sections — reproducibility requires detailed documentation",
+        "Building permits — documentation enables safety inspection"
+      ],
+      "correct": 1,
+      "explanation": "Gebru et al. drew on the electronics industry analogy: components come with datasheets that systematically document specifications, limitations, and intended uses. Datasets should have equivalent structured documentation so downstream practitioners can make informed decisions about fitness for purpose."
+    },
+    {
+      "stage": "pre",
+      "question": "Data Cards (Pushkarna et al., Google 2022) introduce three 'zoom levels.' What are they?",
+      "options": [
+        "Summary, detailed, and technical",
+        "Telescopic (high-level for non-experts), periscopic (middle-level for ML practitioners), and microscopic (detailed feature-level for auditors)",
+        "Executive, engineering, and legal",
+        "Model, dataset, and deployment levels"
+      ],
+      "correct": 1,
+      "explanation": "Data Cards use a boundary-object framing with three zoom levels: telescopic (high-level summary readable by non-experts), periscopic (middle-level overview for ML practitioners), and microscopic (detailed feature-level documentation for auditors). The same document serves different audiences at different levels of detail."
+    },
+    {
+      "stage": "post",
+      "question": "Laminator (Duddu et al., 2024) addresses which specific limitation of existing model cards?",
+      "options": [
+        "Model cards are too long; Laminator generates compressed summaries",
+        "Model cards contain claims without proof; Laminator enables verifiable attestations via hardware TEE or cryptographic signatures attached to evaluation results",
+        "Model cards are not machine-readable; Laminator produces structured JSON outputs",
+        "Model cards become outdated; Laminator provides version tracking"
+      ],
+      "correct": 1,
+      "explanation": "Laminator addresses the trust problem with model card claims: anyone can write anything. Using hardware trusted execution environments (TEEs) or cryptographic signatures, Laminator allows a model card to carry a proof-of-claim rather than just an assertion — a verifier can check the attestation independently."
+    },
+    {
+      "stage": "post",
+      "question": "System Cards differ from Model Cards in scope. What does a System Card additionally cover?",
+      "options": [
+        "It covers only the training data in greater depth than a Model Card",
+        "It covers the end-to-end AI deployment system including the safety stack, prompt-injection protection, data-exfiltration detection, incident response, and alignment with stated values",
+        "It covers the business case and financial projections for the AI deployment",
+        "It covers hardware infrastructure and compute costs for model training"
+      ],
+      "correct": 1,
+      "explanation": "System Cards (Sidhpurwala 2024; formalized in 'Blueprints of Trust' arXiv:2509.20394) extend documentation beyond the model to the entire deployed system: the safety stack, prompt-injection protections, data-exfiltration detection mechanisms, alignment with stated values, and incident response procedures."
+    },
+    {
+      "stage": "post",
+      "question": "Liang et al. (2024) found that detailed model cards on Hugging Face correlate with higher download rates. What does this demonstrate about adoption incentives?",
+      "options": [
+        "Detailed cards cause downloads to increase through algorithmic search ranking",
+        "Adoption pressure is now partly market-driven — well-documented models are more trusted and more frequently selected — not only compliance-driven",
+        "The effect is spurious: popular models receive more documentation because users contribute to them",
+        "Detailed model cards reduce liability concerns, which is the primary driver of the download correlation"
+      ],
+      "correct": 1,
+      "explanation": "Liang et al. report up to 29% higher download rates for models with detailed cards. This suggests the adoption problem (only 0.3% document ethical considerations) may be self-correcting as documentation becomes a competitive differentiator. Market pressure is emerging as a complementary adoption mechanism alongside regulatory compliance."
+    }
+  ]
+}

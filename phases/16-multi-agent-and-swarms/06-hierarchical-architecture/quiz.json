@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is 'decomposition drift' in a hierarchical agent architecture?",
+      "options": ["Sub-managers gradually changing their system prompts over many turns", "The top manager's subtask split no longer covers the original user question after several levels of delegation", "Workers completing tasks in a different order than the manager planned", "The manager's context window filling up with sub-manager outputs over long runs"],
+      "correct": 1,
+      "explanation": "Decomposition drift: the top manager splits 'review this contract' into 'legal review' and 'financial review.' Due to a prompt error, 'financial' becomes 'finance,' a sub-manager does accounting instead of legal-finance review, and the original legal question is never answered. The error only surfaces at final synthesis."
+    },
+    {
+      "stage": "pre",
+      "question": "Why does the lesson recommend capping hierarchical tree depth at 2 levels?",
+      "options": ["More than 2 levels causes exponential growth in total LLM calls", "Three or more levels hides most errors from observability — the top manager can no longer trace which leaf output caused a problem", "The A2A protocol does not support more than 2 levels of task delegation", "LangGraph's create_supervisor function does not support nesting deeper than 2 levels"],
+      "correct": 1,
+      "explanation": "At depth 3, the top manager sees sub-manager summaries of sub-sub-manager summaries of worker outputs. Provenance is lost at each level. Bugs at the leaf level look like 'the sub-manager reported...' with no trace back to the actual worker. Depth-2 is the empirical observability ceiling."
+    },
+    {
+      "stage": "pre",
+      "question": "In CrewAI's Process.hierarchical, what role does the manager_llm play?",
+      "options": ["A model used only for performance evaluation of worker outputs, not for task assignment", "The LLM that decomposes the top-level task, assigns subtasks to crews, evaluates outputs, and decides whether to accept or re-delegate", "A shared LLM endpoint that all agents in the hierarchy call through for consistency", "A lightweight routing model that only decides which worker gets the next task without evaluating quality"],
+      "correct": 1,
+      "explanation": "CrewAI's manager_llm is the decision-making brain at each internal node. It receives the task, splits it, assigns to specialist crews, evaluates what they return, and decides: accept, re-delegate, or iterate. It is an LLM agent acting as a project manager."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'canary question' pattern and what failure mode does it target?",
+      "options": ["A lightweight health-check query sent to agents before assigning production tasks to detect offline agents", "A worker at each sub-manager level that is always given the original user question unchanged, used to detect when the manager's decomposition has drifted from the user's intent", "An adversarial query injected by a security agent to test whether workers reject prompt injection attempts", "A low-complexity task routed to new agents first to verify capability before assigning complex work"],
+      "correct": 1,
+      "explanation": "Canary question: at each sub-manager, one worker always gets the original, unmodified user question. If the canary's answer differs sharply from the sub-manager's synthesized answer, the decomposition has drifted. The manager can then replan using the canary's ground-truth check."
+    },
+    {
+      "stage": "post",
+      "question": "When should you use a sequential pipeline instead of a hierarchical architecture?",
+      "options": ["When you need more than three levels of organizational hierarchy", "When the task is a linear flow with stage-to-stage dependencies rather than genuinely having independent parallel sub-teams", "When workers need to run longer than 60 seconds each", "When the system needs to support more than 10 concurrent users"],
+      "correct": 1,
+      "explanation": "Hierarchy's value is parallelism and local summarization. If the real task is 'research then code then review,' it is a sequential pipeline pretending to be a tree. Adding hierarchy gives you manager overhead with no parallelism benefit, plus extra levels hiding errors. Use sequential for linear flows."
+    }
+  ]
+}

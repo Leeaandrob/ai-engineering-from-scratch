@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the structure of the Kubernetes knowledge graph used by the DevOps troubleshooting agent?",
+      "options": [
+        "A relational table of pods and their CPU/memory metrics sampled every 60 seconds",
+        "Nodes are K8s objects (Pods, Deployments, Nodes, etc.) plus telemetry sources; edges encode ownership, scheduling, and observation relationships",
+        "A flat list of Prometheus alert rules with their firing thresholds",
+        "A time-series database of container restart counts indexed by namespace"
+      ],
+      "correct": 1,
+      "explanation": "The graph has nodes for K8s objects and telemetry sources, connected by edges like OWNED_BY, SCHEDULED_ON, EXPOSES, and OBSERVED_BY, giving the agent a structured view of dependencies and relationships."
+    },
+    {
+      "stage": "pre",
+      "question": "Why does the agent operate 'read-only by default' with destructive actions in a separate gated server?",
+      "options": [
+        "Cloud providers require read-only RBAC for any automated tooling in production",
+        "Keeping destructive verbs off the default tool surface prevents the agent from taking irreversible actions without explicit human approval",
+        "Kubernetes admission controllers block scale and delete verbs from service accounts",
+        "The LangGraph orchestrator does not support stateful tool calls"
+      ],
+      "correct": 1,
+      "explanation": "The agent's default service account has only get/list/describe verbs. Destructive actions (scale, rollback, delete) live on a second MCP server that requires a Slack approval token, ensuring no irreversible action runs without a human explicitly approving it."
+    },
+    {
+      "stage": "post",
+      "question": "How is each root-cause hypothesis scored in the evidence-ranking system?",
+      "options": [
+        "Hypotheses are ranked by model confidence score from Claude Sonnet 4.7",
+        "Score = recency x specificity x graph-path-length-inverse x citation count",
+        "Score = number of Prometheus alerts that fired within the last hour",
+        "Hypotheses are ranked by the Slack approval timestamp of the previous incident"
+      ],
+      "correct": 1,
+      "explanation": "Each hypothesis score is the product of recency, specificity, inverse graph-path length (shorter paths score higher), and telemetry citation count, favoring recent, specific, nearby, well-evidenced root causes."
+    },
+    {
+      "stage": "pre",
+      "question": "What does the 'considered vs. executed' audit log capture, and why is it valuable?",
+      "options": [
+        "It records which Prometheus metrics were queried and how long each query took",
+        "It logs every command the agent considered, not just those it executed, enabling review of near-misses where a destructive action was almost taken",
+        "It tracks which Slack messages were approved and by which team member",
+        "It computes MTTR by recording incident open and close timestamps"
+      ],
+      "correct": 1,
+      "explanation": "Recording considered-but-not-executed commands exposes near-misses in the agent's reasoning, allowing reviewers to catch cases where a destructive action was close to being taken, improving trust and auditability."
+    },
+    {
+      "stage": "post",
+      "question": "What is the target time-to-hypothesis SLO for this DevOps agent?",
+      "options": [
+        "Under 30 seconds from alert fire to Slack brief",
+        "Under 5 minutes from alert fire to Slack brief",
+        "Under 15 minutes from alert fire to ArgoCD rollback",
+        "Under 60 seconds from Slack approval to remediation complete"
+      ],
+      "correct": 1,
+      "explanation": "The rubric specifies p50 time-to-hypothesis under 5 minutes from when the alert fires to when the Slack brief with ranked hypotheses appears."
+    },
+    {
+      "stage": "post",
+      "question": "Which telemetry sources does the agent pull to build a hypothesis after an alert fires?",
+      "options": [
+        "GitHub Actions logs, Docker image scan results, and Terraform plan outputs",
+        "Prometheus metrics, Loki logs, Tempo traces, and kube-state-metrics, scoped to the last 15 minutes",
+        "Node exporter CPU percentiles, container filesystem usage, and network packet loss",
+        "Datadog APM traces, PagerDuty alert history, and AWS CloudWatch alarms"
+      ],
+      "correct": 1,
+      "explanation": "The agent pulls the last-15-minute slices from Prometheus (metrics), Loki (logs), and Tempo (traces), along with the kube-state-metrics graph, to form telemetry citations for each ranked hypothesis."
+    }
+  ]
+}

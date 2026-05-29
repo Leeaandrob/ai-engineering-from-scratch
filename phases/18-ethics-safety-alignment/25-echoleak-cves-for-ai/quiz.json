@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "EchoLeak (CVE-2025-32711) is classified as which type of attack?",
+      "options": [
+        "Direct prompt injection via malicious user input in the chat interface",
+        "Zero-click indirect prompt injection — the attacker sends an email, the victim does nothing, and the attack fires when Copilot retrieves the email as RAG context",
+        "Jailbreak via adversarial system prompt modification",
+        "Data exfiltration via model parameter extraction"
+      ],
+      "correct": 1,
+      "explanation": "EchoLeak is zero-click indirect prompt injection: the victim takes no action. The attacker sends a crafted email; when the victim's Copilot runs a routine query like 'summarize my recent emails,' it retrieves the email as RAG context; the hidden instructions in the email execute; Copilot exfiltrates data via a CSP-approved Microsoft domain."
+    },
+    {
+      "stage": "pre",
+      "question": "Aim Labs' 'LLM Scope Violation' framework describes the EchoLeak attack class using three components. What are they?",
+      "options": [
+        "Injection, execution, and persistence",
+        "Untrusted input enters via a retrieval surface, model action accesses a privileged scope, and output crosses a trust boundary",
+        "Data access, model manipulation, and network exfiltration",
+        "Authentication bypass, privilege escalation, and data theft"
+      ],
+      "correct": 1,
+      "explanation": "Aim Labs' Scope Violation framework: (1) untrusted input enters via a retrieval surface (the attacker's email), (2) model action accesses a privileged scope (the victim's mailbox), (3) output crosses the trust boundary (exfiltration via CSP-approved URL). All three must be independently prevented — fixing one does not secure the others."
+    },
+    {
+      "stage": "pre",
+      "question": "EchoLeak bypassed Copilot's XPIA filter and link-redaction mechanism. How was the data exfiltrated?",
+      "options": [
+        "By encoding data as Base64 in the model's text output",
+        "Via a Mermaid diagram reference loading from a Microsoft-signed URL — CSP permitted the request because the domain was trusted, but the URL embedded the exfiltrated data",
+        "By creating a new email with the data as the body using Copilot's send-email action",
+        "By modifying the user's saved documents to contain the exfiltrated data"
+      ],
+      "correct": 1,
+      "explanation": "The attack used a Mermaid diagram URL: the hidden instructions told Copilot to find MFA codes and include them in a Mermaid diagram referenced via a specific URL. Copilot rendered the diagram by loading from a Microsoft-signed domain — permitted by Content-Security-Policy — with the exfiltrated data embedded in the URL parameters."
+    },
+    {
+      "stage": "post",
+      "question": "CamoLeak (GitHub Copilot Chat) was fixed by disabling image rendering entirely. Why was this the fix rather than a more targeted defense?",
+      "options": [
+        "Image rendering in Copilot Chat was a beta feature that was not ready for production",
+        "The Camo image proxy attack surface could not be bounded with targeted filtering — any image loading through Camo could leak data, so the only reliable fix was to disable the capability",
+        "Image rendering consumed too much compute and the fix was a performance optimization",
+        "Disabling image rendering was temporary while a cryptographic signing requirement was developed"
+      ],
+      "correct": 1,
+      "explanation": "The CamoLeak attack exploited GitHub's Camo image proxy: attacker-controlled content triggered image loads that leaked data through Camo. The attack surface was not a specific image type or URL pattern — any image load through Camo could be exploited. A targeted filter could not bound the surface, so the fix was to disable image rendering entirely, accepting the usability cost."
+    },
+    {
+      "stage": "post",
+      "question": "EchoLeak was initially rated at low severity. What evidence caused the severity to be escalated to CVSS 9.3?",
+      "options": [
+        "Aim Labs demonstrated that the attack worked against all Microsoft 365 users globally",
+        "Aim Labs demonstrated an end-to-end exploit that exfiltrated MFA codes, showing the information disclosure was a high-impact credential leak, not just metadata",
+        "Microsoft discovered the same vulnerability independently and assigned the higher score",
+        "The CVSS methodology was updated to treat all LLM vulnerabilities as high severity"
+      ],
+      "correct": 1,
+      "explanation": "The pattern across AI CVEs: vendors initially rated EchoLeak low (generic information disclosure). Aim Labs demonstrated a concrete proof-of-concept showing MFA-code exfiltration — not generic data leakage but credential theft that enables account compromise. This demonstration caused the severity escalation to CVSS 9.3."
+    },
+    {
+      "stage": "post",
+      "question": "The methodological lesson from EchoLeak, CamoLeak, and CVE-2025-53773 for AI security disclosure is:",
+      "options": [
+        "AI vulnerabilities should not receive CVEs because they cannot be patched in the same way as software bugs",
+        "AI-specific vulnerabilities require comprehensive proof-of-concept demonstrations before severity can be assessed — initial classifications are often too low, and defenders must push for full exploit demonstration",
+        "AI vulnerabilities are always rated higher than equivalent software vulnerabilities because LLMs have access to more sensitive data",
+        "Responsible disclosure is not appropriate for AI vulnerabilities because patches are deployed instantly via server-side updates"
+      ],
+      "correct": 1,
+      "explanation": "The consistent pattern across all three CVEs: initial severity assessments were low; demonstrations of full exploits (MFA codes for EchoLeak, data exfiltration for CamoLeak) forced escalation. The lesson is that AI vulnerability assessment requires demonstrated exploits, and defenders should not accept low initial severity ratings without a complete proof of concept."
+    }
+  ]
+}

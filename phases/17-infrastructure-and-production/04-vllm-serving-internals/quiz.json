@@ -1,0 +1,71 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What problem does PagedAttention solve compared to a standard KV cache implementation?",
+      "options": [
+        "It moves the KV cache from GPU to CPU to free up HBM for larger models",
+        "It manages KV cache as fixed-size blocks like virtual memory, keeping fragmentation under 4%",
+        "It compresses KV cache values using FP8 quantization to double effective capacity",
+        "It shares a single KV cache across all replicas in a multi-GPU cluster"
+      ],
+      "correct": 1,
+      "explanation": "PagedAttention manages KV cache as fixed-size blocks in a block table — analogous to OS virtual memory. This eliminates the fragmentation and over-reservation that plagues contiguous-allocation schemes, keeping waste under 4% at production load."
+    },
+    {
+      "stage": "pre",
+      "question": "What is continuous batching in vLLM and what problem does it solve over static batching?",
+      "options": [
+        "It batches all requests of the same prompt length together to avoid padding waste",
+        "It admits new requests and releases finished ones at every decode iteration without draining the batch",
+        "It continuously monitors GPU utilization and adjusts batch size accordingly",
+        "It splits long prompts into continuous chunks to prevent VRAM overflow"
+      ],
+      "correct": 1,
+      "explanation": "Continuous batching works at the iteration level: when a sequence finishes decoding, it leaves the batch immediately and a waiting request takes its slot — without waiting for all sequences to finish. This eliminates head-of-line blocking from slow sequences."
+    },
+    {
+      "stage": "post",
+      "question": "Chunked prefill in vLLM primarily protects which latency metric?",
+      "options": [
+        "Mean throughput (tokens per second)",
+        "Mean TTFT across all requests",
+        "P99 TTFT tail latency",
+        "Mean TPOT (inter-token latency)"
+      ],
+      "correct": 2,
+      "explanation": "Chunked prefill slices long prompts into smaller chunks and interleaves them with decode iterations. This prevents a single massive prefill from monopolizing the GPU and spiking decode latency for concurrent requests. It protects P99 TTFT, not mean throughput."
+    },
+    {
+      "stage": "post",
+      "question": "A Llama 3.3 70B FP8 model on one H100 SXM5 with all three vLLM optimizations enabled at 128 concurrent requests achieves approximately how many tokens per second?",
+      "options": ["~600 tok/s", "~1,800 tok/s", "2,200-2,400 tok/s", "~4,000 tok/s"],
+      "correct": 2,
+      "explanation": "With PagedAttention, continuous batching, and chunked prefill all enabled, the lesson cites 2,200-2,400 tok/s — roughly 25% above vLLM's own default (~1,800) and 3-4x a naive PyTorch forward loop (~600 tok/s)."
+    },
+    {
+      "stage": "post",
+      "question": "What is the v0.18.0 compatibility gotcha teams hit when enabling every vLLM optimization at once?",
+      "options": [
+        "PagedAttention and continuous batching conflict at >64 concurrent requests",
+        "Draft-model speculative decoding plus --enable-chunked-prefill does not compile; only N-gram GPU spec decode works in V1",
+        "FP8 quantization disables chunked prefill in V1 mode",
+        "KV cache offloading to CPU is incompatible with continuous batching"
+      ],
+      "correct": 1,
+      "explanation": "vLLM v0.18.0 has a documented incompatibility: draft-model speculative decoding combined with --enable-chunked-prefill does not compile. The exception is N-gram GPU speculative decoding in V1, which is compatible with chunked prefill."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the approximate P99 ITL (inter-token latency) improvement from adding chunked prefill under mixed prefill/decode load?",
+      "options": [
+        "~15 ms with chunked prefill vs ~50 ms without",
+        "~5 ms with chunked prefill vs ~10 ms without",
+        "~100 ms with chunked prefill vs ~200 ms without",
+        "No improvement — chunked prefill only reduces TTFT, not ITL"
+      ],
+      "correct": 0,
+      "explanation": "The lesson's numbers show P99 ITL drops from ~50 ms (without chunked prefill) to ~15 ms (with it) under mixed load. Chunked prefill prevents long prefill batches from blocking decode iterations, directly improving the tail of inter-token latency."
+    }
+  ]
+}

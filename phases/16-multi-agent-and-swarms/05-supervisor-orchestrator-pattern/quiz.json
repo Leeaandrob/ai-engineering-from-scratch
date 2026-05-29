@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "According to Anthropic's production Research system, what single factor explains 80% of the variance on BrowseComp?",
+      "options": ["The model tier used for the lead agent", "Total token usage — each subagent getting a fresh context window", "The number of parallel workers spawned", "The quality of the synthesis prompt used by the lead"],
+      "correct": 1,
+      "explanation": "Anthropic's engineering post reports that 80% of BrowseComp variance is explained by token usage alone. Multi-agent wins primarily because each subagent gets a fresh 200k-token window for a narrow question, not because of the orchestration logic itself."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the recommended model pairing for the supervisor pattern in production?",
+      "options": ["Same model for lead and workers to ensure consistent outputs", "Reasoning-tier model (Opus class) for the lead; faster cheaper model (Sonnet class) for workers", "Fastest available model for the lead since it only plans; most capable for workers", "All workers use the same model but the lead uses an ensemble of two models"],
+      "correct": 1,
+      "explanation": "Anthropic's production pairing: Opus 4 as lead (plans, decomposes, synthesizes — complex reasoning), Sonnet 4 as subagents (focused execution — faster, cheaper). The lead does the hardest reasoning; workers need only follow a narrow instruction accurately."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'synthesis conflict' failure mode and what is the recommended mitigation?",
+      "options": ["Two workers finish at the same time and overwrite each other's output; fix with a mutex lock", "Two workers return contradictory facts; the lead must surface the disagreement explicitly rather than silently picking one", "The lead's synthesis exceeds the context window; fix by capping the number of workers", "Workers produce outputs in different formats; fix by adding output schema validation before synthesis"],
+      "correct": 1,
+      "explanation": "Synthesis conflict: Worker A says '4.2% gain,' Worker B says '42% gain.' If the lead silently picks one, the user never knows disagreement occurred. The correct behavior is for the lead to note the contradiction explicitly in its output, potentially spawning a third worker to resolve it."
+    },
+    {
+      "stage": "post",
+      "question": "Why do Anthropic's engineers recommend 'rainbow deployments' for the Research system specifically?",
+      "options": ["Rainbow deployments allow different model versions to be tested on the same query for comparison", "Agents are long-running and stateful; blue-green would kill in-flight agent runs; rainbow lets old versions drain while new traffic goes to the new version", "Rainbow deployments reduce token cost by routing simpler queries to older cheaper model versions", "The Research system needs multiple deployment regions simultaneously for low latency globally"],
+      "correct": 1,
+      "explanation": "Blue-green deployments assume stateless services. A research agent may run for 20+ minutes. A hot-swap code deploy would kill it mid-research. Rainbow deployment: new versions take new traffic; old versions continue serving until their in-flight agents finish. Stateful long-running agents make this non-optional."
+    },
+    {
+      "stage": "post",
+      "question": "When is a supervisor pattern the wrong choice compared to a sequential pipeline?",
+      "options": ["When the task requires more than three specialized roles", "When each stage depends on the previous stage's output, making parallelism provide no benefit", "When the lead agent needs to use tools directly rather than only delegating", "When the total token budget is less than 100k tokens"],
+      "correct": 1,
+      "explanation": "Supervisor wins when subtasks are independent (parallel speedup is real). Sequential pipeline wins when step N literally requires step N-1's output: the researcher's work must finish before the coder can start. Parallelism on sequential-dependent tasks adds orchestration cost with no throughput benefit."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the seven fields every handoff packet must carry?",
+      "options": [
+        "author, timestamp, branch, commit, files, tests, status",
+        "summary, changed_files, commands_run, failed_attempts, open_risks, next_action, verdict_pointer",
+        "goal, progress, blockers, decisions, lessons, metrics, todos",
+        "start_state, end_state, actions, observations, thoughts, evaluations, plans"
+      ],
+      "correct": 1,
+      "explanation": "The seven handoff fields: summary (what was done), changed_files (diff at a glance), commands_run (what was actually executed), failed_attempts (what was tried and why it failed), open_risks (what could bite next session), next_action (first concrete step next session takes), verdict_pointer (path to verification + review reports)."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is the 'next_action' field the most load-bearing in a handoff?",
+      "options": [
+        "It is the longest field and contains the most information",
+        "Without it, the handoff is a status report (useful) but not a handoff — the next session still has to figure out where to start",
+        "It determines the priority of the task on the board",
+        "It is required by CI to verify the handoff is complete"
+      ],
+      "correct": 1,
+      "explanation": "A handoff without next_action is a status report — it tells what happened but leaves the next session to figure out where to start. The next_action field makes the first action deterministic: the next session begins immediately instead of spending tokens recovering context."
+    },
+    {
+      "stage": "post",
+      "question": "When should a handoff packet be generated rather than continuing with in-place compaction?",
+      "options": [
+        "Only when the session crashes unexpectedly",
+        "At 50-75% context budget — before quality degrades from compression; compaction extends a session, handoff closes one cleanly",
+        "Only at the end of a completed task",
+        "When the model asks for it"
+      ],
+      "correct": 1,
+      "explanation": "Best results occur when the session ends at 50-75% context budget, not at 95%. The handoff packet is cheap to generate while context is intact; expensive when the model is already losing its place due to compression artifacts. Compaction extends a session; handoff closes one cleanly and starts the next."
+    },
+    {
+      "stage": "post",
+      "question": "What does the 'one active handoff per branch and topic' pattern prevent?",
+      "options": [
+        "Too many handoff files accumulating in the repository",
+        "Stale handoffs driving the next session — only the active handoff (status: active vs superseded vs archived) drives next session decisions",
+        "Conflicting next_action fields from multiple sessions",
+        "Handoff packets being used by the wrong agent"
+      ],
+      "correct": 1,
+      "explanation": "Always include branch, last_known_good_commit, and status (active/superseded/archived). Stale handoffs are archived; only the active one drives the next session. Without this, multi-agent coordination breaks down on stale handoff-as-notes rather than handoff-as-state."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'feedback trim' strategy for handoff packets?",
+      "options": [
+        "Include the full feedback log",
+        "Carry only the last K feedback entries plus every entry with a non-zero exit code; next session loads the full log if needed",
+        "Include only the most recent 5 commands",
+        "Summarize all feedback into a single paragraph"
+      ],
+      "correct": 1,
+      "explanation": "The feedback trim strategy: include the last K entries (recent context) plus every non-zero exit code entry (failure history). The next session loads the full feedback_record.jsonl if it needs more context, but the packet stays small."
+    },
+    {
+      "stage": "pre",
+      "question": "Why are handoffs generated from artifacts rather than hand-written by the agent?",
+      "options": [
+        "Agents are not capable of writing good summaries",
+        "A hand-written handoff gets skipped on a hard day; the generator reads workbench artifacts and produces the packet automatically — the agent's job is to leave the workbench in a state the generator can summarize",
+        "Generated handoffs are more accurate than written ones",
+        "Hand-written handoffs would not be structured enough for the next agent to parse"
+      ],
+      "correct": 1,
+      "explanation": "Hand-written handoffs get skipped when sessions end under pressure. The generator reads the workbench artifacts (state, verdict, review, feedback) and emits the packet automatically. The agent's job is to maintain good workbench artifacts, not to write prose summaries under time pressure."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are Voyager's three core components?",
+      "options": [
+        "Memory, Planning, Execution",
+        "Automatic curriculum, Skill library, Iterative prompting mechanism",
+        "Proposer, Critic, Refiner",
+        "Planner, Worker, Solver"
+      ],
+      "correct": 1,
+      "explanation": "Voyager (Wang et al., TMLR 2024) has three components: an Automatic curriculum (curiosity-driven task proposer), a Skill library (executable code stored and retrieved by similarity), and an Iterative prompting mechanism (refine skills using environment feedback)."
+    },
+    {
+      "stage": "pre",
+      "question": "Why does Voyager use code as its action space instead of primitive commands?",
+      "options": [
+        "Code is faster to execute than primitive commands",
+        "Code enables temporally extended, composable, reusable behavior that can be stored as named skills and retrieved later",
+        "Code requires fewer tokens than listing primitive commands",
+        "Primitive commands are not supported in Minecraft"
+      ],
+      "correct": 1,
+      "explanation": "Making the action space code (JavaScript functions) enables temporally extended actions, composition from sub-skills, and storage as retrievable named programs. This is the foundation for the 2026 Claude Agent SDK skills pattern."
+    },
+    {
+      "stage": "post",
+      "question": "What three feedback signals does Voyager's iterative prompting mechanism use?",
+      "options": [
+        "Reward, Penalty, Neutral",
+        "Success, Error (with stack trace), Self-verification failure",
+        "Pass, Fail, Retry",
+        "High, Medium, Low confidence"
+      ],
+      "correct": 1,
+      "explanation": "Voyager's feedback loop uses three signals: success (skill works as intended), error with stack trace (execution failed), and self-verification failure (skill ran but did not achieve the goal). All three feed back into skill refinement."
+    },
+    {
+      "stage": "post",
+      "question": "What Minecraft performance improvements does Voyager report vs baselines?",
+      "options": [
+        "2x more unique items, 3x faster stone tools",
+        "3.3x more unique items, 8.5x faster stone tools, 6.4x faster iron tools, 2.3x longer map traversal",
+        "5x faster task completion, 10x better success rate",
+        "Same performance, but with far fewer tokens"
+      ],
+      "correct": 1,
+      "explanation": "Voyager achieves 3.3x more unique items, 8.5x faster stone tools, 6.4x faster iron tools, and 2.3x longer map traversal versus baselines in Minecraft (Wang et al., 2024)."
+    },
+    {
+      "stage": "post",
+      "question": "What is 'skill library rot' and how is it mitigated?",
+      "options": [
+        "Skills becoming outdated as the environment changes; mitigate by re-running all skills periodically",
+        "The same skill being added multiple times with slightly different descriptions; mitigate by deduplication on write",
+        "Skills taking too long to execute; mitigate by adding timeouts",
+        "Skills conflicting with each other; mitigate by version pinning"
+      ],
+      "correct": 1,
+      "explanation": "Skill library rot means the same skill gets added 10+ times with slightly different descriptions, bloating the library and degrading retrieval. Deduplication on write — collapsing near-duplicate descriptions to one canonical skill — prevents this."
+    },
+    {
+      "stage": "pre",
+      "question": "How does the Voyager skill retrieval process work for a new task?",
+      "options": [
+        "The agent reads all skills and picks the most recently added one",
+        "The task description is embedded, top-k similar skills are retrieved, and the new skill is composed from retrieved primitives plus new logic",
+        "The agent asks the user which skill to use",
+        "Skills are retrieved alphabetically until one works"
+      ],
+      "correct": 1,
+      "explanation": "For a new task: (1) embed the task description, (2) query the skill library for top-k similar skills, (3) retrieve relevant primitives, (4) compose a new skill from those primitives plus any new logic needed."
+    }
+  ]
+}

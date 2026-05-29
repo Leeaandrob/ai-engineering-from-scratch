@@ -1,0 +1,71 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the key difference between shadow mode and canary rollout?",
+      "options": [
+        "Shadow mode uses 1% of traffic while canary uses 10%",
+        "Shadow mode duplicates production requests with zero user impact; canary shifts live user traffic progressively",
+        "Shadow mode only tests latency while canary tests output quality",
+        "Shadow mode requires feature flags while canary uses DNS-based traffic splitting"
+      ],
+      "correct": 1,
+      "explanation": "Shadow mode duplicates real production requests to the candidate model, logs results, and compares — with zero user impact. Canary routes a percentage of live users to the new model. Shadow catches distribution issues; canary exposes users to the actual product change."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the standard canary traffic progression for LLM rollouts?",
+      "options": [
+        "50% → 100%",
+        "10% → 50% → 100%",
+        "1% → 10% → 25% → 50% → 75% → 100%",
+        "0.1% → 1% → 10% → 100%"
+      ],
+      "correct": 2,
+      "explanation": "The lesson specifies: 1% → 10% → 25% → 50% → 75% → 100% with quality gates at each step. The slow progression at low percentages catches regressions early when blast radius is minimal."
+    },
+    {
+      "stage": "post",
+      "question": "Up to what percentage run-to-run accuracy variation can occur on identical LLM inputs due to GPU non-determinism?",
+      "options": ["~1%", "~5%", "~15%", "~30%"],
+      "correct": 2,
+      "explanation": "The lesson cites up to 15% run-to-run variance on identical inputs due to GPU FP non-associativity (floating-point reduction order varies by batch) and batch-size variance. This means 'stable' in an LLM canary must account for inherent non-determinism."
+    },
+    {
+      "stage": "post",
+      "question": "What is the rollback strategy that takes seconds rather than hours?",
+      "options": [
+        "Re-deploy the previous Docker image from the container registry",
+        "Flip the policy feature flag and revert the pinned model digest in the registry",
+        "Drain the current replica set and scale up the previous replica set",
+        "Run a database migration to restore the previous model configuration"
+      ],
+      "correct": 1,
+      "explanation": "The lesson's rollback recipe: policy lives in a feature flag (flip percentage in config, takes seconds) + model is pinned to a registry digest. Rollback = revert flag + set digest to previous. No redeploy required. Rollbacks that require redeploy take 10-30 minutes."
+    },
+    {
+      "stage": "post",
+      "question": "The lesson names five LLM-specific canary metrics to track. Which of the following is NOT one of the five?",
+      "options": [
+        "Latency percentiles",
+        "Cost per request",
+        "GPU utilization per replica",
+        "Error and refusal rate"
+      ],
+      "correct": 2,
+      "explanation": "The five canary metrics are: latency percentiles, cost/request, error/refusal rate, output length distribution, and user feedback rate. GPU utilization is an infrastructure metric, not one of the five LLM-specific quality gates."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is cost described as a variable in LLM canary rollouts rather than a constant?",
+      "options": [
+        "Provider pricing changes frequently and can shift during a rollout",
+        "A 20% better model can be 3x more expensive per call, so quality improvements may not be free",
+        "Cost varies by region and the canary may serve different geographies",
+        "Caching behavior differs between models, making cost unpredictable"
+      ],
+      "correct": 1,
+      "explanation": "The lesson warns: a new model that is 20% better on quality benchmarks may cost 3x more per API call. Teams that approve rollouts based only on quality metrics without monitoring cost/request can inadvertently triple their inference bill."
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which inference platform billing model is most cost-effective for a workload running at less than 30% sustained GPU utilization?",
+      "options": [
+        "Per-minute (Baseten, Modal)",
+        "Per-token (Fireworks, Together)",
+        "Per-prediction (Replicate)",
+        "Reserved annual commitment"
+      ],
+      "correct": 1,
+      "explanation": "Below ~30% sustained utilization, per-token pricing wins because you only pay for tokens consumed and avoid idle GPU charges. Per-minute billing is cheaper once you are saturating the GPU above that threshold."
+    },
+    {
+      "stage": "pre",
+      "question": "Which inference platform is described as Python-native serverless with per-second billing and sub-second cold starts via GPU snapshots?",
+      "options": ["Fireworks AI", "Baseten", "Modal", "Anyscale"],
+      "correct": 2,
+      "explanation": "Modal is the Python-native platform: you decorate a function with @modal.function(gpu='A100') and deploy with one command. It uses per-second billing and achieves sub-second cold starts for small models with pre-warming."
+    },
+    {
+      "stage": "post",
+      "question": "What differentiates Fireworks AI from other per-token GPU platforms regarding fine-tuned LoRA model pricing?",
+      "options": [
+        "Fireworks charges a 2x premium for LoRA-served requests",
+        "Fireworks charges LoRA-served requests at the same rate as the base model",
+        "Fireworks requires pre-purchasing LoRA serving capacity separately",
+        "Fireworks does not support LoRA fine-tunes on its serverless tier"
+      ],
+      "correct": 1,
+      "explanation": "The lesson explicitly names Fireworks' policy of charging fine-tuned LoRA requests at the base model rate as a real differentiator versus providers that charge a premium for custom adapter inference."
+    },
+    {
+      "stage": "post",
+      "question": "Which platform was valued at $5 billion after its January 2026 Series E and is described as enterprise-polish-optimized with SOC 2 and HIPAA certifications?",
+      "options": ["Fireworks AI", "Modal", "Baseten", "Together AI"],
+      "correct": 2,
+      "explanation": "Baseten closed a $300M Series E at $5B valuation in January 2026 from CapitalG, IVP, and NVIDIA. It is enterprise-polish-optimized with SOC 2 Type II, HIPAA-readiness, and Truss model packaging."
+    },
+    {
+      "stage": "post",
+      "question": "The lesson identifies a rule of thumb for when per-minute billing beats per-token billing. What is that threshold?",
+      "options": [
+        "Above ~10% sustained GPU utilization",
+        "Above ~30% sustained GPU utilization",
+        "Above ~60% sustained GPU utilization",
+        "Above ~80% sustained GPU utilization"
+      ],
+      "correct": 1,
+      "explanation": "The lesson states: for workloads above ~30% sustained utilization of a dedicated GPU, per-minute (Baseten, Modal) starts to beat per-token. Below that, per-token wins by avoiding idle charges."
+    },
+    {
+      "stage": "pre",
+      "question": "Which inference platform is built on Ray and is described as best for distributed Python workloads where inference is one node in a larger compute graph?",
+      "options": ["Replicate", "Together AI", "Baseten", "Anyscale"],
+      "correct": 3,
+      "explanation": "Anyscale is built on Ray and uses RayTurbo as its inference engine. It is the right pick when the inference step is embedded in a larger Ray-native distributed Python workflow rather than a standalone service."
+    }
+  ]
+}

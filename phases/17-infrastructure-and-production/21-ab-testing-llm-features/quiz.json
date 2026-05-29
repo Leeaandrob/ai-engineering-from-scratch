@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the critical distinction between evals and A/B tests for LLM features?",
+      "options": [
+        "Evals use synthetic data; A/B tests use real traffic",
+        "Evals answer whether the model can do the job; A/B tests answer whether users care",
+        "Evals are offline; A/B tests are always real-time",
+        "Evals measure accuracy; A/B tests measure latency"
+      ],
+      "correct": 1,
+      "explanation": "The lesson frames it precisely: evals answer 'can the model do the job?' (capability, quality on benchmarks); A/B tests answer 'do users care?' (engagement, retention, conversion). Both are required — shipping on vibe checks without both is over."
+    },
+    {
+      "stage": "pre",
+      "question": "Statsig was acquired by which company in September 2025, and for approximately how much?",
+      "options": [
+        "Anthropic for $500M",
+        "OpenAI for $1.1B",
+        "Google for $800M",
+        "Microsoft for $2B"
+      ],
+      "correct": 1,
+      "explanation": "Statsig was acquired by OpenAI for $1.1 billion in September 2025. This acquisition context is relevant to organizations deciding whether to use Statsig — some teams care about having their experimentation infrastructure owned by a model provider."
+    },
+    {
+      "stage": "post",
+      "question": "What is CUPED and why is it important for LLM A/B tests?",
+      "options": [
+        "A correction for multiple simultaneous experiments (multiple-comparison correction)",
+        "Variance reduction using pre-experiment covariates, reducing required sample size",
+        "A method to detect sample ratio mismatch (SRM) in randomization",
+        "A sequential testing approach that allows peeking at results early"
+      ],
+      "correct": 1,
+      "explanation": "CUPED (Controlled-experiment Using Pre-Experiment Data) reduces variance in the experiment metric by controlling for pre-experiment covariates. It reduces the required sample size to achieve statistical power — important for LLM features where collecting enough samples takes time."
+    },
+    {
+      "stage": "post",
+      "question": "A real case study cited in the lesson showed a chatbot reward-model variant delivering what improvements?",
+      "options": [
+        "+10% conversation length and +5% retention",
+        "+70% conversation length and +30% retention",
+        "+30% conversation length and +70% retention",
+        "+5% CTR and +2% retention"
+      ],
+      "correct": 1,
+      "explanation": "The lesson cites a chatbot reward-model variant delivering +70% conversation length and +30% retention. This is the kind of business metric that an eval on benchmark accuracy would not have predicted — which is why A/B tests are required alongside evals."
+    },
+    {
+      "stage": "post",
+      "question": "What is the Benjamini-Hochberg correction used for in LLM experimentation?",
+      "options": [
+        "Correcting for TTFT measurement bias in streaming responses",
+        "Controlling the false discovery rate when running multiple simultaneous experiments",
+        "Adjusting for non-deterministic model outputs in significance tests",
+        "Correcting for A/B test sample ratio mismatches"
+      ],
+      "correct": 1,
+      "explanation": "Benjamini-Hochberg (BH) controls the false discovery rate when testing multiple hypotheses simultaneously. When you run 20 experiments in parallel, some will appear significant by chance. BH sets the threshold per test to keep the expected proportion of false positives bounded."
+    },
+    {
+      "stage": "pre",
+      "question": "GrowthBook is described as the warehouse-native A/B testing platform. What distinguishes it architecturally?",
+      "options": [
+        "It stores experiment data in its own proprietary time-series database",
+        "It reads metrics directly from your Snowflake/BigQuery/Redshift data warehouse without ingesting data",
+        "It runs entirely in the browser without server-side infrastructure",
+        "It uses LLMs to automatically interpret experiment results"
+      ],
+      "correct": 1,
+      "explanation": "GrowthBook is warehouse-native: it queries your existing Snowflake, BigQuery, or Redshift data warehouse directly for metrics. Your data stays in your warehouse; GrowthBook adds the experimentation and analysis layer on top without requiring data ingestion."
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the key difference between a 'critic' and a 'verifier' in a role-specialized multi-agent pipeline?",
+      "options": ["A critic is an LLM agent while a verifier is always a human reviewer", "A critic is subjective and LLM-based; a verifier is deterministic and code-based with a pass/fail outcome", "A critic reviews only code artifacts while a verifier reviews all artifact types", "A critic runs before the executor; a verifier runs after the critic but before human approval"],
+      "correct": 1,
+      "explanation": "Critic: an LLM reviewing an artifact for quality. Subjective, can be fooled by plausible-sounding prose. Verifier: a deterministic program running tests, type checking, or schema validation. Objective, gives pass/fail with evidence. Both are needed: critic catches design issues; verifier catches bugs."
+    },
+    {
+      "stage": "pre",
+      "question": "What did PwC report about the impact of adding a structured validation loop to CrewAI deployments?",
+      "options": ["Token cost increased 7x but quality stayed the same", "Accuracy improved from 10% to 70% — a 7x gain from a single role addition", "Latency decreased 7x because verifiers could skip LLM calls for simple checks", "The number of required iterations dropped by 7x because verifiers caught errors earlier"],
+      "correct": 1,
+      "explanation": "PwC's 2025 report on CrewAI deployments: adding a structured validation loop moved task accuracy from 10% to 70%. That is a 7x gain from adding one role — the verifier. This is the most-cited production evidence that verification is the highest-leverage role in multi-agent systems."
+    },
+    {
+      "stage": "pre",
+      "question": "What is MetaGPT's 'Code = SOP(Team)' formulation?",
+      "options": ["A mathematical proof that code quality equals the number of agents on the team squared", "The claim that strict input/output schemas per role turn a team of LLMs into a predictable, deterministic pipeline", "A configuration format that defines agent roles as code rather than natural-language prompts", "A benchmark where MetaGPT's output code is compared against an SOP-specified reference implementation"],
+      "correct": 1,
+      "explanation": "MetaGPT's core insight: encode software-engineering Standard Operating Procedures as role prompts with explicit I/O schemas. Product Manager outputs a PRD. Architect outputs a system design. Engineer reads both and outputs code. When each role has a typed input and a typed output, the team behaves like a deterministic pipeline."
+    },
+    {
+      "stage": "post",
+      "question": "What is 'communicative dehallucination' as described in ChatDev?",
+      "options": ["A post-processing step that removes hallucinated facts from agent outputs using a fact-checking database", "The pattern where an executor agent explicitly asks the planner for missing specific details rather than inventing them", "A multi-round debate where agents challenge each other's claims until hallucinations are eliminated", "An output filtering layer that rejects any agent response containing uncertain language like 'probably' or 'might'"],
+      "correct": 1,
+      "explanation": "ChatDev's communicative dehallucination: when the programmer agent needs a specific detail not in the spec (e.g., which database to use), it asks the designer agent before generating code. This prevents the classic LLM failure of plausibly inventing the missing detail, which would then propagate through the rest of the pipeline."
+    },
+    {
+      "stage": "post",
+      "question": "According to Cemri et al.'s MAST taxonomy, what percentage of multi-agent failures trace back to verification gaps?",
+      "options": ["3.4%", "21.3%", "41.8%", "86.7%"],
+      "correct": 1,
+      "explanation": "Cemri et al. analyzed 1642 execution traces across 7 multi-agent systems. 21.3% of failures were verification gaps — the system shipped an answer no one had independently checked. The lesson frames this as 'not optional' because verification is the role that catches silent correctness failures before they reach users."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "How does ControlNet attach a new conditioning signal to a pretrained diffusion model?",
+      "options": [
+        "It retrains the full U-Net from scratch on (condition, image) pairs",
+        "It clones the U-Net encoder, freezes the original, trains the clone to accept the conditioning image, and connects it back via zero-initialized convolutions",
+        "It adds the conditioning image directly to the noisy latent before each denoising step",
+        "It replaces the text cross-attention layers with image cross-attention layers"
+      ],
+      "correct": 1,
+      "explanation": "ControlNet clones the encoder half of the U-Net, freezes the original model, and trains the clone to accept the conditioning input. Zero-convolution skip connections (1x1 convs initialized to zero) inject the clone's features into the decoder, starting as a no-op and learning a delta."
+    },
+    {
+      "stage": "pre",
+      "question": "What does LoRA add to a pretrained linear layer W, and why is it parameter-efficient?",
+      "options": [
+        "A full-rank delta matrix of the same size as W, trained on task-specific data",
+        "A low-rank factored update B@A where B is d x r and A is r x d, with r much smaller than d",
+        "A learned bias vector that shifts the outputs of W without changing its weights",
+        "A gating mechanism that selectively activates subsets of W's rows during inference"
+      ],
+      "correct": 1,
+      "explanation": "LoRA parameterizes the weight delta as B@A where rank r << d. For SDXL attention with d=640 and r=16, this is 20k parameters instead of 410k for a full-rank delta, a 20x reduction. The base weight W stays frozen."
+    },
+    {
+      "stage": "post",
+      "question": "What is the zero-convolution initialization in ControlNet, and why is it important for training stability?",
+      "options": [
+        "Zeros in the ControlNet encoder's first layer prevent gradient flow from corrupting the frozen base early in training",
+        "Zero-initialized 1x1 convolutions make ControlNet a perfect no-op at the start of training, so no harm is done to the frozen base before meaningful features are learned",
+        "Zero initialization sets the ControlNet's conditioning weight to zero, forcing the model to rely on text prompts first",
+        "Zeroing the skip connections prevents ControlNet from accessing the base model's intermediate features"
+      ],
+      "correct": 1,
+      "explanation": "Because the skip connections start at zero output, adding them changes nothing in the frozen base at initialization. ControlNet can then learn gradually without catastrophically disrupting the base model's already good generation ability."
+    },
+    {
+      "stage": "post",
+      "question": "According to the lesson, what is the recommended sum of ControlNet weights when composing multiple ControlNets?",
+      "options": [
+        "Each ControlNet should be set to weight 1.0 regardless of how many are active",
+        "The sum of active ControlNet weights should be approximately 1.0 to avoid overshooting",
+        "ControlNet weights should always sum to 0.5 so the base model retains majority influence",
+        "ControlNet weights have no interaction; each can be set independently without regard to others"
+      ],
+      "correct": 1,
+      "explanation": "Running two ControlNets each at weight 1.0 typically overshoots, producing unnatural outputs dominated by the conditioning signals. Keeping the total weight around 1.0 (e.g., 0.5 + 0.5 or 0.7 + 0.3) preserves the base model's contribution."
+    },
+    {
+      "stage": "post",
+      "question": "How does IP-Adapter differ from a LoRA in terms of what it controls and how it works?",
+      "options": [
+        "IP-Adapter fine-tunes the full U-Net weights; LoRA fine-tunes only the attention layers",
+        "IP-Adapter accepts a reference image as conditioning via CLIP image tokens injected into cross-attention; LoRA adapts the weight matrices for a concept expressed in text",
+        "IP-Adapter replaces the VAE encoder with a CLIP encoder; LoRA replaces the text encoder",
+        "IP-Adapter is a ControlNet variant that uses image patches instead of edge maps"
+      ],
+      "correct": 1,
+      "explanation": "IP-Adapter (~20MB) uses the CLIP image encoder to produce image tokens and injects them into cross-attention alongside text tokens. It provides style/subject reference from an image without requiring text description. LoRA adjusts weight matrices to encode a concept as a weight-space delta."
+    },
+    {
+      "stage": "pre",
+      "question": "What happens when a LoRA trained for SDXL is loaded onto an SD 1.5 model?",
+      "options": [
+        "The LoRA applies correctly because LoRA ranks are model-agnostic",
+        "The LoRA silently no-ops because the attention weight dimensions differ between SDXL and SD 1.5",
+        "The LoRA causes a NaN error because the scaling factor is incompatible",
+        "The LoRA blends with the SD 1.5 weights but produces weak stylistic effects"
+      ],
+      "correct": 1,
+      "explanation": "LoRA matrices are sized for specific layer dimensions. SDXL has different attention dimensions than SD 1.5. Loading an SDXL LoRA onto SD 1.5 produces a shape mismatch that Diffusers 0.30+ warns about, and the result is a no-op rather than the intended adaptation."
+    }
+  ]
+}

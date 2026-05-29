@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the two phases of the Constitutional AI (CAI) pipeline?",
+      "options": [
+        "Pre-training on constitutional data, then RLHF with human labelers",
+        "Supervised self-critique and revision under a constitution, then RL from AI Feedback (RLAIF)",
+        "Reward model training on constitutional principles, then DPO on principle-violating pairs",
+        "Principle injection into the system prompt, then behavioral evaluation"
+      ],
+      "correct": 1,
+      "explanation": "CAI has two phases: (1) supervised learning where the model critiques and revises its own responses using sampled constitutional principles, producing SFT targets; and (2) RLAIF where an AI feedback model ranks completion pairs against principles, training a reward model used in standard PPO."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is replacing a human labeler with an AI labeler in RLAIF NOT simply 'cheaper RLHF'?",
+      "options": [
+        "Because AI labelers are slower than humans and increase training cost",
+        "Because the failure modes change — labeler bias shifts from psychology to principle-interpretation, and Goodhart's Law still applies to the AI-generated proxy",
+        "Because AI labelers cannot process preference data as accurately as trained humans",
+        "Because RLAIF requires more compute to run the feedback model compared to human annotation"
+      ],
+      "correct": 1,
+      "explanation": "The preference signal changes qualitatively: labeler psychology is replaced by the AI's interpretation of principles. Sycophancy drops (no user to please), but Goodhart's Law persists. The proxy is now 'model's interpretation of principle set X,' still an imperfect measurement of what was intended."
+    },
+    {
+      "stage": "pre",
+      "question": "The 2026 Claude constitution introduced a four-tier priority hierarchy. Which tier is the highest priority?",
+      "options": [
+        "Being broadly ethical (standard HHH)",
+        "Following Anthropic's guidelines and operator rules",
+        "Avoiding catastrophic outcomes such as mass casualty events or critical infrastructure attacks",
+        "Being helpful and candid to the user"
+      ],
+      "correct": 2,
+      "explanation": "The 2026 four-tier hierarchy resolves conflicts top-down: Tier 1 (catastrophic avoidance) > Tier 2 (Anthropic guidelines/operator rules) > Tier 3 (broad ethics/HHH) > Tier 4 (helpfulness). When any two tiers conflict, the higher tier wins."
+    },
+    {
+      "stage": "post",
+      "question": "Constitutional Classifiers v2 (2026) improved over v1 (2023) primarily in which dimension?",
+      "options": [
+        "The number of constitutional principles covered increased from 16 to over 100",
+        "Compute overhead dropped from 23.7% to approximately 1% while maintaining the lowest reported successful attack rate",
+        "The classifier now handles multimodal inputs including images and audio",
+        "The classifier runs on the client side instead of requiring server-side inference"
+      ],
+      "correct": 1,
+      "explanation": "Constitutional Classifiers v1 had 23.7% compute overhead — significant for production. v2 reduced this to approximately 1%, making it qualitatively different for deployment. Anthropic reports it also has the lowest successful attack rate of any publicly tested Anthropic defense as of early 2026."
+    },
+    {
+      "stage": "post",
+      "question": "What distinguishes CAI's legibility advantage over standard RLHF from human labelers?",
+      "options": [
+        "CAI produces a numerical score for each response rather than a binary preference",
+        "CAI's preference signal is strongly legible — you can read the principle, the critique, and the revision — whereas human labels are opaque",
+        "CAI eliminates disagreement between labelers because the AI always applies principles consistently",
+        "CAI requires fewer training examples because principles generalize better than demonstrations"
+      ],
+      "correct": 1,
+      "explanation": "A critical property of CAI is that the preference signal is interpretable: you can trace a critique-and-revision pair back to the specific constitutional principle that motivated it. Human preference labels from pairwise rankings give only a number with no explanation, making it hard to diagnose failure modes."
+    },
+    {
+      "stage": "post",
+      "question": "Which aspect of the 2026 Claude constitution was described as a first for a major AI laboratory?",
+      "options": [
+        "Publishing the constitution under an open license (CC0 1.0)",
+        "Including a section on cybersecurity vulnerabilities",
+        "Explicitly acknowledging uncertainty about model moral status",
+        "Specifying rules for refusing government requests"
+      ],
+      "correct": 2,
+      "explanation": "The 2026 Claude constitution includes the first major-lab formal acknowledgment of uncertainty about model moral status, linking to the model welfare research program covered in Lesson 19. It was released under CC0 1.0, but the moral-status acknowledgment is identified as the notable first."
+    }
+  ]
+}

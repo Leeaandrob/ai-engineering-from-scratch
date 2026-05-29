@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the two essential properties of a correctly implemented kill switch?",
+      "options": [
+        "Fast response time and automatic re-enable after a timeout",
+        "The agent cannot set it to off; it is checked on every consequential action (not just at startup); re-enabling requires an explicit human action",
+        "Encrypted storage and audit logging of every state change",
+        "Integration with the cloud provider's billing system and automatic rollback capability"
+      ],
+      "correct": 1,
+      "explanation": "A correct kill switch lives in a system the agent's credentials do not write (agent cannot turn it off), is checked on every consequential action, causes no externally observable behavior when off, and requires an explicit human action to re-enable (not an automatic timeout)."
+    },
+    {
+      "stage": "pre",
+      "question": "In classical circuit-breaker terminology, what happens in the 'half-open' state?",
+      "options": [
+        "Half of all requests are blocked while the other half are allowed",
+        "After a cool-down, 1-3 probe attempts are allowed; success closes (allows) the breaker, any failure re-opens (blocks) it",
+        "The circuit breaker monitors but does not block requests",
+        "The circuit breaker escalates all requests to human review"
+      ],
+      "correct": 1,
+      "explanation": "Half-open is the recovery probe state (from Nygard 2007). After a cool-down period, a small number of probe requests are allowed. If they succeed, the breaker closes (normal operation resumes). Any failure during probing re-opens the breaker."
+    },
+    {
+      "stage": "pre",
+      "question": "What is a canary token (honeytoken) in an agent deployment, and what is its alarm condition?",
+      "options": [
+        "A credential with extra logging; the alarm fires when the agent uses it successfully",
+        "A bait input the agent has no legitimate reason to touch; access to it is the alarm, because any legitimate workflow should never need it",
+        "A monitoring agent that runs alongside the primary agent to check its outputs",
+        "A syntax marker embedded in system prompts that triggers logging when matched"
+      ],
+      "correct": 1,
+      "explanation": "Canary tokens are inputs the agent should never touch—a fake API key with no real privilege, a sentinel database record, a fake file, or a fake memory entry. Any read, write, or reference to the canary is the alarm because legitimate workflows have no reason to access it. Access reveals either exfiltration or prompt injection."
+    },
+    {
+      "stage": "post",
+      "question": "Why should statistical detectors like EWMA and CUSUM be layered with hard constitutional limits rather than used alone?",
+      "options": [
+        "Statistical detectors are too computationally expensive to run alone",
+        "Statistical detectors adapt to baseline drift, so a patient attacker can shift the baseline slowly enough that no alarm fires; hard limits do not bend",
+        "Hard constitutional limits are required by the EU AI Act; statistical detectors are optional",
+        "EWMA and CUSUM have high false-positive rates that would trigger too many alerts without hard limits as a filter"
+      ],
+      "correct": 1,
+      "explanation": "EWMA and CUSUM adapt to a moving baseline. That is a feature for legitimate drift and a bug for adversarial drift: a patient attacker can shift the baseline slowly enough that no statistical alarm fires. Hard constitutional limits (e.g., 'never email secrets@') do not adapt, catching the attack that walked past the statistical detector."
+    },
+    {
+      "stage": "post",
+      "question": "What is the key design requirement that prevents a canary token from being useless?",
+      "options": [
+        "The canary must be rotated every 24 hours to stay effective",
+        "The canary must be in a system the agent cannot modify and must not be something the agent has a legitimate reason to touch",
+        "The canary must be embedded in every tool call as a verification step",
+        "The canary must match the format of real credentials exactly to be convincing"
+      ],
+      "correct": 1,
+      "explanation": "A canary the agent has a legitimate reason to touch is noise—it will fire constantly with false positives. The canary must be in a system the agent cannot modify (so the agent cannot delete the canary itself) and must be something no legitimate workflow accesses."
+    },
+    {
+      "stage": "post",
+      "question": "How does Cilium's eBPF-based datapath redirect support forensic investigation of a quarantined agent?",
+      "options": [
+        "It replays the agent's memory to reconstruct what decisions it made",
+        "It rewrites the quarantined pod's egress traffic to a honeypot at the kernel layer, so the agent's behavior is fully observed while no real exfiltration occurs",
+        "It captures all network packets and uploads them to a forensic analysis service",
+        "It terminates the agent process and sends a core dump to the security team"
+      ],
+      "correct": 1,
+      "explanation": "Cilium can rewrite a quarantined pod's egress to a forensic honeypot at the kernel layer with sub-millisecond datapath latency. The agent does not exfiltrate real data, and the agent's full behavior inside the honeypot is observable. This provides both containment and forensic evidence."
+    }
+  ]
+}

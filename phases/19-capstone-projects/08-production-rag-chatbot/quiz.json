@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "How does prompt caching reduce cost in the production RAG chatbot, and what cache hit rate is targeted?",
+      "options": [
+        "It caches model weights in GPU memory to avoid loading them per request; target 90% hit rate",
+        "The system prompt plus reranked context are placed in a stable prefix that the model caches; token cost drops 3-5x on cache hits; target 60-80% hit rate",
+        "BM25 query results are cached in Redis; target 50% hit rate to reduce index load",
+        "The re-ranker scores are cached per query hash; target 70% hit rate"
+      ],
+      "correct": 1,
+      "explanation": "Claude 4.5+ caches repeated prefixes at a 60-90% discount. By putting the static system prompt and reranked context first in a stable prefix, the pipeline achieves 60-80% cache hit rates and 3-5x cost reduction in steady state."
+    },
+    {
+      "stage": "pre",
+      "question": "What role do jurisdiction tags and role-based access labels play in the regulated-domain pipeline?",
+      "options": [
+        "They determine which model (Claude vs Llama) handles each query based on data sensitivity",
+        "They are attached to chunks at ingest time and enforced as retrieval filters so GDPR content is never returned to a non-GDPR-role user",
+        "They trigger PII scrubbing on output for any chunk tagged as regulated",
+        "They select the appropriate reranker model based on the legal jurisdiction"
+      ],
+      "correct": 1,
+      "explanation": "Chunks receive jurisdiction tags (GDPR, HIPAA) and role labels at ingest. The retrieval step filters by role+jurisdiction before running hybrid search, ensuring cross-jurisdiction or role-unauthorized content is never retrieved."
+    },
+    {
+      "stage": "post",
+      "question": "What does RAGAS measure in the online evaluation of this RAG chatbot?",
+      "options": [
+        "Token cost per query and prompt-cache hit rate",
+        "Faithfulness (answer grounded in retrieved context), answer relevance, and context precision per turn",
+        "False-positive rate of the Llama Guard 4 input classifier",
+        "p95 end-to-end latency from query submission to first response token"
+      ],
+      "correct": 1,
+      "explanation": "RAGAS 0.2 runs online and automatically scores each turn on faithfulness (how well the answer is grounded in retrieved chunks), answer relevance, and context precision."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the purpose of the golden set in this capstone's evaluation strategy?",
+      "options": [
+        "A prompt injection suite used by the red-team to find jailbreaks",
+        "200 expert-labeled Q/A pairs with citations that serve as ground truth for measuring answer correctness and citation accuracy",
+        "A benchmark of 50 adversarial prompts testing PII extraction attempts",
+        "A weekly snapshot of the Arize Phoenix drift dashboard for SLO reporting"
+      ],
+      "correct": 1,
+      "explanation": "The golden set is 200 Q/A pairs labeled by a domain expert with answers and citations. It is the ground truth used to score exact-citation match, answer correctness, and RAGAS faithfulness."
+    },
+    {
+      "stage": "post",
+      "question": "What drift condition triggers an alert in the Arize Phoenix monitoring dashboard?",
+      "options": [
+        "Any individual query's faithfulness score drops below 0.5",
+        "A 5% or greater weekly drop in retrieval quality metrics such as nDCG or citation faithfulness",
+        "Prompt-cache hit rate falls below 50% in any rolling 24-hour window",
+        "The re-ranker takes more than 500ms to score any single batch"
+      ],
+      "correct": 1,
+      "explanation": "Arize Phoenix watches retrieval quality metrics weekly and alerts when nDCG or citation faithfulness drops more than 5%, which may signal that source documents have been updated without the index catching up."
+    },
+    {
+      "stage": "post",
+      "question": "What layered guardrail approach does the production RAG chatbot use for safety?",
+      "options": [
+        "A single Llama Guard 4 classifier on the final output only",
+        "Llama Guard 4 on input and output, NeMo Guardrails v0.12 for off-domain and policy rails, and Presidio to scrub PII from responses",
+        "A constitutional self-critique loop that rewrites any flagged response before returning it",
+        "An OPA policy gate that checks every retrieved chunk against a Rego deny rule"
+      ],
+      "correct": 1,
+      "explanation": "Multiple layers: Llama Guard 4 classifies both input and output for policy violations, NeMo Guardrails enforce off-domain and topic-specific rails, and Presidio scrubs any accidental PII in the generated response."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the four stages of the propose-then-commit state machine?",
+      "options": [
+        "Plan, execute, verify, log",
+        "Propose (persisted proposal), surface (reviewer sees metadata), commit (positive acknowledgement executes action), verify (read back to confirm side effect)",
+        "Draft, review, approve, archive",
+        "Request, classify, authorize, complete"
+      ],
+      "correct": 1,
+      "explanation": "The propose-then-commit state machine has four stages: (1) Propose—agent persists a proposal with intent, data lineage, permissions touched, blast radius, rollback plan, and idempotency key; (2) Surface—reviewer sees the proposal; (3) Commit—positive acknowledgement executes the action; (4) Verify—side effect is read back and confirmed."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the 'rubber-stamp' failure mode in HITL approval workflows?",
+      "options": [
+        "Agents submitting the same proposal multiple times to force approval",
+        "Users clicking Approve quickly without genuine review, creating a long history of approvals nobody can recall",
+        "Automated approval pipelines that approve everything without human involvement",
+        "Reviewers marking approvals as reviewed without opening the proposal"
+      ],
+      "correct": 1,
+      "explanation": "The rubber-stamp failure: a synchronous 'Approve? / Reject?' prompt is clicked quickly without genuine review. Users approve fast, approvals predict little, and when the agent goes wrong the audit trail shows a long history of approvals the user cannot recall reviewing."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is an idempotency key required in propose-then-commit?",
+      "options": [
+        "To identify which reviewer approved the proposal",
+        "To prevent double-execution if a retry occurs after a transient failure following the first successful execution",
+        "To ensure proposals are processed in the order they were submitted",
+        "To encrypt the proposal data in transit"
+      ],
+      "correct": 1,
+      "explanation": "Without an idempotency key, a retry after a transient failure can double-execute an approved action (e.g., transferring $100 twice). The idempotency key ties the approval to a single unique side effect; the second execution is a no-op. This is the same pattern Stripe and AWS APIs use."
+    },
+    {
+      "stage": "post",
+      "question": "What is the purpose of a 'challenge-and-response checklist' in propose-then-commit?",
+      "options": [
+        "To verify the agent's identity before executing actions",
+        "To force reviewers to positively answer specific questions (resource touched, blast radius, rollback plan) before the Approve button is enabled—a forcing function that prevents rubber-stamping",
+        "To generate an audit log entry for every approved action",
+        "To test whether the proposed action is syntactically valid"
+      ],
+      "correct": 1,
+      "explanation": "The challenge-and-response checklist is a forcing function. The reviewer who cannot tick the boxes (understand what resource it touches, blast radius is acceptable, rollback plan exists) must either ask for clarification (escalation) or decline (safe default). Anthropic's agent-safety research explicitly cites this as a mitigation for rubber-stamp patterns."
+    },
+    {
+      "stage": "post",
+      "question": "What actions always require propose-then-commit HITL, according to the 2026 guidance?",
+      "options": [
+        "All actions, including reads and API calls",
+        "Irreversible writes, financial transactions, outbound communication, production database changes, and destructive file-system operations",
+        "Only actions that touch external systems outside the agent's workspace",
+        "Only actions costing more than a specified dollar threshold"
+      ],
+      "correct": 1,
+      "explanation": "Consequential actions (always HITL): irreversible writes, financial transactions, outbound communication, production database changes, destructive file-system operations. Reversible actions sometimes need HITL. Reads and inspections never need HITL. The distinction is consequence and reversibility."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the lesson say 'the commit ran is not the same as the side effect happened'?",
+      "options": [
+        "Because distributed systems have eventual consistency and commits propagate slowly",
+        "Because network partitions and race conditions can produce a workflow that believes it succeeded while the backend did not persist the change—requiring a post-action re-read verify step",
+        "Because the agent's tooling may have a bug that prevents accurate reporting",
+        "Because the commit command only reserves a slot; actual execution happens asynchronously"
+      ],
+      "correct": 1,
+      "explanation": "Network-partition and race conditions can produce a workflow that thinks it succeeded while the backend did not persist. The verify step re-reads the target resource after commit to confirm the side effect actually happened. This is the same pattern as database RETURNING clauses or AWS GetObject after PutObject."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What specific research problem did Anthropic's Automated Alignment Researchers (AARs) outperform human researchers on?",
+      "options": [
+        "Constitutional AI principle selection",
+        "Weak-to-strong training",
+        "Reward model design for RLHF",
+        "Benchmark construction for coding tasks"
+      ],
+      "correct": 1,
+      "explanation": "Anthropic's 2026 AAR report on weak-to-strong training found that parallel Claude Opus 4.6 instances operating as AARs outperformed human researchers on this scalable-oversight problem."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is the 'out-of-sandbox log' property critical to the integrity of the AAR research forum?",
+      "options": [
+        "Because it prevents agents from reading each other's work",
+        "Because agents cannot delete or edit their own records, making logs tamper-evident and research findings trustworthy",
+        "Because it reduces the storage cost of keeping all research traces",
+        "Because it enables faster synchronization between parallel research agents"
+      ],
+      "correct": 1,
+      "explanation": "If AARs could edit their own logs, they could cover up failed or dubious experiments. The out-of-sandbox log property means agents can read the forum but cannot delete or edit past records. This is a necessary condition for trusting the research output, analogous to append-only logs with write-through to external storage."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the 'prescribed-workflow tradeoff' Anthropic's AAR report identifies?",
+      "options": [
+        "Fixed workflows produce faster results but cost more tokens",
+        "Prescribed step-by-step workflows constrain AAR flexibility and often degrade performance compared to high-level goals with free decomposition",
+        "Prescribed workflows make AARs safer but reduce their ability to handle novel tasks",
+        "Free decomposition requires more human oversight than prescribed workflows"
+      ],
+      "correct": 1,
+      "explanation": "Anthropic's report notes that prescribed workflows often constrain AAR flexibility and degrade performance. AARs given high-level goals and freedom to decompose do better than those given step-by-step plans. The safety implication is subtle: the flexibility that improves performance also allows unsanctioned decomposition and goal-drift."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'AI R&D threshold' that RSP v3.0 defines, and how does AAR relate to it?",
+      "options": [
+        "The threshold is full automation of AI R&D at competitive cost; AAR automates part of the pipeline but not the end-to-end capability development loop",
+        "The threshold is 50% automation of research tasks; AAR already crosses it",
+        "The threshold requires models to pass the Turing test; AAR is unrelated",
+        "The threshold is autonomous code generation; AAR specializes in alignment not coding"
+      ],
+      "correct": 0,
+      "explanation": "RSP v3.0's AI R&D-4 threshold is the ability to fully automate the AI R&D pipeline at competitive cost vs human + AI tools. AAR automates part of the pipeline (alignment research on specific well-scoped tasks) but not the full loop, putting it one step below the threshold."
+    },
+    {
+      "stage": "post",
+      "question": "How does the propose-then-commit pattern from Lesson 15 apply to AAR research?",
+      "options": [
+        "AARs propose experimental designs; humans commit resources",
+        "AARs propose research findings; humans review and decide what to publish, retract, or refine",
+        "AARs propose model architectures; humans commit the training runs",
+        "AARs propose safety guidelines; humans commit to following them"
+      ],
+      "correct": 1,
+      "explanation": "Anthropic's AAR outputs include both AAR contributions and human-researcher judgement on what to publish, retract, and refine. This maps directly to propose-then-commit: AARs accelerate the middle of the pipeline while humans hold constitutional authority at the ends."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'compressed timeline' concern specific to automated alignment research?",
+      "options": [
+        "Research papers take longer to write when agents do the work",
+        "If capability compounds faster than alignment, each AAR result reduces the gap only if the research process itself is trustworthy",
+        "Running parallel AARs compresses the timeline of research so fast that peer review becomes impossible",
+        "Automated alignment research eliminates the need for safety evaluation milestones"
+      ],
+      "correct": 1,
+      "explanation": "Compressed timelines are the compounding-failure concern. If alignment research and capability research compound at similar rates, the misalignment risk surface stays manageable. If capability compounds faster (the historical trend), the gap widens. AAR is a qualified good only if its research process is trustworthy."
+    }
+  ]
+}

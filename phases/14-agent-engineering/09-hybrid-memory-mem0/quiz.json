@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the three parallel stores in Mem0 and what does each optimize for?",
+      "options": [
+        "SQL for joins, NoSQL for documents, cache for speed",
+        "Vector for semantic similarity, KV for fast fact lookup, Graph for entity-relationship reasoning",
+        "Primary for writes, replica for reads, archive for history",
+        "RAM for current session, disk for history, network for sharing"
+      ],
+      "correct": 1,
+      "explanation": "Mem0 writes to three parallel stores: Vector (embedding-based semantic similarity queries), KV (O(1) lookup keyed on user_id+fact_type+entity), and Graph (typed edges for relationship queries). Each optimizes for a different query class."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the Mem0 fusion scoring formula?",
+      "options": [
+        "score = max(relevance, importance, recency)",
+        "score = w_relevance * relevance + w_importance * importance + w_recency * recency",
+        "score = relevance * importance / recency",
+        "score = sqrt(relevance^2 + importance^2 + recency^2)"
+      ],
+      "correct": 1,
+      "explanation": "Mem0 fuses three stores using a weighted sum: score = w_relevance * relevance(q, record) + w_importance * importance(record) + w_recency * recency(record). Weights are tuned per product."
+    },
+    {
+      "stage": "post",
+      "question": "What benchmark scores does Mem0 report that demonstrate the value of the hybrid approach?",
+      "options": [
+        "LoCoMo 91.6, LongMemEval 93.4, BEAM 1M 64.1 — all beating single-store baselines by 10+ points",
+        "SWE-bench 50%, GAIA 80%, AgentBench 70%",
+        "HumanEval 90%, MBPP 85%, HotpotQA 95%",
+        "WebArena 60%, OSWorld 40%, ALFWorld 75%"
+      ],
+      "correct": 0,
+      "explanation": "Mem0 reports LoCoMo 91.6, LongMemEval 93.4, and BEAM 1M 64.1. Single-store baselines (full-context 128k LLM, flat vector, flat KV) lose by 10+ points, showing the fusion design provides substantial value."
+    },
+    {
+      "stage": "post",
+      "question": "What is 'temporal invalidation' in Mem0g?",
+      "options": [
+        "Deleting old memories after a time-to-live expires",
+        "Marking contradicted edges as invalid rather than deleting them, enabling temporal queries about past states",
+        "Compressing old memories into summaries",
+        "Moving memories from hot to cold storage after a time period"
+      ],
+      "correct": 1,
+      "explanation": "Mem0g uses soft deletion: when a new fact contradicts an existing edge, the old edge is marked invalid but not deleted. Temporal queries ('what was the user's city in March?') traverse the valid-at-time subgraph."
+    },
+    {
+      "stage": "post",
+      "question": "What are the three memory scope levels in Mem0?",
+      "options": [
+        "Public, Private, Shared",
+        "User memory (across sessions), Session memory (within one thread), Agent memory (per-agent instance)",
+        "Global, Local, Temporary",
+        "Core, Recall, Archival"
+      ],
+      "correct": 1,
+      "explanation": "Mem0 splits memory by scope: User memory (persists across sessions, keyed on user_id), Session memory (persists within one conversation thread), and Agent memory (per-agent instance state). Mixing scopes without thought causes data leakage incidents."
+    },
+    {
+      "stage": "pre",
+      "question": "What is 'graph explosion' in Mem0 and how is it mitigated?",
+      "options": [
+        "The graph database crashes under load; mitigate by using a faster database",
+        "A noisy fact extractor adds too many edges per message; mitigate by capping graph writes per add() call and dropping low-confidence edges",
+        "The graph grows too large to query efficiently; mitigate by periodically pruning old edges",
+        "Graph queries take too long; mitigate by caching frequent queries"
+      ],
+      "correct": 1,
+      "explanation": "Graph explosion occurs when a noisy extractor adds many low-quality edges per message. Mitigation: cap graph writes per add() call and drop low-confidence edges before they accumulate."
+    }
+  ]
+}

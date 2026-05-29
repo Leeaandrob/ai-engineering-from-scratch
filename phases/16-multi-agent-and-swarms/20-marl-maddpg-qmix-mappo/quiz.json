@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is Centralized Training, Decentralized Execution (CTDE) and why does it solve the non-stationarity problem?",
+      "options": ["Training uses only the agent's local observation; deployment uses full global state for better decisions", "Training uses global information (all agents' states and actions) to reduce variance; deployment uses only each agent's local observation, respecting real-world constraints", "A single central policy is trained and then copied to all agents for deployment", "Training is done offline on historical data; execution uses online learning to adapt in real time"],
+      "correct": 1,
+      "explanation": "CTDE's insight: during training we have access to all agents' information, which makes each critic's value estimate stationary (it sees everyone). At test time, each agent runs its local actor policy that only sees its own observation. This satisfies real-world constraints (agents do not have omniscient view) while avoiding the non-stationarity problem that plagues independent RL."
+    },
+    {
+      "stage": "pre",
+      "question": "What property of QMIX's value decomposition enables decentralized execution?",
+      "options": ["QMIX uses a shared global Q function that all agents query through a central server", "The monotone mixing constraint ensures that argmax of Q_tot can be computed by each agent choosing argmax of its own Q independently", "QMIX eliminates the need for Q functions by using policy gradients directly", "Each agent's Q function is trained on randomly sampled subsets of the team to encourage independence"],
+      "correct": 1,
+      "explanation": "QMIX's key guarantee: Q_tot = f(Q_1, Q_2, ..., Q_n) where f is monotone in each Q_i. Monotonicity means that the global argmax (best joint action) equals the product of each agent's individual argmax. Agents do not need to coordinate at execution time — each picks its own best action and together they achieve the global optimum."
+    },
+    {
+      "stage": "post",
+      "question": "Why did MAPPO (2022) surprise the MARL community?",
+      "options": ["It achieved superhuman performance on StarCraft without any domain-specific reward shaping", "It showed that simple PPO with a centralized value function matches or beats off-policy methods (MADDPG, QMIX) on multiple benchmarks with minimal hyperparameter tuning", "It demonstrated that agents trained with MAPPO spontaneously developed language to coordinate", "It proved theoretically that on-policy methods must eventually outperform off-policy methods with enough training data"],
+      "correct": 1,
+      "explanation": "The community assumed off-policy MARL (MADDPG, QMIX) dominated on-policy. Yu et al. 2022 showed MAPPO — just PPO with a centralized value function — matches or beats both on 5 benchmarks (particle-world, SMAC, Google Research Football, Hanabi, MPE) with almost no tuning. MAPPO became the 2026 default cooperative MARL baseline as a result."
+    },
+    {
+      "stage": "post",
+      "question": "How can CTDE be applied as a design pattern even without reinforcement learning training?",
+      "options": ["By using CTDE's mathematical formulation to define reward functions for LLM fine-tuning", "At design time, assume full team visibility to design agent interactions; at runtime, enforce that each agent only receives its own local observation, preventing unintended shared-state dependencies", "By training a centralized critic offline and deploying it as a scoring function for LLM outputs", "By having a central coordinator that aggregates all agents' observations before redistributing them to each agent"],
+      "correct": 1,
+      "explanation": "CTDE as discipline: during system design, you know which information every agent will have. Use this to design coordination mechanisms. At runtime, enforce that each agent's code path only reads its own observation (o_i). This discipline catches the common mistake of production systems that silently assume shared state everywhere, preventing failures when that assumption breaks."
+    },
+    {
+      "stage": "post",
+      "question": "When does MARL training make sense for LLM agent systems in production?",
+      "options": ["Always, because MARL-trained policies outperform prompt-engineered policies on all tasks", "Only when you have abundant interaction data, a clear reward signal, and willingness to invest in training infrastructure — prompt-level policies are the practical default otherwise", "Whenever the multi-agent system runs more than 1000 concurrent sessions per day", "When the task involves more than three agents, since prompt engineering does not scale past this point"],
+      "correct": 1,
+      "explanation": "In 2026, most production LLM-agent systems prompt their policies rather than train them. MARL investment makes sense when: (a) there is abundant interaction data, (b) the reward signal is clear and automatable, and (c) training infrastructure exists. Without all three, the overhead of MARL training outweighs the policy quality improvement over well-engineered prompts."
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the two primitives that OpenAI Swarm (October 2024) reduces multi-agent orchestration to?",
+      "options": ["Tasks and artifacts", "Routines and handoffs", "Agents and selectors", "Queues and workers"],
+      "correct": 1,
+      "explanation": "Swarm's entire design space is two primitives: a routine (an agent's system prompt plus tool list) and a handoff (a tool that returns another Agent object). The Swarm runtime detects Agent return values and switches the active agent. No state machine, no DSL, no branching graph — just tools and prompts."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the trade-off Swarm makes by being explicitly stateless between runs?",
+      "options": ["Lower token cost per run but higher latency because context must be rebuilt from scratch", "No built-in memory, session continuity, or long-running task support — all are the caller's responsibility", "Agents cannot access external tools because tool state is stored in the runtime", "Handoffs cannot pass context between agents, requiring each specialist to re-derive all prior work"],
+      "correct": 1,
+      "explanation": "Swarm's statelessness is explicit and intentional. The framework tracks message history within one run but persists nothing. Memory, continuity across runs, long-horizon tasks — all require the caller to implement and pass in. The OpenAI Agents SDK (March 2025) kept the handoff primitive and added session state on top."
+    },
+    {
+      "stage": "post",
+      "question": "What is a 'handoff loop' and how should it be detected?",
+      "options": ["A handoff that transfers to the same agent that just completed a turn, causing an infinite self-referral", "Two agents handing off to each other repeatedly; detect with a last-K ring check on the active-agent history", "A handoff that fails because the target agent does not exist, causing a fallback loop through all available agents", "A circular dependency in handoff tools where calling tool A eventually calls tool B which calls tool A again"],
+      "correct": 1,
+      "explanation": "Handoff loop: agent A hands to B, B hands back to A, repeat. No work gets done; tokens accumulate. Detection: keep a ring buffer of the last K active-agent names; if A and B appear alternately K/2 times, trigger a circuit-breaker and route to a fallback agent. This is the most common failure mode in triage-style handoff topologies."
+    },
+    {
+      "stage": "post",
+      "question": "What did the OpenAI Agents SDK (March 2025) add on top of the original Swarm primitives?",
+      "options": ["Support for multiple concurrent active agents and a parallel execution runtime", "Session state persistence, guardrails (input/output validation hooks), tracing, and handoff filters", "A visual workflow editor for defining handoff graphs without writing code", "Native integration with MCP tool servers, removing the need for custom tool implementations"],
+      "correct": 1,
+      "explanation": "The Agents SDK kept the handoff primitive but added production ergonomics: session state (persistent thread across runs), guardrails (validation at input and output), tracing (every tool call and handoff logged), and handoff filters (control what context transfers at handoff boundaries). The core abstraction is unchanged; the production wrapper was added."
+    },
+    {
+      "stage": "post",
+      "question": "What is the recommended policy for 'context transfer' on a handoff?",
+      "options": ["Always transfer the full message history to give the incoming agent maximum context", "Choose between full history (expensive), last N messages, or a summary; match the policy to the incoming agent's needs", "Never transfer context — each agent should start fresh with only its system prompt", "Transfer only tool call results, not the natural language conversation"],
+      "correct": 1,
+      "explanation": "Context transfer is a design decision with real cost implications. Full history: the incoming agent has everything but may be flooded with irrelevant prior turns. Last N: cheap, misses early context. Summary: the outgoing agent compresses to bullet points before the handoff. The OpenAI Agents SDK formalizes this as handoff filters. Choose based on what the incoming agent actually needs."
+    }
+  ]
+}

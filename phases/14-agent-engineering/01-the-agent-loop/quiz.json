@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which paper introduced the ReAct framework, and what year was it presented?",
+      "options": [
+        "Shinn et al., 2023",
+        "Yao et al., 2022 (ICLR 2023)",
+        "Packer et al., 2023",
+        "Xu et al., 2023"
+      ],
+      "correct": 1,
+      "explanation": "Yao et al. introduced ReAct (Reason + Act) in arXiv:2210.03629, presented at ICLR 2023, interleaving Thought, Action, and Observation in one stream."
+    },
+    {
+      "stage": "pre",
+      "question": "What are the five required ingredients of an agent loop?",
+      "options": [
+        "LLM, API key, system prompt, user prompt, output parser",
+        "Message buffer, tool registry, stop condition, turn budget, observation formatter",
+        "Memory, planner, executor, evaluator, reflector",
+        "Encoder, decoder, attention, retriever, generator"
+      ],
+      "correct": 1,
+      "explanation": "The five ingredients are: a growing message buffer, a tool registry, a stop condition, a turn budget, and an observation formatter that converts tool outputs into readable strings."
+    },
+    {
+      "stage": "post",
+      "question": "What does the 2026 shift from prompt-based Thought tokens to native reasoning change in the agent loop?",
+      "options": [
+        "The loop logic changes fundamentally, requiring a new architecture",
+        "The Thought tokens are removed and the loop stops entirely",
+        "The thought trace moves to a separate channel but the Observe-Think-Act control flow is unchanged",
+        "Native reasoning eliminates tool calls entirely"
+      ],
+      "correct": 2,
+      "explanation": "With native reasoning (Responses API, encrypted reasoning passthrough), thoughts move to a separate channel rather than inline strings, but the core Observe -> Think -> Act -> Observe loop is unchanged."
+    },
+    {
+      "stage": "post",
+      "question": "What was the performance gain of ReAct on ALFWorld compared to imitation learning baselines?",
+      "options": [
+        "+4 points",
+        "+10 points",
+        "+34 points absolute success rate",
+        "+50 points"
+      ],
+      "correct": 2,
+      "explanation": "The ReAct paper reported +34 points absolute success rate on ALFWorld with only 1-2 in-context examples, compared to imitation learning and RL baselines."
+    },
+    {
+      "stage": "post",
+      "question": "What is a 'trust boundary collapse' in the context of agent loops?",
+      "options": [
+        "The LLM exceeds its maximum token context",
+        "Tool outputs are treated as trusted user instructions, enabling prompt injection from retrieved content",
+        "The model hallucinates a tool that does not exist",
+        "The loop runs more iterations than the turn budget allows"
+      ],
+      "correct": 1,
+      "explanation": "Trust boundary collapse occurs when tool outputs (which are untrusted input from the environment) are treated as having the same authority as direct user instructions, enabling prompt injection attacks."
+    },
+    {
+      "stage": "pre",
+      "question": "Typical agent runs in 2026 involve how many steps per task according to Anthropic's computer use announcement?",
+      "options": [
+        "1-5 steps",
+        "5-10 steps",
+        "Dozens to hundreds of steps",
+        "Thousands of steps"
+      ],
+      "correct": 2,
+      "explanation": "Anthropic's computer use announcement states that dozens-to-hundreds of steps per task is normal for modern agents, making observability and turn budgets essential."
+    }
+  ]
+}

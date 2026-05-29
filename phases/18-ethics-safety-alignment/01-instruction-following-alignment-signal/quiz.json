@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the three stages of the InstructGPT pipeline in order?",
+      "options": [
+        "Reward model training, PPO fine-tuning, supervised fine-tuning",
+        "Supervised fine-tuning, reward model training, PPO with KL penalty",
+        "Pre-training, RLHF, constitutional AI",
+        "Data collection, preference labeling, DPO optimization"
+      ],
+      "correct": 1,
+      "explanation": "InstructGPT follows three sequential stages: (1) supervised fine-tuning on instruction-response pairs, (2) reward model training using Bradley-Terry pairwise preference loss, and (3) PPO with a KL penalty to the SFT policy."
+    },
+    {
+      "stage": "pre",
+      "question": "In InstructGPT, why did a 1.3B instruction-tuned model outperform the raw 175B GPT-3 on human preference evaluations?",
+      "options": [
+        "The 1.3B model had better pre-training data",
+        "The 175B model was not fine-tuned at all and lacked basic instruction-following ability",
+        "Alignment is a different axis from capability; the smaller model was more aligned even though the larger had more raw capability",
+        "Labelers always preferred shorter outputs from smaller models"
+      ],
+      "correct": 2,
+      "explanation": "The result demonstrates that alignment and capability are separate axes. The 175B base GPT-3 had more capability but was not aligned to follow instructions. The 1.3B InstructGPT was trained to produce aligned responses, which labelers preferred about 70% of the time despite the massive capability gap."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the role of the KL penalty in the InstructGPT PPO objective?",
+      "options": [
+        "It increases the reward signal to speed up training",
+        "It prevents the RL policy from drifting too far from the SFT model, which would allow the optimizer to find adversarial reward-hacking inputs",
+        "It regularizes the reward model to prevent overfitting to preference data",
+        "It forces the policy to maintain the same token probabilities as the base pre-trained model"
+      ],
+      "correct": 1,
+      "explanation": "The KL term (beta * KL(pi || pi_SFT)) keeps the RL policy anchored near the SFT model. Without it, the optimizer finds inputs that score high under the reward model because the RM never saw them, not because humans actually prefer them — this is reward hacking."
+    },
+    {
+      "stage": "post",
+      "question": "What is the alignment tax in InstructGPT, and how did Ouyang et al. address it?",
+      "options": [
+        "The financial cost of human labelers; addressed by using AI feedback instead",
+        "The drop in performance on standard benchmarks after RLHF; addressed by mixing pre-training gradients into the RL objective (PPO-ptx)",
+        "The reduction in response speed due to the reward model inference overhead; addressed by caching reward scores",
+        "The tendency of RLHF to overfit to specific labeler preferences; addressed by using diverse labeler pools"
+      ],
+      "correct": 1,
+      "explanation": "After RLHF, the model regresses on benchmarks like SQuAD and HellaSwag that were never directly rewarded. Ouyang et al. call this the alignment tax and fix it with PPO-ptx, which mixes a fraction of pre-training log-likelihood into the PPO objective to prevent the model from forgetting downstream tasks."
+    },
+    {
+      "stage": "post",
+      "question": "The Bradley-Terry loss used to train the InstructGPT reward model is formulated as:",
+      "options": [
+        "-log sigmoid(r(x, y_w) - r(x, y_l))",
+        "mean squared error between r(x, y_w) and r(x, y_l)",
+        "cross-entropy between the human ranking and the model's predicted ranking",
+        "-log(r(x, y_w)) + log(r(x, y_l))"
+      ],
+      "correct": 0,
+      "explanation": "The Bradley-Terry pairwise preference loss is -log sigmoid(r(x, y_w) - r(x, y_l)), where y_w is the preferred response and y_l is the less-preferred one. It reduces pairwise ranking to binary classification on the difference of reward scores."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement correctly describes what SFT achieves and what it does NOT achieve in the InstructGPT pipeline?",
+      "options": [
+        "SFT teaches the model to produce high-reward responses; it does not teach it to generate diverse outputs",
+        "SFT teaches the model to answer questions rather than continue prompts; it does not provide signal about which of multiple plausible answers a labeler prefers",
+        "SFT teaches the model human values; it does not fix reward hacking",
+        "SFT teaches the model to avoid harmful outputs; it does not improve benchmark performance"
+      ],
+      "correct": 1,
+      "explanation": "SFT on instruction-response pairs shifts the model from text completion to answering questions. However, it gives no signal about preference when multiple responses are plausible — that comparative signal requires the reward model trained on pairwise rankings."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does 'first-audio-out' latency measure in a voice assistant pipeline?",
+      "options": [
+        "Time from microphone open to first ASR partial transcript",
+        "Time from the user stopping speaking to the first audio packet leaving the server",
+        "Time from TTS stream start to the first audio chunk reaching the client",
+        "Round-trip time for a complete tool call including API response"
+      ],
+      "correct": 1,
+      "explanation": "First-audio-out is defined as the wall-clock time from when the user stops speaking to when the first audio packet leaves the server toward the caller."
+    },
+    {
+      "stage": "pre",
+      "question": "What is barge-in, and how does the pipeline handle it?",
+      "options": [
+        "A network packet collision resolved by retransmitting the TTS stream",
+        "Canceling the TTS stream and re-arming the ASR when VAD detects new user speech during agent playback",
+        "Pausing the LLM stream until the user's utterance is fully transcribed",
+        "Buffering new user input while the current TTS chunk finishes playing"
+      ],
+      "correct": 1,
+      "explanation": "Barge-in means the user starts speaking while the agent is speaking. The correct handling is to cancel the TTS stream immediately, drop the remaining LLM output, and re-arm the ASR."
+    },
+    {
+      "stage": "post",
+      "question": "Why must the turn-detector combine VAD silence with a completion score from a transformer model?",
+      "options": [
+        "VAD alone cannot handle non-English languages",
+        "VAD alone cannot distinguish a mid-sentence pause from a genuine end-of-turn",
+        "Transformer models are faster than VAD at detecting speech boundaries",
+        "The completion score is required by the LiveKit Agents 1.0 spec"
+      ],
+      "correct": 1,
+      "explanation": "VAD detects silence but cannot tell whether the user simply paused mid-sentence. The turn-detector transformer reads partial transcripts for linguistic completion cues, reducing false cutoffs."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the filler technique, and when does the pipeline use it?",
+      "options": [
+        "A pre-recorded audio clip played when the network drops packets",
+        "A short phrase the agent emits to avoid silence when a tool call takes longer than 300ms",
+        "A synthetic pause inserted before TTS to align audio with video",
+        "A placeholder response the ASR uses while waiting for a final transcript"
+      ],
+      "correct": 1,
+      "explanation": "When a side-channel tool call does not resolve within 300ms, the agent pre-emits an acknowledgment filler ('one second, let me check') so the user is not left in silence."
+    },
+    {
+      "stage": "post",
+      "question": "What is MOS (Mean Opinion Score) measuring in this capstone's evaluation?",
+      "options": [
+        "ASR word error rate on the held-out transcript benchmark",
+        "Perceptual speech quality of the TTS output",
+        "End-to-end round-trip latency for a complete voice turn",
+        "The fraction of VAD frames correctly labeled as speech"
+      ],
+      "correct": 1,
+      "explanation": "MOS is a perceptual speech quality rating (automated proxy: NISQA) that measures how natural the TTS audio sounds to a listener. The target is MOS above 4.2."
+    },
+    {
+      "stage": "post",
+      "question": "What does a false-cutoff event represent in voice assistant quality measurement?",
+      "options": [
+        "The VAD model triggering speech detection on background noise",
+        "The TTS stream being cancelled while the user was still mid-sentence",
+        "The ASR producing an incorrect final transcript due to low SNR",
+        "The tool side channel timing out before returning a result"
+      ],
+      "correct": 1,
+      "explanation": "A false cutoff is when the system cancels the TTS playback (barge-in) while the user was actually still speaking mid-sentence, causing an interrupted turn. The target false-cutoff rate is under 3%."
+    }
+  ]
+}

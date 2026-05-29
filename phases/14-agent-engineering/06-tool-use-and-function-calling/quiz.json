@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is Toolformer's core self-supervised training signal for deciding which tool calls to keep?",
+      "options": [
+        "Human preference ratings on tool call quality",
+        "Whether the tool result reduces next-token prediction loss",
+        "Whether the tool call succeeds without errors",
+        "Whether the tool result is longer than a threshold"
+      ],
+      "correct": 1,
+      "explanation": "Toolformer (Schick et al., NeurIPS 2023) keeps tool annotations only when executing the tool and including the result reduces loss on the next token. This self-supervised signal requires no human labels."
+    },
+    {
+      "stage": "pre",
+      "question": "What are the five evaluation categories in BFCL V4, and what is the largest category?",
+      "options": [
+        "Single-turn 40%, Multi-turn 30%, Parallel 10%, Sequential 10%, Hallucination 10%",
+        "Agentic 40%, Multi-turn 30%, Live 10%, Non-live 10%, Hallucination 10%",
+        "Code 50%, Math 20%, Web 15%, API 10%, Other 5%",
+        "Reasoning 40%, Planning 30%, Memory 15%, Tools 10%, Safety 5%"
+      ],
+      "correct": 1,
+      "explanation": "BFCL V4 (Patil et al., ICML 2025) is composed of: Agentic 40%, Multi-turn 30%, Live 10%, Non-live 10%, Hallucination 10%. Single-turn function calling is now considered near-solved; failures concentrate in the agentic and multi-turn categories."
+    },
+    {
+      "stage": "post",
+      "question": "What does 'hallucination detection' mean in the context of BFCL V4?",
+      "options": [
+        "Detecting when the model invents a fact in its response",
+        "Detecting when the model should refuse to call any tool because no tool fits the request",
+        "Detecting when the model calls a tool with wrong arguments",
+        "Detecting when the model calls a tool that has been deprecated"
+      ],
+      "correct": 1,
+      "explanation": "The hallucination category in BFCL V4 tests whether the model correctly declines to call any tool when the request does not match any available tool. Calling a hallucinated or wrong tool is the failure mode being measured."
+    },
+    {
+      "stage": "post",
+      "question": "Why is the tool_use_id field called 'load-bearing' in parallel tool call dispatch?",
+      "options": [
+        "It limits the number of parallel calls to prevent server overload",
+        "It ties each tool call to its result, enabling correct routing when multiple calls return out of order",
+        "It sets the execution priority of concurrent tool calls",
+        "It specifies the timeout for each tool call"
+      ],
+      "correct": 1,
+      "explanation": "When a model issues multiple parallel tool calls, each has a unique tool_use_id. The runtime uses this ID to route each result back to the correct call. Swapping IDs causes wrong-tool-to-wrong-result routing, a silent but serious failure."
+    },
+    {
+      "stage": "post",
+      "question": "What is the most common root cause of wrong-tool-picked failures according to the lesson?",
+      "options": [
+        "Models not having enough parameters",
+        "Poor tool descriptions that do not tell the model when to use the tool",
+        "Too many tools in the registry",
+        "Argument schema being too strict"
+      ],
+      "correct": 1,
+      "explanation": "Bad tool descriptions are the #1 root cause of wrong-tool-picked failures. The model reads descriptions to choose the right tool; if descriptions do not explain when to use each tool, the model guesses incorrectly."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the proper handling when a required argument is missing from a model's tool call?",
+      "options": [
+        "Use a default value and proceed silently",
+        "Crash the agent with an exception",
+        "Return a structured error observation to the model so it can retry with the correct shape",
+        "Skip the tool call entirely and continue"
+      ],
+      "correct": 2,
+      "explanation": "Missing required fields should return a structured error observation back to the model describing what is missing. This enables the model to retry with the correct schema rather than causing a crash."
+    }
+  ]
+}

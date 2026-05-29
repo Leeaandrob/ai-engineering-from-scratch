@@ -1,0 +1,71 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why is mobile LLM inference memory-bandwidth-bound rather than compute-bound?",
+      "options": [
+        "Mobile chips lack dedicated matrix-multiplication units",
+        "Mobile DRAM bandwidth (50-90 GB/s) is 30-50x lower than datacenter HBM3 (2-3 TB/s), and decode is memory-bound",
+        "Mobile operating systems limit GPU compute time to extend battery life",
+        "Mobile models must run INT4 quantization which reduces compute requirements"
+      ],
+      "correct": 1,
+      "explanation": "LLM decode is memory-bandwidth-bound: each token generation requires loading model weights from memory. Mobile DRAM at 50-90 GB/s versus datacenter HBM3 at 2-3 TB/s is a 30-50x bandwidth gap — the decisive bottleneck."
+    },
+    {
+      "stage": "pre",
+      "question": "What throughput does WebLLM achieve for Llama 3.1 8B Q4 on an M3 Max, and how does it compare to native inference?",
+      "options": [
+        "~10 tok/s, which is ~25% of native",
+        "~41 tok/s, which is roughly 70-80% of native",
+        "~80 tok/s, which matches native performance",
+        "~5 tok/s, which is ~10% of native due to WebGPU overhead"
+      ],
+      "correct": 1,
+      "explanation": "WebLLM achieves ~41 tok/s for Llama 3.1 8B Q4 on M3 Max via WebGPU compute shaders — roughly 70-80% of native performance. This makes browser-based inference practical for smaller models."
+    },
+    {
+      "stage": "post",
+      "question": "What is the recommended model format for iOS apps using the Apple Neural Engine in 2026?",
+      "options": [
+        "GGUF Q4_K_M loaded via llama.cpp Metal backend",
+        "ONNX INT8 via the CoreML ONNX bridge",
+        "Core ML model with INT4 weights and FP16 activations",
+        "TensorRT-LLM FP8 compiled for A18 Neural Engine"
+      ],
+      "correct": 2,
+      "explanation": "The lesson prescribes Core ML with INT4 weights and FP16 activations as the best practical path for iOS in 2026. The llama.cpp Metal backend uses MPS, not the ANE directly — native ANE requires Core ML conversion."
+    },
+    {
+      "stage": "post",
+      "question": "The NVIDIA Jetson T4000 with JetPack 7.1 delivers approximately what performance relative to AGX Orin?",
+      "options": ["0.5x AGX Orin", "Same as AGX Orin", "2x AGX Orin", "5x AGX Orin"],
+      "correct": 2,
+      "explanation": "The lesson states Jetson T4000 (JetPack 7.1) delivers 2x AGX Orin performance. The AGX Orin runs gpt-oss-20b via vLLM at ~40 tok/s, so T4000 targets ~80 tok/s on similar workloads."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 2026 mobile browser coverage for WebGPU, and which browser still had incomplete Android support?",
+      "options": [
+        "~40% coverage; Safari iOS was still missing",
+        "~70-75% coverage; Firefox Android was still catching up",
+        "~95% coverage; only older Android devices lacked support",
+        "100% on iOS; ~50% on Android with Chrome only"
+      ],
+      "correct": 1,
+      "explanation": "WebGPU coverage in 2026 is approximately 70-75% of mobile devices. Chrome Android v121+ and Safari iOS 26 GA are supported; Firefox Android was still catching up."
+    },
+    {
+      "stage": "pre",
+      "question": "Which Qualcomm chip generation hits 45 TOPS in 2026 and what SDK enables LLM deployment on it?",
+      "options": [
+        "Snapdragon 8 Gen 2; QNN SDK",
+        "Snapdragon X Elite / 8 Gen 4; QNN SDK and AI Hub",
+        "Snapdragon 8cx Gen 4; TensorRT Mobile",
+        "Snapdragon 7s Gen 3; ONNX Runtime"
+      ],
+      "correct": 1,
+      "explanation": "Qualcomm Snapdragon X Elite and 8 Gen 4 Hexagon DSPs hit 45 TOPS. The QNN (Qualcomm Neural Network) SDK and AI Hub provide conversion from PyTorch/ONNX, with Llama 3.2 and Phi-3 as first-class artifacts."
+    }
+  ]
+}

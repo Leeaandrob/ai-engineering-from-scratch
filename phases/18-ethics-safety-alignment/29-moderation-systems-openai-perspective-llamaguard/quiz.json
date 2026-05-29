@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "OpenAI's omni-moderation-latest endpoint is built on which base model and covers how many response-schema categories?",
+      "options": [
+        "GPT-3.5-turbo base; 8 categories",
+        "GPT-4o base; 13 category booleans in the response schema",
+        "A purpose-built safety model; 20 categories",
+        "Llama-3.1 base; 14 MLCommons categories"
+      ],
+      "correct": 1,
+      "explanation": "omni-moderation-latest (2024) is built on GPT-4o and returns 13 category booleans: harassment, harassment/threatening, hate, hate/threatening, self-harm, self-harm/intent, self-harm/instructions, sexual, sexual/minors, violence, violence/graphic, illicit, illicit/violent. It supports text + images and was reported as 42% better on multilingual test sets than the prior version."
+    },
+    {
+      "stage": "pre",
+      "question": "The three-layer moderation pattern consists of input moderation, output moderation, and custom moderation. What is the specific failure mode of 'output moderation only'?",
+      "options": [
+        "Output-only moderation increases latency because classification happens after generation",
+        "Output-only moderation allows any input to reach the model — encoding attacks from Lessons 12-14 that bypass input classifiers expose internal model reasoning to the attacker and increase cost",
+        "Output-only moderation cannot detect multi-turn attacks spread across several messages",
+        "Output-only moderation requires more compute than input moderation"
+      ],
+      "correct": 1,
+      "explanation": "Output-only moderation allows every input — including encoding attacks and jailbreak attempts — to reach the model for inference. This means the model's internal reasoning is exposed to the attacker, cost is higher because generation runs for all inputs, and adversarial prompts can probe the model's behavior patterns."
+    },
+    {
+      "stage": "pre",
+      "question": "Perspective API (Google Jigsaw) is described as a 'pre-LLM-era baseline.' Why does it remain used in research despite this limitation?",
+      "options": [
+        "Perspective API is more accurate than modern classifiers on short text",
+        "The API is stable, well-documented, and has years of calibration data, making it a reproducible baseline for comparing moderation research across papers",
+        "Perspective API is free while modern alternatives require commercial licenses",
+        "Regulatory requirements mandate comparison to Perspective API in moderation evaluations"
+      ],
+      "correct": 1,
+      "explanation": "Perspective API's research value comes from its longevity and stability: it has been available since before the LLM era, is well-documented, and provides years of calibration history. This makes it a reliable comparison baseline in research papers even though modern LLM-based classifiers perform better for production use cases."
+    },
+    {
+      "stage": "post",
+      "question": "The OpenAI and Llama Guard category taxonomies both cover harm types but diverge in their classification structure. Which example best illustrates this divergence?",
+      "options": [
+        "OpenAI classifies all self-harm types in one category; Llama Guard does not cover self-harm",
+        "OpenAI has 'illicit' as a broad category; Llama Guard separates 'violent crimes' and 'non-violent crimes'",
+        "Llama Guard has a 'CSAM' category; OpenAI uses 'sexual/minors' instead",
+        "OpenAI includes political speech; Llama Guard excludes it entirely"
+      ],
+      "correct": 1,
+      "explanation": "The lesson highlights OpenAI's 'illicit' as a broad umbrella category versus Llama Guard's separate 'violent crimes' and 'non-violent crimes' MLCommons categories. Deployments must choose based on their policy taxonomy — a system where violent crime and non-violent crime have different handling needs Llama Guard's finer granularity."
+    },
+    {
+      "stage": "post",
+      "question": "Azure Content Moderator was deprecated. By when must organizations complete migration to Azure AI Content Safety?",
+      "options": [
+        "February 2024 — when deprecation was announced",
+        "The migration deadline is February 2027 — Azure Content Moderator is deprecated February 2024 but not retired until February 2027",
+        "August 2026 — aligned with EU AI Act full applicability",
+        "December 2025 — the end of Microsoft's extended support period"
+      ],
+      "correct": 1,
+      "explanation": "Azure Content Moderator: deprecated February 2024 (no new deployments), retired February 2027. The 3-year window (2024-2027) is the migration period for existing deployments to Azure AI Content Safety, which is LLM-based and integrates with Azure OpenAI."
+    },
+    {
+      "stage": "post",
+      "question": "Running multiple classifiers (OpenAI Moderation + Llama Guard + Perspective) concurrently within a single moderation layer hides latency because:",
+      "options": [
+        "Each classifier caches results from the previous classifier's output",
+        "The classifiers run in parallel — the total latency is determined by the slowest classifier, not the sum of all classifier latencies",
+        "Multiple classifiers share the same tokenization step, reducing per-classifier overhead",
+        "Parallel classifiers can early-exit as soon as one classifier flags the content"
+      ],
+      "correct": 1,
+      "explanation": "Parallelism within a moderation layer means all classifiers process the same input simultaneously. The wall-clock latency equals the slowest single classifier (max of latencies) rather than the sum (sequential). This allows ensemble coverage — multiple taxonomies, multiple calibrations — at a cost close to running one classifier."
+    }
+  ]
+}

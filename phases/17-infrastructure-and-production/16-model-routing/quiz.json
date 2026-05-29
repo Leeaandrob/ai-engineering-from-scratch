@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is model cascading / model routing as a cost-reduction primitive?",
+      "options": [
+        "Running the same model on multiple hardware configurations and picking the fastest response",
+        "A dynamic broker that sends simple queries to a cheap model and escalates complex ones to a frontier model",
+        "Caching model weights across replicas to avoid redundant downloads",
+        "Splitting long prompts across multiple models in parallel and merging outputs"
+      ],
+      "correct": 1,
+      "explanation": "Model routing (cascading) evaluates each request and routes it to the cheapest model capable of meeting quality requirements. Simple queries go cheap; complex queries escalate to frontier. Production case studies show 20-60% cost reduction at iso-quality."
+    },
+    {
+      "stage": "pre",
+      "question": "The lesson names four routing signals. Which of these is NOT one of the four?",
+      "options": [
+        "Task classification (task type)",
+        "Prompt token length",
+        "Embedding similarity to known-hard query set",
+        "User subscription tier"
+      ],
+      "correct": 3,
+      "explanation": "The four routing signals are: task classification, prompt length, embedding similarity to a known-hard set, and self-confidence from a first-pass cheap model. User subscription tier is a business rule, not one of the four ML-based routing signals."
+    },
+    {
+      "stage": "post",
+      "question": "What is cheap-model drift and why is it dangerous?",
+      "options": [
+        "The cheap model's weights drift over time due to provider fine-tuning changes",
+        "Too much traffic routes to the cheap model, quality drops 3-5% on reasoning tasks, and nobody notices for a quarter",
+        "The cheap model becomes more expensive over time as providers increase prices",
+        "The router itself degrades as the embedding model used for routing ages out of distribution"
+      ],
+      "correct": 1,
+      "explanation": "Cheap-model drift: the router pushes 40%+ of traffic to a weaker model, quality drops 3-5% on reasoning tasks — subtle enough to miss in aggregate metrics, but visible to users. The fix is gating routes by online quality metrics (LLM-judge on 5% sample, user thumbs-down rate) not just offline evals."
+    },
+    {
+      "stage": "post",
+      "question": "What was the approximate price of a GPT-4-class token in 2022 versus 2026?",
+      "options": [
+        "$5/M in 2022 vs $2/M in 2026 (2.5x drop)",
+        "$20/M in 2022 vs ~$0.40/M in 2026 (~10x per year drop)",
+        "$0.50/M in 2022 vs $0.05/M in 2026 (10x drop)",
+        "$100/M in 2022 vs $10/M in 2026 (10x drop)"
+      ],
+      "correct": 1,
+      "explanation": "The lesson cites ~$20/M tokens for GPT-4-class in late 2022 dropping to ~$0.40/M in 2026 — approximately 10x per year aggregate. Most of the drop came from better serving stacks, not hardware. Routing is how teams convert that drop into margin."
+    },
+    {
+      "stage": "post",
+      "question": "What is the latency impact of cascading, and what percentage of traffic typically escalates to the frontier model?",
+      "options": [
+        "~1x (no overhead); ~50% escalation",
+        "~1.2x median latency; ~2x on escalated requests; typically ~10% escalation",
+        "~3x median latency; ~5x on escalated requests; typically ~30% escalation",
+        "Latency is unchanged; only cost changes"
+      ],
+      "correct": 1,
+      "explanation": "The lesson states cascade adds ~1.2x median latency (cheap model first pass) with ~2x latency on the ~10% of requests that escalate to the frontier model. This is the acceptable overhead for 20-60% cost savings."
+    },
+    {
+      "stage": "pre",
+      "question": "Which online metric specifically monitors whether the cascade is over-routing to the cheap model?",
+      "options": [
+        "GPU utilization per route",
+        "Escalation rate: if it exceeds 30%, the cheap model is being over-routed",
+        "Token cost per request per route",
+        "P99 TTFT per route"
+      ],
+      "correct": 1,
+      "explanation": "The lesson names escalation rate as the key drift signal: if the cheap model is being escalated more than ~30% of the time, it means the router is sending traffic to the cheap tier that it cannot handle. This is over-routing."
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What was the first AI Scientist v2 result that crossed a peer-review threshold?",
+      "options": [
+        "A generated paper was published in Nature",
+        "A generated paper passed peer review at an ICLR 2025 workshop",
+        "A generated paper won best paper at NeurIPS 2025",
+        "A generated paper was accepted to a top-10 conference as a main track paper"
+      ],
+      "correct": 1,
+      "explanation": "One AI Scientist v2-generated paper passed peer review at an ICLR 2025 workshop. The authors disclosed the paper's origin to the program committee. This is a proof of concept, not a reliability claim: workshop papers are a lower bar than main-conference papers."
+    },
+    {
+      "stage": "pre",
+      "question": "According to Beel et al.'s independent evaluation, what fraction of AI Scientist v2 experiments failed from coding errors?",
+      "options": ["About 10%", "About 25%", "About 42%", "About 65%"],
+      "correct": 2,
+      "explanation": "Beel et al. found 42% of experiments failed from coding errors (bad imports, shape mismatches, undefined variables). The retry loop caught some but not all of these failures."
+    },
+    {
+      "stage": "pre",
+      "question": "What is 'polish masking' as identified by Beel et al.'s evaluation of AI Scientist v2?",
+      "options": [
+        "The model refusing to generate figures for failed experiments",
+        "Publication-grade visuals produced by the vision-language critique masking underlying experimental weaknesses",
+        "A post-processing step that removes politically sensitive content from papers",
+        "The model adding excessive citations to make papers look more credible"
+      ],
+      "correct": 1,
+      "explanation": "AI Scientist v2's vision-language figure critique produced publication-grade visuals, masking underlying experimental weaknesses. This is the most important finding: a system producing convincing outputs without doing convincing research is more dangerous than one that fails obviously."
+    },
+    {
+      "stage": "post",
+      "question": "What is the key architectural difference between AI Scientist v1 and v2?",
+      "options": [
+        "v2 uses a larger base model while v1 used GPT-3",
+        "v1 used human-authored templates while v2 uses agentic tree search with a VLM figure critique loop",
+        "v2 can only run for one hour while v1 had no time limit",
+        "v1 submitted papers automatically while v2 requires human approval"
+      ],
+      "correct": 1,
+      "explanation": "AI Scientist v1 required human-authored templates that the LLM filled in. v2 removes the template requirement by using agentic tree search over a space of hypotheses, with a vision-language model critique loop that rewrites figures for clarity."
+    },
+    {
+      "stage": "post",
+      "question": "Why does AI Scientist v2 require stronger sandbox isolation than AlphaEvolve?",
+      "options": [
+        "Because research papers are larger files than code programs",
+        "Because v2 runs open-ended code with open-ended goals, while AlphaEvolve has a tight, deterministic evaluator",
+        "Because research agents require internet access to fetch papers",
+        "Because v2 needs more compute than AlphaEvolve can safely allocate"
+      ],
+      "correct": 1,
+      "explanation": "AlphaEvolve's sandbox story is easier because its evaluator is tight and machine-checkable. AI Scientist v2 runs open-ended code with open-ended goals, creating paths to data exfiltration, compute waste, and process spawning. Sakana's own docs recommend Docker isolation minimum, with seccomp or gVisor preferred."
+    },
+    {
+      "stage": "post",
+      "question": "What does the 'novelty mislabeling' failure mode mean in AI Scientist v2?",
+      "options": [
+        "The system assigns incorrect author names to generated papers",
+        "The literature-retrieval step frequently classifies established concepts as novel, the research equivalent of hallucination",
+        "The system generates ideas that are too novel to be understood by reviewers",
+        "The system fails to label figures with correct captions"
+      ],
+      "correct": 1,
+      "explanation": "Beel et al. found the literature-retrieval step frequently flagged established concepts as novel. This is the research equivalent of hallucination: the system claims originality it cannot support."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are Agno's performance targets for agent instantiation?",
+      "options": [
+        "100ms instantiation, 1 MB memory per agent",
+        "~2 microseconds instantiation, ~3.75 KiB memory per agent",
+        "10ms instantiation, 100 KB memory per agent",
+        "1 second instantiation, 10 MB memory per agent"
+      ],
+      "correct": 1,
+      "explanation": "Agno targets ~2 microseconds agent instantiation and ~3.75 KiB memory per agent, making it suitable for workloads with thousands of short-lived agents per second like chat fan-in or evaluation pipelines."
+    },
+    {
+      "stage": "pre",
+      "question": "What is Mastra's recommended observability backend at scale?",
+      "options": [
+        "Elasticsearch",
+        "ClickHouse",
+        "MongoDB",
+        "BigQuery"
+      ],
+      "correct": 1,
+      "explanation": "Mastra uses composite storage for different aspects of the system, and recommends ClickHouse for observability at scale. Mastra Studio (localhost:4111) is the first-party local debugging tool."
+    },
+    {
+      "stage": "post",
+      "question": "When should you choose Agno over Mastra?",
+      "options": [
+        "For TypeScript-first projects on Vercel",
+        "For Python-first backends with many short-lived agents and strong performance requirements in a FastAPI shop",
+        "When you need multi-provider model routing",
+        "When you want a managed runtime"
+      ],
+      "correct": 1,
+      "explanation": "Choose Agno for Python-first teams with many short-lived agents, strong performance requirements, and a FastAPI backend. Mastra is better for TypeScript-first teams deploying on Vercel with multi-provider model routing."
+    },
+    {
+      "stage": "post",
+      "question": "What is the licensing situation for Mastra's enterprise features?",
+      "options": [
+        "All features are Apache 2.0",
+        "Core is Apache 2.0; ee/ directories are source-available (not Apache 2.0) and restrict commercial use",
+        "All features require a commercial license",
+        "Features are MIT licensed but with attribution requirements"
+      ],
+      "correct": 1,
+      "explanation": "Mastra's core is Apache 2.0, but the ee/ (enterprise edition) directories are source-available — you can read the source but commercial use is restricted. Read the license carefully before planning to fork Mastra."
+    },
+    {
+      "stage": "post",
+      "question": "What is Mastra's Unified Model Router?",
+      "options": [
+        "A load balancer for Mastra's own servers",
+        "A single client providing access to 3,300+ models across 94 providers as of March 2026",
+        "A system for routing user requests to the best available agent",
+        "A proxy that caches model responses"
+      ],
+      "correct": 1,
+      "explanation": "Mastra ships a Unified Model Router that provides access to 3,300+ models across 94 providers through a single client interface as of March 2026."
+    },
+    {
+      "stage": "pre",
+      "question": "What is Agno's recommended production deployment pattern?",
+      "options": [
+        "Long-running stateful servers with session affinity",
+        "Stateless session-scoped FastAPI backend where each request starts a fresh agent and session state lives in a database",
+        "Containerized agents with persistent volumes",
+        "Serverless functions with no state"
+      ],
+      "correct": 1,
+      "explanation": "Agno's production path is a stateless session-scoped FastAPI backend. Each request instantiates a fresh agent (at ~2 microseconds cost); session state lives in a database, not in the agent process."
+    }
+  ]
+}

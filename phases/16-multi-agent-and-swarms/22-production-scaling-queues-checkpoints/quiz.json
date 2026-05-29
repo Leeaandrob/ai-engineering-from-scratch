@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the 'outbox pattern' for agent side effects and why is it needed for exactly-once semantics?",
+      "options": ["A separate log that records all outputs from agent runs for post-hoc analysis and debugging", "Side effects write intent to a database table first; a separate executor process performs the external call and marks it done — making both steps idempotent and safe to retry", "An output queue that rate-limits how many tool calls an agent can make per second", "A cache that stores recent tool call results to avoid repeated external API calls"],
+      "correct": 1,
+      "explanation": "The problem: agent completes a tool call but crashes before updating its tracking state. On restart, it calls the tool again. If the tool is not idempotent (e.g., charging a customer), you get a duplicate. Outbox pattern: first write intent to a table, then execute. If execution succeeds but the done-write fails, replay is safe. Both steps are idempotent operations."
+    },
+    {
+      "stage": "pre",
+      "question": "Why does async/fiber-based concurrency outperform thread-per-agent for LLM streaming workloads?",
+      "options": ["Async avoids context-switch overhead that dominates CPU time in LLM inference", "LLM calls are 99% idle waiting for tokens; threads sit blocked and cost ~1MB RAM each; fibers yield cooperatively on I/O and fit thousands of concurrent calls in one process's memory", "Async enables pipelining of token generation, allowing the GPU to run at higher utilization", "Thread-per-agent is limited to one CPU core while async can use all cores simultaneously"],
+      "correct": 1,
+      "explanation": "A thread waiting for the next LLM token consumes a full OS thread (~1MB stack) while doing nothing. At 10,000 concurrent calls, that is 10GB in idle stacks. Python asyncio, Go goroutines, and Rust tokio fibers cooperatively yield the CPU on every await, letting thousands of concurrent waiting coroutines share the same OS thread. For I/O-bound LLM calls, async is architectural, not optional."
+    },
+    {
+      "stage": "post",
+      "question": "What is 'durable execution' and what are its three requirements?",
+      "options": ["A deployment strategy that keeps agent services running with zero downtime", "An engine that persists full program state after each super-step so workers can resume from the last checkpoint after a crash — requires serializable state, deterministic resume, and idempotent side effects", "A database pattern that logs all agent actions for compliance and replay purposes", "A testing methodology that verifies agent behavior is consistent across multiple runs"],
+      "correct": 1,
+      "explanation": "Durable execution: after each super-step, the engine serializes all agent state. On worker crash, another worker picks up the thread_id and resumes from the last checkpoint. Three requirements: (1) serializable state — closures with live DB connections do not survive; (2) deterministic resume — same state + same input produces same actions; (3) idempotent side effects — external calls (payments, API) are safe to replay."
+    },
+    {
+      "stage": "post",
+      "question": "What is Ashpreet Bedi's pragmatic recommendation for production agent scaling?",
+      "options": ["Always adopt a workflow engine like Temporal from day one to avoid future migration pain", "Start with FastAPI + Postgres — simple architectures go further than expected; adopt durable-execution frameworks only when you measure a concrete problem they solve", "Deploy agents in Kubernetes from the start to handle horizontal scaling requirements", "Use LangGraph's runtime for all production deployments because it is the most battle-tested option"],
+      "correct": 1,
+      "explanation": "Bedi's 'Scaling Agentic Software' rule: under ~100 concurrent agent-runs, FastAPI + Postgres with optimistic concurrency, pg_notify for background jobs, and application-level retry is often all you need. Teams over-engineer before measuring load. Adopt Temporal, LangGraph runtime, or Restate when you hit a specific problem: hour-long waits, complex compensation, cross-region coordination."
+    },
+    {
+      "stage": "post",
+      "question": "What is a 'rainbow deployment' and why do agents require it instead of blue-green deployments?",
+      "options": ["A deployment that tests multiple model versions simultaneously and routes traffic to the best-performing one", "Multiple runtime versions run concurrently because long-running stateful agents cannot be killed mid-run; old versions drain their in-flight agents while new traffic goes to the new version", "A canary deployment where 1% of traffic is routed to the new version before full rollout", "A deployment strategy specific to model updates that allows gradual weight replacement without service interruption"],
+      "correct": 1,
+      "explanation": "Blue-green assumes stateless services: swap in the new version, all new requests go there. An agent mid-research-run cannot be hot-swapped — it has state accumulated over 20+ minutes of tool calls. Rainbow deployment: new traffic routes to the new version; old versions remain live until their in-flight agents complete naturally. Anthropic's Research system uses this pattern explicitly."
+    }
+  ]
+}

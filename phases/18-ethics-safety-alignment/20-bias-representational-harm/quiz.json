@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the distinction between representational harm and allocational harm in LLM deployments?",
+      "options": [
+        "Representational harm is caused by the training data; allocational harm is caused by the model's inference",
+        "Representational harm involves biased portrayals of groups (stereotypes, erasure); allocational harm involves unequal material outcomes for groups (different resource distribution or recommendations)",
+        "Representational harm affects language models; allocational harm affects classification systems",
+        "Representational harm is measurable; allocational harm is theoretical"
+      ],
+      "correct": 1,
+      "explanation": "Representational harms: stereotypes, erasure, demeaning portrayals (e.g., depicting nurses as exclusively female). Allocational harms: unequal material outcomes (e.g., scoring Black applicants' resumes lower). A model can be representationally unbiased while allocationally biased, so evaluations must measure both."
+    },
+    {
+      "stage": "pre",
+      "question": "Gallegos et al. (2024) categorize bias evaluation metrics into three types. Which of the following is the most ecologically valid?",
+      "options": [
+        "Embedding-based metrics (WEAT-style co-occurrence tests)",
+        "Probability-based metrics (log-likelihood of stereotype-confirming completions)",
+        "Generated-text-based metrics (downstream task measurement on actual model outputs)",
+        "Activation-based metrics (MLP neuron correlation with identity terms)"
+      ],
+      "correct": 2,
+      "explanation": "Generated-text-based metrics — measuring actual model behavior on downstream tasks like resume scoring or recommendation writing — are the most ecologically valid because they reflect real deployment consequences. Embedding-based metrics measure representations without capturing behavioral bias; probability-based metrics are one step closer but still indirect."
+    },
+    {
+      "stage": "pre",
+      "question": "An et al. (PNAS Nexus, 2025) measured intersectional bias in resume evaluation. What type of intersectional effect did they find?",
+      "options": [
+        "Models showed no bias on single-axis evaluations but substantial bias on intersectional pairs",
+        "GPT-4o penalized Black women more than Black men and more than white women separately — an effect invisible to single-axis gender or race evaluation alone",
+        "Bias only appeared when the resume explicitly stated demographic information",
+        "All five tested models showed identical intersectional bias patterns"
+      ],
+      "correct": 1,
+      "explanation": "An et al. found that GPT-4o penalized Black women on resume scoring more than Black men alone and more than white women alone — an intersectional amplification that single-axis (race-only or gender-only) bias evaluation would miss entirely. This is the key empirical case for intersectional evaluation."
+    },
+    {
+      "stage": "post",
+      "question": "WinoIdentity (COLM 2025) introduces uncertainty-based fairness evaluation. What does it add that point-prediction evaluation misses?",
+      "options": [
+        "It includes more demographic identity categories than previous fairness benchmarks",
+        "It measures whether the model's uncertainty over outcomes differs across intersectional identity tuples — catching cases where the model is equally wrong on average but more uncertain for some groups, producing different allocation behavior",
+        "It uses crowdsourced annotations to reduce labeler bias in fairness evaluation",
+        "It tests whether models can correctly identify their own biases when asked"
+      ],
+      "correct": 1,
+      "explanation": "WinoIdentity measures uncertainty across intersectional identity tuples, not just mean accuracy. A model can show equal average error across groups while having higher variance for some groups — which downstream allocation systems will treat differently. Uncertainty-based evaluation catches this invisible form of differential treatment."
+    },
+    {
+      "stage": "post",
+      "question": "Zhou et al.'s UniBias (2024) achieves zero-shot debiasing using which technique?",
+      "options": [
+        "Suppressing specific MLP neurons identified as gender neurons",
+        "Reweighting or zeroing specific attention heads that amplify identity-class sensitivity, without requiring fine-tuning",
+        "Adding a bias penalty term to the decoding objective at inference time",
+        "Replacing identity terms in the prompt with demographically neutral alternatives"
+      ],
+      "correct": 1,
+      "explanation": "UniBias (Zhou et al., ACL 2024) identifies specific attention heads that amplify sensitivity to identity-class features and reweights or zeros those heads at inference time. No fine-tuning is required — it is a zero-shot debiasing intervention at the attention mechanism level."
+    },
+    {
+      "stage": "post",
+      "question": "The meta-critique (arXiv:2508.11067, 2025) identifies a systematic gap in the 10-year bias literature. What is it?",
+      "options": [
+        "The literature focuses only on English-language models",
+        "The literature disproportionately focuses on binary-gender bias, neglecting disability, religion, migration status, multi-lingual identity, and other axes",
+        "The literature uses only embedding-based metrics, ignoring generated-text evaluation",
+        "The literature focuses only on generative models, neglecting classification models used in hiring and lending"
+      ],
+      "correct": 1,
+      "explanation": "The 2025 meta-critique finds that the 10-year NLP bias literature is dominated by binary-gender bias. Other axes — disability, religion, migration status, multi-lingual identity — receive far less attention. The concern is that models well-debiased on the frequently-studied axes may remain badly biased on neglected dimensions."
+    }
+  ]
+}

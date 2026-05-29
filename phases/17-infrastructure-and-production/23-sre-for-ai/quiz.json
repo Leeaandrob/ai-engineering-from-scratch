@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the 2026 multi-agent AI SRE architecture pattern?",
+      "options": [
+        "A single AI agent with full autonomous remediation authority over all infrastructure",
+        "A supervisor agent coordinating specialized agents (logs, metrics, runbooks) with humans approving judgment calls",
+        "Three independent AI agents running in parallel with the fastest one's answer winning",
+        "An AI copilot that only answers questions but never proposes actions"
+      ],
+      "correct": 1,
+      "explanation": "The 2026 pattern is a supervisor coordinating specialized agents — one for logs, one for metrics, one for runbooks — where AI proposes hypotheses and queries, but humans approve judgment calls. Datadog Bits AI and Azure SRE Agent ship this architecture."
+    },
+    {
+      "stage": "pre",
+      "question": "What MIT research result does the lesson cite about pre-incident prediction?",
+      "options": [
+        "An LLM predicted 65% of outages 5 minutes early",
+        "An LLM trained on historical logs, GPU temps, and API error patterns predicted 89% of outages 10-15 minutes early",
+        "A transformer model predicted 99% of outages 1 minute early",
+        "No LLM has yet achieved better than 50% outage prediction"
+      ],
+      "correct": 1,
+      "explanation": "MIT research reports an LLM trained on historical logs plus GPU temperatures plus API error patterns predicted 89% of outages 10-15 minutes in advance. The lesson notes that predictions without actuation are just dashboards — the operational constraint is actuation."
+    },
+    {
+      "stage": "post",
+      "question": "What is the NeuBird Hawkeye adversarial evaluation pattern?",
+      "options": [
+        "Two AI models debate the root cause and the longer argument wins",
+        "Two models analyze the same incident independently: agreement = confidence, disagreement = escalate to human",
+        "One model proposes a fix and another model attacks it for weaknesses",
+        "Two models use different datasets; the one with better recall is trusted"
+      ],
+      "correct": 1,
+      "explanation": "NeuBird Hawkeye's adversarial evaluation runs two models on the same incident independently. When they agree on the diagnosis, confidence is high. When they disagree, the system escalates to a human for judgment. This operationalizes uncertainty quantification."
+    },
+    {
+      "stage": "post",
+      "question": "What is the safe scope for fully autonomous AI remediation in 2026?",
+      "options": [
+        "Any action that can be reversed within 24 hours",
+        "Narrow, well-defined actions: restart pod, revert a specific deploy, scale within pre-set bounds",
+        "All infrastructure changes within a single availability zone",
+        "Any action approved by an on-call engineer in real time"
+      ],
+      "correct": 1,
+      "explanation": "The lesson is explicit: fully autonomous action stays narrow — restart pod, rollback a specific deploy, scale within bounds. Anything broader requires human approval. The lesson calls out that 'set it and forget it' sales pitches are overselling."
+    },
+    {
+      "stage": "post",
+      "question": "What is the lesson's projection for automated LLM failover adoption by end-2026?",
+      "options": [
+        "25% of enterprise LLMs",
+        "50% of enterprise LLMs",
+        "75% of enterprise LLMs",
+        "95% of enterprise LLMs"
+      ],
+      "correct": 3,
+      "explanation": "The lesson cites a projection that 95% of enterprise LLMs will have automated failover by end-2026 — reflecting rapid adoption of AI SRE patterns and the operational maturity of the ecosystem."
+    },
+    {
+      "stage": "pre",
+      "question": "Why do AI SRE systems use RAG to ground LLMs in infrastructure data rather than prompting the model with its training knowledge?",
+      "options": [
+        "RAG is faster than prompting at inference time",
+        "Infrastructure data (live logs, runbooks, topology) is not in the model's training data and changes constantly",
+        "RAG avoids the need for fine-tuning on expensive GPU hardware",
+        "Regulatory requirements mandate that all AI decisions reference live data"
+      ],
+      "correct": 1,
+      "explanation": "Live infrastructure state — current logs, service topology, today's runbook versions — cannot be in training data. RAG injects the relevant live context into the model's prompt, grounding hypothesis generation in current reality rather than stale training knowledge."
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why does disaggregated prefill/decode improve efficiency compared to colocated serving?",
+      "options": [
+        "Disaggregation allows each GPU to run at a higher clock speed",
+        "Prefill is compute-bound and decode is memory-bound; colocation wastes one resource on each GPU",
+        "Disaggregation allows the KV cache to be shared across all requests globally",
+        "It enables FP4 quantization on decode GPUs while prefill uses FP8"
+      ],
+      "correct": 1,
+      "explanation": "Prefill (processing the input prompt) is compute-bound; decode (generating output tokens) is memory-bandwidth-bound. Running both on the same GPU means the GPU is simultaneously underutilizing compute (during decode) and underutilizing memory bandwidth (during prefill). Separate pools allow each to be optimized independently."
+    },
+    {
+      "stage": "pre",
+      "question": "What protocol does disaggregated serving use to transfer KV cache between prefill and decode pools?",
+      "options": ["gRPC over TCP", "NIXL (RDMA/InfiniBand or TCP fallback)", "NFS/POSIX file system", "Redis pub/sub"],
+      "correct": 1,
+      "explanation": "NIXL is the KV cache transfer protocol in disaggregated serving architectures. It uses RDMA/InfiniBand when available for maximum bandwidth, with TCP as a fallback. The choice of transport matters because KV cache can be gigabytes per request."
+    },
+    {
+      "stage": "post",
+      "question": "NVIDIA Dynamo is described as sitting above vLLM/SGLang/TRT-LLM. What does its Planner Profiler and SLA Planner do?",
+      "options": [
+        "They recompile model kernels at runtime to optimize for current hardware utilization",
+        "They measure workload characteristics and auto-configure prefill:decode ratios to meet SLOs",
+        "They profile memory usage across all engines and redistribute KV cache blocks",
+        "They route requests to the cheapest available provider in real time"
+      ],
+      "correct": 1,
+      "explanation": "Dynamo's Planner Profiler measures the incoming workload (prompt lengths, request rates, output lengths) and feeds the SLA Planner, which automatically configures the ratio of prefill-to-decode GPU pool size to meet the target SLO."
+    },
+    {
+      "stage": "post",
+      "question": "When does disaggregation NOT pay off?",
+      "options": [
+        "When running on NVIDIA H100 hardware instead of GB200",
+        "For prompts under 512 tokens with short outputs — the KV transfer cost exceeds the gain",
+        "When the cluster has more than 16 GPUs",
+        "When using vLLM instead of SGLang as the serving engine"
+      ],
+      "correct": 1,
+      "explanation": "Short prompts (< 512 tokens) with short outputs generate a small KV cache. The NIXL transfer overhead — even over InfiniBand — exceeds the compute savings from separating the pools. The transfer tax dominates the gain."
+    },
+    {
+      "stage": "post",
+      "question": "How does llm-d differ from NVIDIA Dynamo in its operational model?",
+      "options": [
+        "llm-d only supports vLLM while Dynamo supports all engines",
+        "llm-d is Kubernetes-native with prefill/decode/router as independent Services and per-role HPA; Dynamo is an orchestration layer above serving engines",
+        "llm-d is open-source while Dynamo is proprietary",
+        "llm-d handles model routing while Dynamo handles hardware provisioning"
+      ],
+      "correct": 1,
+      "explanation": "llm-d (Red Hat + AWS) is Kubernetes-native: each of prefill, decode, and router runs as independent Kubernetes Services with separate HPAs using inference-specific signals (queue depth for prefill, KV utilization for decode). Dynamo is an orchestration layer that sits above existing serving engines."
+    },
+    {
+      "stage": "pre",
+      "question": "What are the reported annual savings when switching from colocated to disaggregated serving on a $2M inference spend?",
+      "options": [
+        "$50-100K (5% savings)",
+        "$200-300K (10-15% savings)",
+        "$600-800K (30-40% savings)",
+        "$1.5M (75% savings)"
+      ],
+      "correct": 2,
+      "explanation": "The lesson cites an internal rollup suggesting 30-40% savings on $2M-class inference spend when switching to disaggregated serving with Dynamo at constant SLA — approximately $600-800K per year. This is presented as an order-of-magnitude anchor, not a single published case study."
+    }
+  ]
+}

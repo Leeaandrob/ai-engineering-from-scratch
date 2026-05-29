@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "The EU AI Act's 'systemic-risk GPAI' tier is defined by which threshold?",
+      "options": [
+        "Models with more than 100 billion parameters",
+        "Models trained with more than 1e25 FLOP of compute",
+        "Models deployed to more than 1 million users in the EU",
+        "Models that score above the 95th percentile on MMLU"
+      ],
+      "correct": 1,
+      "explanation": "The EU AI Act's systemic-risk GPAI tier applies to general-purpose AI models trained with more than 1e25 FLOP of compute. This threshold is estimated to bind 5-15 companies globally as of 2026. Systemic-risk GPAI providers have additional obligations beyond the baseline GPAI requirements."
+    },
+    {
+      "stage": "pre",
+      "question": "When did EU AI Act's prohibited practices (Article 5) and AI literacy obligations begin applying?",
+      "options": [
+        "1 August 2024 — when the Act entered force",
+        "2 February 2025 — the first applicability date after the Act's entry into force",
+        "2 August 2025 — when GPAI obligations apply",
+        "2 August 2026 — full applicability date"
+      ],
+      "correct": 1,
+      "explanation": "The EU AI Act entered force on 1 August 2024, but most provisions apply on a phased timeline. Prohibited practices (Article 5) and AI literacy obligations were the first to apply, on 2 February 2025 (6 months after entry into force). GPAI obligations follow on 2 August 2025; full applicability including Article 50 transparency is 2 August 2026."
+    },
+    {
+      "stage": "pre",
+      "question": "The GPAI Code of Practice (published 10 July 2025) has three chapters. Which chapter applies only to systemic-risk GPAI providers?",
+      "options": [
+        "Transparency",
+        "Copyright",
+        "Safety and Security",
+        "Governance and Accountability"
+      ],
+      "correct": 2,
+      "explanation": "The GPAI Code of Practice's three chapters: Transparency (all GPAI providers), Copyright (all GPAI providers), and Safety and Security (systemic-risk GPAI providers only). Enforcement begins August 2026; until then good-faith compliance is accepted."
+    },
+    {
+      "stage": "post",
+      "question": "What does the renaming of UK AISI to 'AI Security Institute' (February 2025) signal about policy direction?",
+      "options": [
+        "The UK is expanding its focus from AI security to a broader safety remit",
+        "The rebrand narrows scope: dropping algorithmic bias and free-speech framings to focus on frontier capability security, aligned with the UK's post-Brexit industrial strategy",
+        "The rename reflects a merger with the UK cybersecurity agency NCSC",
+        "The AI Security Institute is now a regulatory body with enforcement powers unlike the former advisory AISI"
+      ],
+      "correct": 1,
+      "explanation": "The February 2025 rename from 'AI Safety Institute' to 'AI Security Institute' deliberately narrows scope: it drops algorithmic bias and free-speech safety framings to focus specifically on frontier capability security threats. The UK AISI also open-sourced the Inspect evaluation tool and collaborates with Redwood on control safety cases."
+    },
+    {
+      "stage": "post",
+      "question": "Korea's AI Framework Act (effective January 2026) includes which provision specifically targeting foreign AI companies?",
+      "options": [
+        "Foreign AI models must be retrained on Korean language data before deployment",
+        "Foreign AI companies must designate local representatives in Korea for regulatory accountability",
+        "Foreign AI companies must pay a licensing fee to the Korean MSIT",
+        "AI models from countries with no AI regulatory framework are prohibited from operating in Korea"
+      ],
+      "correct": 1,
+      "explanation": "Korea's AI Framework Act (passed December 2024, effective January 2026) mandates that foreign AI companies operating in Korea designate local representatives — analogous to GDPR's local representative requirements. This ensures Korean regulators have a contact point for enforcement and compliance questions."
+    },
+    {
+      "stage": "post",
+      "question": "For a company operating in multiple jurisdictions simultaneously, which regulatory framework generally sets the highest compliance floor in 2026?",
+      "options": [
+        "US CAISI standards, because they are the most technically precise",
+        "UK AI Security Institute guidance, because it is the most operationally detailed",
+        "EU AI Act, because it has the strictest risk-tiered requirements and highest penalties (up to 15M EUR or 3% global turnover)",
+        "Korean AI Framework Act, because it has the broadest coverage of AI system types"
+      ],
+      "correct": 2,
+      "explanation": "The EU AI Act is the strictest among the four regimes discussed: mandatory risk tiers, conformity assessments for high-risk systems, GPAI code of practice, Article 50 transparency requirements, and penalties up to 15M EUR or 3% of global annual turnover. Deployers in multiple jurisdictions must comply with the strictest applicable standard, which in 2026 is typically the EU AI Act."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the seven workbench surfaces that determine whether an agent ships reliably?",
+      "options": [
+        "Model, Prompt, Tools, Memory, State, Output, Logging",
+        "Instructions, State, Scope, Feedback, Verification, Review, Handoff",
+        "Plan, Execute, Verify, Test, Review, Deploy, Monitor",
+        "Input, Processing, Storage, Retrieval, Generation, Evaluation, Output"
+      ],
+      "correct": 1,
+      "explanation": "The seven workbench surfaces are: Instructions (startup rules, definition of done), State (current task, touched files, next action), Scope (allowed/forbidden files), Feedback (real command output), Verification (tests, lint, smoke run), Review (second pass with different role), and Handoff (what changed, what is left)."
+    },
+    {
+      "stage": "pre",
+      "question": "What evidence-backed claim does Terminal Bench 2.0 provide about harness vs model quality?",
+      "options": [
+        "Models matter 10x more than harness",
+        "The same model moved from outside the top 30 to rank 5 on Terminal Bench by changing only the harness",
+        "Harness changes have no measurable effect on benchmark scores",
+        "Only frontier models benefit from harness optimization"
+      ],
+      "correct": 1,
+      "explanation": "LangChain's 'Anatomy of an Agent Harness' (April 2026) reports: a coding agent jumped from outside the top 30 to rank 5 on Terminal Bench 2.0 by changing only the harness. Same model. Different surfaces. A 25-rank delta."
+    },
+    {
+      "stage": "post",
+      "question": "What failure occurs when the Scope surface is missing?",
+      "options": [
+        "The agent runs out of memory",
+        "Edits leak into unrelated code — the agent touches files with no connection to the task",
+        "The agent cannot find the relevant files",
+        "The agent produces output in the wrong format"
+      ],
+      "correct": 1,
+      "explanation": "Without the Scope surface (allowed files, forbidden files, acceptance criteria), edits leak into unrelated code. The agent narrates each touch in good faith but collectively produces a different change than what was reviewed."
+    },
+    {
+      "stage": "post",
+      "question": "What failure occurs when the State surface is missing?",
+      "options": [
+        "The agent produces incorrect answers",
+        "Each session restarts from zero — the next agent rediscovers everything, re-runs the same commands, re-asks the same questions",
+        "The agent cannot use external tools",
+        "The agent fails to follow the verification step"
+      ],
+      "correct": 1,
+      "explanation": "Without the State surface (current task, touched files, assumptions, blockers, next action), each session restarts from zero. The agent re-discovers what was already done, re-runs commands, and wastes tokens recovering the previous session's last 30 seconds."
+    },
+    {
+      "stage": "post",
+      "question": "What does the Vercel '80% to 100%' receipt illustrate about workbench design?",
+      "options": [
+        "Adding more tools always improves agent performance",
+        "Deleting 80% of the agent's tools (reducing scope/surface) moved success rate from 80% to 100% — negative space wins",
+        "Larger models solve the tool-selection problem",
+        "Performance improvements require fine-tuning on domain data"
+      ],
+      "correct": 1,
+      "explanation": "Vercel reported deleting 80% of its agent's tools moved success rate from 80% to 100%. A smaller, more focused tool surface with sharper scope means fewer ways to fail. This illustrates that workbench design — specifically scope — has direct impact on reliability."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the key distinction between workbench and prompt engineering?",
+      "options": [
+        "Workbench is automated; prompt engineering is manual",
+        "Prompting tells the model what you want this turn; a workbench tells the agent how to do work across turns and across sessions",
+        "Workbench is used for code tasks; prompt engineering is for text tasks",
+        "Workbench requires more compute; prompt engineering is cheaper"
+      ],
+      "correct": 1,
+      "explanation": "Prompting tells the model what you want in this single turn. A workbench tells the agent how to do reliable work across turns and across sessions — state survives, scope is enforced, feedback is captured, verification runs, and handoffs persist. Most agent failure stories are workbench failures wearing prompt-engineering clothes."
+    }
+  ]
+}

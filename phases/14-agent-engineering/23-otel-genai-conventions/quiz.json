@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the three span categories in the OTel GenAI semantic conventions?",
+      "options": [
+        "Request, Response, Error",
+        "Model/client spans, Agent spans, Tool spans",
+        "Input, Processing, Output",
+        "Application, Framework, Infrastructure"
+      ],
+      "correct": 1,
+      "explanation": "The GenAI SIG defines three span categories: Model/client spans (raw LLM calls), Agent spans (create_agent and invoke_agent), and Tool spans (one per tool invocation, connected to the agent span by parent-child relation)."
+    },
+    {
+      "stage": "pre",
+      "question": "When should an invoke_agent span use CLIENT vs INTERNAL kind?",
+      "options": [
+        "CLIENT for Python agents, INTERNAL for JavaScript agents",
+        "CLIENT for remote agent services (OpenAI Assistants, Bedrock Agents), INTERNAL for in-process agent frameworks (LangChain, CrewAI, local ReAct)",
+        "CLIENT for production, INTERNAL for development",
+        "CLIENT when the agent calls external APIs, INTERNAL when it does not"
+      ],
+      "correct": 1,
+      "explanation": "CLIENT kind is for calls to remote agent services (OpenAI Assistants API, AWS Bedrock Agents). INTERNAL kind is for in-process agent frameworks running locally (LangChain, CrewAI, local ReAct loops)."
+    },
+    {
+      "stage": "post",
+      "question": "What is the default content capture behavior in the GenAI conventions?",
+      "options": [
+        "Always capture all inputs and outputs",
+        "Instrumentations SHOULD NOT capture inputs/outputs by default; capture is opt-in",
+        "Capture only errors and exceptions",
+        "Capture only system instructions, not user messages"
+      ],
+      "correct": 1,
+      "explanation": "The GenAI conventions specify that instrumentations SHOULD NOT capture inputs/outputs by default. Capture is opt-in via gen_ai.system_instructions, gen_ai.input.messages, gen_ai.output.messages. In production, store content externally and reference by ID."
+    },
+    {
+      "stage": "post",
+      "question": "What is gen_ai.data_source.id used for?",
+      "options": [
+        "Identifying which database the agent is connected to",
+        "For RAG: identifying which corpus or store was consulted during retrieval",
+        "Identifying the training data source for the model",
+        "Tracking which tool registry is being used"
+      ],
+      "correct": 1,
+      "explanation": "gen_ai.data_source.id is a GenAI attribute for RAG use cases that identifies which corpus or retrieval store was consulted. This enables tracing which knowledge source contributed to a specific agent response."
+    },
+    {
+      "stage": "post",
+      "question": "How do you opt in to the stable preview of GenAI semantic conventions as of March 2026?",
+      "options": [
+        "Set OTEL_GENAI_ENABLED=true",
+        "Set OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental",
+        "Set GENAI_CONVENTIONS_VERSION=latest",
+        "Install the genai-stable package"
+      ],
+      "correct": 1,
+      "explanation": "Most GenAI conventions are experimental as of March 2026. To opt into the stable preview, set: OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental"
+    },
+    {
+      "stage": "pre",
+      "question": "What are the four key gen_ai provider names expected in the spec?",
+      "options": [
+        "gpt, claude, gemini, llama",
+        "anthropic, openai, aws.bedrock, google.vertex",
+        "anthropic, openai, google, microsoft",
+        "claude, gpt-4, gemini, titan"
+      ],
+      "correct": 1,
+      "explanation": "The GenAI spec defines gen_ai.provider.name as: anthropic, openai, aws.bedrock, google.vertex. Consistent provider names across teams allow cross-provider dashboards to work without manual mapping."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "How does this async cloud coding agent differ architecturally from an interactive terminal coding agent?",
+      "options": [
+        "The async agent uses a different LLM provider and does not support Python repositories",
+        "The trigger is a GitHub label; the agent runs non-interactively in a cloud sandbox, clones the repo, iterates without a human in the loop, and opens a PR when done",
+        "The async agent skips CI verification to reduce latency and opens a draft PR immediately",
+        "The async agent runs locally on the developer's machine rather than in a cloud sandbox"
+      ],
+      "correct": 1,
+      "explanation": "The async cloud agent has no interactive terminal. A GitHub label triggers it; it spins up in a cloud sandbox, works autonomously through its agent loop, verifies CI in-sandbox, and opens a review-ready PR with rationale."
+    },
+    {
+      "stage": "pre",
+      "question": "What scope of GitHub App permissions does the agent use, and why are they kept minimal?",
+      "options": [
+        "Full repository admin rights are required to run CI checks and push branches",
+        "Fine-grained installation token covering issues read+write, pull_requests write, contents read+write, and workflows read; minimal to limit blast radius if the token is compromised",
+        "OAuth app token covering all public repositories owned by the organization",
+        "Personal access token (PAT) with repo and workflow scopes for the service account user"
+      ],
+      "correct": 1,
+      "explanation": "The GitHub App uses a minimal fine-grained installation token: issues, PRs, contents, and workflows (read). This limits the damage if the short-lived token leaks, and the app is never added to the branch-protection bypass list."
+    },
+    {
+      "stage": "post",
+      "question": "What prevents the agent from writing to .github/workflows files, and why is this important?",
+      "options": [
+        "The GitHub App is denied the workflows:write scope, which blocks all writes under .github/workflows at the API level",
+        "GitHub App permissions are not path-scoped, so the worker enforces an allow-list on proposed diffs that blocks edits to .github/workflows",
+        "Branch protection rules prevent any commit touching workflow files from being pushed",
+        "The agent's system prompt includes an instruction to never edit CI configuration files"
+      ],
+      "correct": 1,
+      "explanation": "GitHub App permissions are coarse-grained, not path-scoped. The worker itself enforces an allow-list on the proposed diff before pushing, blocking any edits under .github/workflows regardless of what the agent proposes."
+    },
+    {
+      "stage": "pre",
+      "question": "What is 'environment inference' in the context of this capstone?",
+      "options": [
+        "The agent reading environment variables from the repo's .env files to understand configuration",
+        "Automatically detecting the repo's language and package manager to generate a Dockerfile for the sandbox if one does not already exist",
+        "Using tree-sitter to infer the coding style and formatting conventions before making edits",
+        "Sampling the CI logs to infer which tests are flaky before running the full suite"
+      ],
+      "correct": 1,
+      "explanation": "Environment inference means detecting the language (Python, Node, Go, Rust) and package manager (uv, pnpm, go mod, cargo) from the repo structure, then generating a Dockerfile on the fly if none exists, so the sandbox can build the project from scratch."
+    },
+    {
+      "stage": "post",
+      "question": "What gate must pass before the PR is opened, and what happens if coverage regresses?",
+      "options": [
+        "Human code review approval; the PR opens as a draft until a reviewer approves",
+        "Full CI must pass in-sandbox; if coverage drops more than 2%, the PR opens but is labeled needs-review",
+        "At least 80% of tests must pass; the remaining 20% may be known-flaky tests",
+        "The agent must complete within $5 and 15 turns; otherwise the PR is not opened"
+      ],
+      "correct": 1,
+      "explanation": "The verification gate requires full CI to be green in-sandbox before opening any PR. If CI is red, no PR opens. If coverage drops more than 2%, the PR opens but with a needs-review label signaling that the human reviewer should check it closely."
+    },
+    {
+      "stage": "post",
+      "question": "What per-repo budget constraints does the dispatcher enforce?",
+      "options": [
+        "1 PR per repo per week and $50 per PR",
+        "A maximum of 5 PRs per repo per day and $20 per PR",
+        "30 agent turns per PR and $10 per day total across all repos",
+        "2 concurrent workers per repo and $100 per month total"
+      ],
+      "correct": 1,
+      "explanation": "The dispatcher enforces per-repo daily ceilings: at most 5 PRs per repo per day and at most $20 per PR, preventing runaway costs from a single busy or broken repository."
+    }
+  ]
+}

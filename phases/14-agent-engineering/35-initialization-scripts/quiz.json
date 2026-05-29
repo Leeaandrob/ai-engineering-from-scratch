@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the 'setup tax' in agent sessions and what does an init script do about it?",
+      "options": [
+        "The compute cost of running initialization; reduce by caching model weights",
+        "Tokens wasted each session as the agent guesses Python version, test commands, and file paths; the init script pays this tax once and writes answers into init_report.json",
+        "The financial cost of API calls during setup; reduce by using cheaper models",
+        "The time spent by humans setting up the development environment"
+      ],
+      "correct": 1,
+      "explanation": "The setup tax: every session the agent guesses Python version, test command, directory structure, and env vars — wasting tokens on rediscovery. An init script runs these probes once, writes init_report.json, and the agent reads it at startup instead of re-probing."
+    },
+    {
+      "stage": "pre",
+      "question": "What seven things does the init script probe?",
+      "options": [
+        "Model quality, prompt length, tool count, memory usage, latency, accuracy, cost",
+        "Runtime versions, dependency availability, test command, repo paths, environment variables, state/board freshness, last-known-good commit",
+        "Network connectivity, database access, API keys, file permissions, disk space, CPU cores, RAM",
+        "User preferences, task history, code style, linting rules, test coverage, dependencies, build artifacts"
+      ],
+      "correct": 1,
+      "explanation": "The init script probes: runtime versions (Python/Node), dependency availability, test command resolvability, repo paths, required environment variables, state and board file freshness (stale state from crashed sessions), and last-known-good commit (anchor for handoff diff)."
+    },
+    {
+      "stage": "post",
+      "question": "What should happen when a block-severity probe fails?",
+      "options": [
+        "Log the failure and continue with best-effort initialization",
+        "Halt immediately and surface the failure to the human — no silent fallback, fail loud",
+        "Retry the probe 3 times before halting",
+        "Skip the failing probe and continue with remaining probes"
+      ],
+      "correct": 1,
+      "explanation": "A probe failure on a block-severity probe means halt and surface to the human. No 'the agent will figure it out.' The entire point of init is to refuse to start when the workbench is broken. Fail loud, fail fast, fail in one place."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'lock file with TTL' pattern for init scripts?",
+      "options": [
+        "Using file locks to prevent concurrent agent execution",
+        "Write a prereqs.lock after the first successful probe pass; subsequent runs trust the lock for N hours if the dependency manifest hash matches, skipping expensive probes",
+        "Locking the init script version to prevent updates",
+        "A time limit for how long the init script is allowed to run"
+      ],
+      "correct": 1,
+      "explanation": "After the first successful probe pass, write prereqs.lock with the dependency manifest hash. Subsequent runs check the lock: if it is fresh (within N hours, default 24h) and the hash matches, skip the expensive probes. Same pattern as Docker layer cache."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'last-known-good commit anchoring' pattern?",
+      "options": [
+        "Recording the last commit that passed all tests",
+        "Probing the current commit against an LKG file; if the diff exceeds a budget (50 files default), refuse to start and require human ratification of the new baseline",
+        "Automatically reverting to the last good commit on failure",
+        "Comparing the current code to the last deployed version"
+      ],
+      "correct": 1,
+      "explanation": "The LKG (last-known-good) pattern: probe the current commit against an LKG file written on the last successful merge. If the diff exceeds a budget (default 50 files), refuse to start and require a human to ratify the new baseline. Used by Cloudflare's AI Code Review to scope reviewer agents."
+    },
+    {
+      "stage": "pre",
+      "question": "What is a probe that takes longer than 3 seconds in a dry run a signal of?",
+      "options": [
+        "A computationally expensive operation that needs optimization",
+        "A workbench smell — that probe should either be moved out of init or its result should be cached",
+        "A network timeout issue that needs debugging",
+        "An indication that the system is underpowered"
+      ],
+      "correct": 1,
+      "explanation": "Probes that take more than 3 seconds are a workbench smell. Init probes should be deterministic plumbing with no LLM calls and no external service calls. A slow probe either belongs in a separate workflow or its result should be cached."
+    }
+  ]
+}

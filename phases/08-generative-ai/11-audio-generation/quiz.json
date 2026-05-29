@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why do production audio generation models use neural audio codecs rather than operating directly on waveform samples?",
+      "options": [
+        "Waveforms cannot be encoded with standard transformer positional embeddings",
+        "A 5-second clip at 16kHz is 80,000 samples; no transformer attends to sequences that long directly, so a codec compresses to 50-75 tokens/second before modeling",
+        "Waveform models require GPU hardware not available in cloud inference",
+        "Neural codecs improve audio quality by filtering out background noise before generation"
+      ],
+      "correct": 1,
+      "explanation": "Transformers attending to raw 16kHz audio would face sequences of tens of thousands of elements per second. Neural codecs like Encodec and DAC compress waveforms to 50-75 discrete tokens per second using residual vector quantization, making sequence lengths tractable."
+    },
+    {
+      "stage": "pre",
+      "question": "What is Residual Vector Quantization (RVQ) in a neural audio codec?",
+      "options": [
+        "A single codebook that maps each audio frame to the nearest centroid",
+        "A cascade of K quantizers where each layer encodes the residual left by the previous layers, enabling high-fidelity reconstruction from multiple coarse-to-fine codebooks",
+        "A variational quantizer that replaces the continuous latent with a Gaussian approximation",
+        "A learned downsampling operation that reduces the sample rate by a factor of K"
+      ],
+      "correct": 1,
+      "explanation": "RVQ uses K quantizer layers in sequence. Layer 1 quantizes the raw audio feature; layer 2 quantizes the residual (error) from layer 1; layer 3 quantizes the residual from layer 2; and so on. The decoder sums all K codebook embeddings to reconstruct the original with fidelity scaling in K."
+    },
+    {
+      "stage": "post",
+      "question": "According to the lesson, which generative paradigm is preferred for text-to-speech in 2026 and why?",
+      "options": [
+        "Latent diffusion, because it produces the highest audio quality without any iterative artifacts",
+        "Token-autoregressive modeling, because TTS is naturally causal and streams well, with each output token representing a short audio segment",
+        "GAN-based vocoders, because they have the lowest latency per output frame",
+        "Score-based SDE models, because they match the signal structure of speech better than discrete tokens"
+      ],
+      "correct": 1,
+      "explanation": "TTS is causal by nature (left-to-right generation) and must stream to minimize time-to-first-audio. Codec AR models (VALL-E, ElevenLabs) generate tokens sequentially and stream immediately. Flow-matching models render a fixed clip length in one pass and cannot stream without chunking."
+    },
+    {
+      "stage": "post",
+      "question": "What is the production throughput requirement for a streaming audio generation system and why?",
+      "options": [
+        "The server must generate at least 1 token per second to avoid buffering",
+        "The server must generate at least 75 tokens per second per user to keep pace with playback at Encodec's 75 Hz token rate",
+        "The server must generate complete 5-second clips in under 100ms to avoid perceptible delay",
+        "The server must maintain a constant latency below the codec's frame size of 13ms"
+      ],
+      "correct": 1,
+      "explanation": "Encodec produces 75 tokens per second of audio. A streaming server must generate tokens at least as fast as the user consumes them — 75 tokens/sec per user — or the audio buffer runs dry and playback stutters. This is the TPOT constraint for audio, analogous to decode speed for LLM text generation."
+    },
+    {
+      "stage": "post",
+      "question": "What ethical risk is specifically called out for voice cloning models like VALL-E and XTTS?",
+      "options": [
+        "Voice cloning models are limited to generating speech in the training language only",
+        "A 3-second voice sample is enough to clone a voice from a prompt, requiring abuse detection and opt-out lists in every production deployment",
+        "Voice cloning models cannot reproduce emotional prosody, making them unsuitable for professional use",
+        "Voice cloning requires retraining the full model for each new voice, making large-scale misuse impractical"
+      ],
+      "correct": 1,
+      "explanation": "VALL-E, XTTS, and ElevenLabs can clone a voice from as little as 3 seconds of audio. This creates serious risks for impersonation, fraud, and non-consensual synthesis. The lesson explicitly flags that production models need abuse detection, speaker opt-out, and consent verification."
+    },
+    {
+      "stage": "pre",
+      "question": "MusicGen uses 'delayed parallel' decoding over multiple RVQ codebook streams. What problem does this solve?",
+      "options": [
+        "It reduces the model size by sharing weights across the K codebook streams",
+        "It reduces the effective sequence length by generating K codebook levels with per-stream time offsets instead of flattening all K streams into a single sequence",
+        "It enables conditioning on midi note sequences rather than text prompts",
+        "It prevents posterior collapse in the RVQ codebook by decorrelating streams"
+      ],
+      "correct": 1,
+      "explanation": "Naively flattening K codebook levels at 75 Hz produces K x 75 tokens per second. Delayed parallel decoding emits K streams with staggered offsets, keeping the effective sequence length at roughly 75 tokens/sec while still modeling all K residual levels, reducing transformer context length significantly."
+    }
+  ]
+}

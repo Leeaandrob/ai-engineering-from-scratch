@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the four core surfaces of a 2026 terminal coding agent harness?",
+      "options": [
+        "Prompt, Response, Retry, Log",
+        "Plan, Act, Observe, Recover",
+        "Read, Write, Search, Commit",
+        "Parse, Execute, Verify, Deploy"
+      ],
+      "correct": 1,
+      "explanation": "The harness is organized as Plan (maintains a TodoWrite-style state object), Act (dispatches tool calls), Observe (captures and feeds back outputs), and Recover (handles tool errors without blowing the context window)."
+    },
+    {
+      "stage": "pre",
+      "question": "Which transport does MCP use in its 2026 revision for networked tool servers?",
+      "options": [
+        "stdio with JSON-RPC",
+        "gRPC bidirectional streaming",
+        "StreamableHTTP",
+        "WebSocket"
+      ],
+      "correct": 2,
+      "explanation": "The 2026 MCP revision specifies StreamableHTTP: a long-lived HTTP connection with bidirectional streaming that replaces the earlier SSE and stdio transports."
+    },
+    {
+      "stage": "post",
+      "question": "What is the primary purpose of the PreCompact hook in the cost-control strategy described in this capstone?",
+      "options": [
+        "Block destructive shell commands before they run",
+        "Summarize older turns into a prior-state block to free context budget",
+        "Emit a final OpenTelemetry trace bundle on session end",
+        "Initialize the per-session dollar budget at the start of a run"
+      ],
+      "correct": 1,
+      "explanation": "The PreCompact hook fires at the 150k-token mark and summarizes older turns into a prior-state block, freeing room for new observations without losing the plan."
+    },
+    {
+      "stage": "post",
+      "question": "What does pass@1 measure in the SWE-bench evaluation context?",
+      "options": [
+        "The fraction of tasks solved after unlimited retries",
+        "The fraction of tasks solved on the first run without retry or test-set peeking",
+        "The fraction of tests that pass on the first compile",
+        "The token efficiency ratio compared to a baseline harness"
+      ],
+      "correct": 1,
+      "explanation": "pass@1 is the fraction of SWE-bench tasks the harness solves on the first run, without peeking at the test set or retrying with test feedback."
+    },
+    {
+      "stage": "pre",
+      "question": "Why does the harness use git worktrees rather than cloning the repo for each task?",
+      "options": [
+        "Worktrees are faster to create and disposable without touching the main clone",
+        "GitHub API requires worktrees for fine-grained permissions",
+        "Worktrees enable multi-agent parallel access to the same branch",
+        "The CI system cannot detect changes made in a plain clone"
+      ],
+      "correct": 0,
+      "explanation": "A linked git worktree at a separate path is fast to create and can be torn down on success or failure without affecting the main checkout, making it ideal as a disposable per-task sandbox."
+    },
+    {
+      "stage": "post",
+      "question": "At which three layers does the capstone enforce cost control on long agent runs?",
+      "options": [
+        "Per-file read limit, per-tool call limit, per-PR size limit",
+        "Per-turn token ceiling, per-session dollar budget, hard turn limit",
+        "Per-repo hour limit, per-coder token budget, per-merge dollar cap",
+        "Input token cap, output token cap, embedding token cap"
+      ],
+      "correct": 1,
+      "explanation": "Cost control is enforced at a per-turn token ceiling, a per-session dollar budget, and a hard turn limit (typically 50), preventing runaway spending on difficult tasks."
+    }
+  ]
+}

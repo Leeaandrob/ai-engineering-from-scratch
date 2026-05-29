@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Llama Guard 3 is based on which model and covers how many MLCommons hazard categories?",
+      "options": [
+        "A 3B Llama model; 8 categories",
+        "A Llama-3.1-8B model fine-tuned for 14 MLCommons hazard categories",
+        "A GPT-4-class model with 20 category classifiers",
+        "A 1B distilled model with 6 top-level harm categories"
+      ],
+      "correct": 1,
+      "explanation": "Llama Guard 3 is a Llama-3.1-8B model fine-tuned on the MLCommons AILuminate 14 hazard categories. Llama Guard 4 (April 2025) scales this to a 12B natively multimodal model pruned from Llama 4 Scout, handling both text and image input."
+    },
+    {
+      "stage": "pre",
+      "question": "What are the three component types in Garak's (NVIDIA) probe architecture?",
+      "options": [
+        "Classifiers, generators, and orchestrators",
+        "Probes, detectors, and harnesses",
+        "Attackers, judges, and reporters",
+        "Samplers, filters, and evaluators"
+      ],
+      "correct": 1,
+      "explanation": "Garak's architecture: Probes generate attacks (static, dynamic, or adaptive); Detectors score outputs against expected failure modes; Harnesses manage probe-detector pairs and run campaigns to generate reports. TrustyAI integrates Garak with Llama-Stack shields for end-to-end shielded evaluation."
+    },
+    {
+      "stage": "pre",
+      "question": "PyRIT's Crescendo orchestrator differs from Garak's standard probe approach in what way?",
+      "options": [
+        "Crescendo uses gradient-based optimization while Garak uses rule-based prompts",
+        "Crescendo runs deep multi-turn escalating campaigns rather than Garak's single-turn probe-at-scale approach",
+        "Crescendo is a closed-source Microsoft tool while Garak is open source",
+        "Crescendo targets only output moderation while Garak targets input moderation"
+      ],
+      "correct": 1,
+      "explanation": "PyRIT (Microsoft) is built for deep multi-turn campaigns. Crescendo is an escalation orchestrator that gradually builds toward a harmful goal across multiple turns. Garak runs thousands of single-turn probes efficiently for regression testing. The two tools target different depths of the red-team lifecycle."
+    },
+    {
+      "stage": "post",
+      "question": "Garak's Tier-Based Severity Assessment (TBSA) replaces binary pass/fail with what?",
+      "options": [
+        "A continuous 0-1 score weighted by harm category severity",
+        "Tiered pass/fail where a model can pass at severity tier 3 and fail at tier 5 on the same probe",
+        "A time-to-success metric measured in query count",
+        "A false-positive-adjusted score that accounts for benign inputs that trigger the detector"
+      ],
+      "correct": 1,
+      "explanation": "TBSA allows a model to receive differentiated results across severity tiers. A model might be safe against mild versions of an attack (tier 3 pass) while failing against severe versions (tier 5 fail). This is more informative than binary pass/fail for safety cases."
+    },
+    {
+      "stage": "post",
+      "question": "Which Llama Guard hazard category is described as 'non-obvious' in the lesson, and why?",
+      "options": [
+        "Hate — because it is frequently confused with political speech",
+        "Code Interpreter Abuse — because it targets a specific deployment modality (code execution in a sandbox) rather than a harm type like violence or harassment",
+        "CSAM — because it requires specialized detection that differs from other sexual content categories",
+        "Indiscriminate weapons — because the category spans chemical, biological, and radiological threats"
+      ],
+      "correct": 1,
+      "explanation": "Code Interpreter Abuse is highlighted as a non-obvious category: it targets the specific risk of an AI system being used to exploit a code execution sandbox, which is a modality-specific attack surface distinct from content-harm categories like violence or harassment."
+    },
+    {
+      "stage": "post",
+      "question": "The recommended 2026 production red-team stack combines all three tools. Which combination is correct?",
+      "options": [
+        "Llama Guard on both model sides, Garak for pre-release campaigns, PyRIT for nightly regression",
+        "Llama Guard on both model sides, Garak for nightly regression, PyRIT for pre-release deep campaigns",
+        "PyRIT for input filtering, Garak for output filtering, Llama Guard for report generation",
+        "Garak for input classification, Llama Guard for attack generation, PyRIT for evaluation scoring"
+      ],
+      "correct": 1,
+      "explanation": "The recommended stack: Llama Guard as input and output classifier (both sides of the model); Garak running nightly for regression testing across its probe library; PyRIT for deeper pre-release multi-turn campaigns targeting specific failure modes. This layered approach covers different temporal depths and attack surfaces."
+    }
+  ]
+}

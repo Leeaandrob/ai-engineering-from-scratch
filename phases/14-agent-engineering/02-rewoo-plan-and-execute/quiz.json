@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the core architectural difference between ReWOO and ReAct?",
+      "options": [
+        "ReWOO uses a larger language model than ReAct",
+        "ReWOO separates planning from execution: one plan up front, then parallel evidence fetching, then solving",
+        "ReWOO requires more tool calls than ReAct",
+        "ReWOO uses reinforcement learning while ReAct uses supervised learning"
+      ],
+      "correct": 1,
+      "explanation": "ReWOO separates Planner, Worker, and Solver roles. It makes one big plan up front, fetches evidence in parallel (no observations feeding back into planning), then composes the answer — unlike ReAct's interleaved thought-action-observation stream."
+    },
+    {
+      "stage": "pre",
+      "question": "What token efficiency improvement does ReWOO achieve on HotpotQA compared to ReAct?",
+      "options": [
+        "2x fewer tokens",
+        "5x fewer tokens with +4% accuracy",
+        "10x fewer tokens with same accuracy",
+        "1.5x fewer tokens with -2% accuracy"
+      ],
+      "correct": 1,
+      "explanation": "The ReWOO paper (Xu et al., arXiv:2305.18323) measures approximately 5x fewer tokens on HotpotQA while scoring +4 absolute accuracy points compared to ReAct."
+    },
+    {
+      "stage": "post",
+      "question": "What are the three roles in a ReWOO system?",
+      "options": [
+        "Generator, Discriminator, Combiner",
+        "Planner, Worker, Solver",
+        "Proposer, Critic, Executor",
+        "Router, Specialist, Synthesizer"
+      ],
+      "correct": 1,
+      "explanation": "ReWOO has three roles: Planner (user question -> plan DAG), Workers (execute tool calls from the plan, possibly in parallel), and Solver (combine user question, plan, and evidence into a final answer)."
+    },
+    {
+      "stage": "post",
+      "question": "What does 'planner distillation' mean in the context of ReWOO?",
+      "options": [
+        "Compressing the plan into fewer tokens",
+        "Fine-tuning a small 7B model on planner outputs from a 175B teacher model",
+        "Removing duplicate steps from a plan",
+        "Converting a plan DAG into a linear sequence"
+      ],
+      "correct": 1,
+      "explanation": "Because the planner never sees observations, its outputs can be collected as training data and used to fine-tune a smaller 7B model as the planner, with the expensive large model only needed for solving."
+    },
+    {
+      "stage": "post",
+      "question": "When should you choose ReAct over ReWOO?",
+      "options": [
+        "When the task is structured with known tools and parallelizable evidence gathering",
+        "When the task is short, in an unknown environment, and needs reactive exception handling",
+        "When token efficiency is the top priority",
+        "When the task has more than 30 steps"
+      ],
+      "correct": 1,
+      "explanation": "ReAct is better for short tasks in unknown environments where each step's result may change the plan, requiring reactive exception handling. ReWOO shines for structured tasks with known tools where evidence can be gathered in parallel."
+    },
+    {
+      "stage": "pre",
+      "question": "In a ReWOO plan DAG, what do references like '#E1' or '#E2' represent?",
+      "options": [
+        "Error codes from failed tool calls",
+        "Evidence placeholders that are substituted with earlier worker outputs at dispatch time",
+        "External API endpoints to call",
+        "Estimated token counts for each step"
+      ],
+      "correct": 1,
+      "explanation": "Evidence references like #E1, #E2 are placeholders in the plan DAG that get substituted with actual worker outputs from prior nodes when a dependent node is dispatched."
+    }
+  ]
+}

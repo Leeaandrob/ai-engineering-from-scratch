@@ -1,0 +1,71 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the AI-gateway pattern for secrets management in 2026?",
+      "options": [
+        "Embed API keys directly in each service's environment variables at deploy time",
+        "Apps talk to a gateway which pulls credentials from vault at runtime — rotate in vault and all apps pick up in minutes",
+        "Use short-lived tokens generated per-request by each service independently",
+        "Store encrypted secrets in the database and decrypt at application startup"
+      ],
+      "correct": 1,
+      "explanation": "The 2026 pattern: apps route to a gateway, the gateway pulls credentials from HashiCorp Vault / AWS Secrets Manager / Azure Key Vault at runtime. Rotating credentials in vault propagates to all apps immediately with no redeploys and no Slack threads about the new key."
+    },
+    {
+      "stage": "pre",
+      "question": "What maximum rotation period does the lesson prescribe for API keys and credentials?",
+      "options": ["7 days", "30 days", "90 days", "180 days"],
+      "correct": 2,
+      "explanation": "The lesson prescribes rotation policy of 90 days or less. Longer rotation windows increase the blast radius if a credential is compromised — attackers have more time with valid credentials."
+    },
+    {
+      "stage": "post",
+      "question": "What was the 2026 Vercel supply-chain incident cited in the lesson?",
+      "options": [
+        "Vercel's CDN was hijacked to serve malicious JavaScript to all customers",
+        "Compromised CI/CD credentials exfiltrated environment variables across thousands of customer deployments",
+        "A rogue Vercel employee leaked source code from private repositories",
+        "Vercel's DNS provider was compromised, redirecting customer domains to phishing sites"
+      ],
+      "correct": 1,
+      "explanation": "The 2026 incident: a supply-chain attack via compromised CI/CD credentials resulted in environment variables being exfiltrated across thousands of Vercel customer deployments. This is the canonical example for why CI/CD must use OIDC-based short-lived tokens rather than static secrets."
+    },
+    {
+      "stage": "post",
+      "question": "What is consistent tokenization (the Mesh approach) for PII scrubbing, and why does it matter?",
+      "options": [
+        "Replace every PII value with a random UUID that changes per request, ensuring no two requests share a token",
+        "Map each unique PII value to a stable placeholder so the LLM preserves code and relationship semantics across a conversation",
+        "Tokenize PII values using the same tokenizer as the LLM to preserve token count",
+        "Store PII tokens in the KV cache so they can be retrieved if the conversation resumes"
+      ],
+      "correct": 1,
+      "explanation": "Consistent tokenization maps each unique sensitive value to the same stable placeholder across the conversation. 'Alice' always becomes '[PERSON_1]', not a random ID each time. This lets the LLM understand that [PERSON_1] and [PERSON_1] are the same entity while preventing PII leakage."
+    },
+    {
+      "stage": "post",
+      "question": "Which three secret-scanning tools does the lesson recommend for running on every commit?",
+      "options": [
+        "SonarQube, Semgrep, and Snyk",
+        "TruffleHog, GitGuardian, and Gitleaks",
+        "Bandit, Safety, and pip-audit",
+        "Checkov, tfsec, and Trivy"
+      ],
+      "correct": 1,
+      "explanation": "The lesson recommends TruffleHog (regex + entropy analysis on commits), GitGuardian (commercial, high accuracy), and Gitleaks (open-source, runs in CI). All three run on every commit to catch accidental credential exposure before it reaches the remote."
+    },
+    {
+      "stage": "pre",
+      "question": "What network egress policy should LLM services enforce to prevent data exfiltration?",
+      "options": [
+        "Allow all outbound traffic within the VPC; block only external internet access",
+        "Place LLM services in a dedicated VPC subnet whitelisting only known model provider endpoints; block all other outbound",
+        "Use a web proxy that logs all outbound requests for audit purposes",
+        "Rely on the cloud provider's default VPC security groups"
+      ],
+      "correct": 1,
+      "explanation": "LLM services should sit in a dedicated VPC/VNet subnet with egress whitelisted only to specific endpoints: api.openai.com, api.anthropic.com, vector DB endpoints, vault endpoints. Everything else is dropped. This prevents compromised containers from exfiltrating data to arbitrary destinations."
+    }
+  ]
+}

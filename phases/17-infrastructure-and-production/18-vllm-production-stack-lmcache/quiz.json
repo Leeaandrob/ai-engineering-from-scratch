@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is LMCache's primary role in the vLLM production stack?",
+      "options": [
+        "A load balancer that routes requests based on cache affinity",
+        "A KV offloading layer that extracts KV cache from GPU HBM to CPU DRAM or disk and reuses it across queries and engines",
+        "A model weight compression tool that reduces HBM usage by 50%",
+        "An observability collector that aggregates Prometheus metrics from vLLM workers"
+      ],
+      "correct": 1,
+      "explanation": "LMCache is the KV offloading layer: it extracts KV cache from GPU HBM to CPU DRAM (and then optionally disk/Ceph) and reuses those KV blocks across queries and across multiple vLLM engine instances. This is distinct from model weight compression."
+    },
+    {
+      "stage": "pre",
+      "question": "The vLLM 0.11.0 KV Offloading Connector (January 2026) made offloading asynchronous. Why does this matter?",
+      "options": [
+        "It allows LMCache to run on a separate Kubernetes node without additional configuration",
+        "Offload latency is no longer user-visible — the write to CPU DRAM happens while the GPU continues serving other requests",
+        "It enables LMCache to synchronously verify data integrity after each write",
+        "Asynchronous offloading doubles the effective HBM bandwidth"
+      ],
+      "correct": 1,
+      "explanation": "With the asynchronous Connector API (v0.9.0+), KV blocks are offloaded to CPU DRAM in the background while the GPU continues processing. The offload latency is decoupled from the user-facing request latency."
+    },
+    {
+      "stage": "post",
+      "question": "When is LMCache most valuable, even without shared prefix reuse across requests?",
+      "options": [
+        "When model weights exceed available HBM capacity",
+        "When a GPU runs out of KV slots and preempted requests can be restored from CPU DRAM instead of recomputing prefill",
+        "When multiple LoRA adapters are loaded simultaneously",
+        "When requests have identical system prompts across all users"
+      ],
+      "correct": 1,
+      "explanation": "LMCache provides value even without shared prefixes: when the GPU exhausts KV slots and must preempt requests, it can restore them from CPU DRAM instead of re-running expensive prefill. The restore cost is much lower than recomputation."
+    },
+    {
+      "stage": "post",
+      "question": "At what KV cache footprint does LMCache start adding overhead without benefit?",
+      "options": [
+        "When KV cache exceeds 50% of HBM capacity",
+        "When KV footprint is low (short prompts, low concurrency) and fits comfortably in HBM",
+        "When the system prompt is longer than 4,096 tokens",
+        "When more than 8 engine replicas share the LMCache layer"
+      ],
+      "correct": 1,
+      "explanation": "The lesson's benchmark behavior: at low KV footprint (short prompts, low concurrency), all configurations match baseline and LMCache adds ~3-5% overhead with no benefit. LMCache becomes decisive when KV pressure is high or cross-engine sharing is needed."
+    },
+    {
+      "stage": "post",
+      "question": "Which deployment scenario is explicitly called out as NOT benefiting from LMCache?",
+      "options": [
+        "Multi-tenant serving with shared system prompts across tenants",
+        "RAG where document chunks repeat across queries",
+        "Single-tenant single-prompt workload with no repeated content",
+        "LoRA fine-tuned variants on the same base model"
+      ],
+      "correct": 2,
+      "explanation": "Single-tenant single-prompt workloads have no KV reuse to capture — every request is unique. LMCache adds 3-5% overhead without benefit in this case. The lesson recommends against enabling it for workloads with no reuse pattern."
+    },
+    {
+      "stage": "pre",
+      "question": "The vLLM production-stack has four main layers. Which is the correct list?",
+      "options": [
+        "Model registry, serving engine, observability, billing",
+        "Router, engines, KV cache offload, observability",
+        "Load balancer, GPU pool, storage, monitoring",
+        "Gateway, inference server, database, CDN"
+      ],
+      "correct": 1,
+      "explanation": "The vLLM production-stack layers: router (cache-aware, consumes KV events), engines (vLLM workers per GPU or TP/PP group), KV cache offload (LMCache or native connector), and observability (Prometheus/Grafana/OTel)."
+    }
+  ]
+}

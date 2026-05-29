@@ -1,0 +1,61 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the approximate cold-start time for a 70B model going from cold to serving without any mitigation?",
+      "options": ["10-30 seconds", "1-2 minutes", "3-8 minutes", "15-30 minutes"],
+      "correct": 2,
+      "explanation": "The lesson states a raw 70B cold start takes 3-8 minutes. For a 7B model it is 5-10 minutes; for 70B it can exceed 20 minutes. In a serverless context, that is an outage, not a warm-up."
+    },
+    {
+      "stage": "pre",
+      "question": "What is Modal's published cold-start floor with GPU memory snapshots enabled?",
+      "options": ["Under 1 second", "2-4 seconds", "10-20 seconds", "1-2 minutes"],
+      "correct": 1,
+      "explanation": "Modal publishes 2-4 second cold starts as their floor, achieved via GPU memory checkpointing. Baseten's default is 5-10 seconds, dropping to sub-second with pre-warming."
+    },
+    {
+      "stage": "post",
+      "question": "Why does live migration transfer input tokens rather than KV cache when moving a running request to a new instance?",
+      "options": [
+        "KV cache is encrypted and cannot be transferred between instances",
+        "Input tokens are kilobytes while KV cache is gigabytes, so transferring tokens is orders of magnitude cheaper",
+        "The KV cache format is instance-specific and cannot be decoded by another instance",
+        "Input tokens are always cached at the gateway layer so re-transfer is free"
+      ],
+      "correct": 1,
+      "explanation": "Input tokens are kilobytes; the KV cache for a long conversation can be gigabytes. Live migration sends the small token payload and accepts the penalty of recomputing prefill on the new instance rather than transferring the large KV cache."
+    },
+    {
+      "stage": "post",
+      "question": "ServerlessLLM's tiered loading pipeline moves weights through which sequence of storage tiers?",
+      "options": [
+        "Object storage → DRAM → NVMe → HBM",
+        "NVMe → DRAM → HBM",
+        "HBM → DRAM → NVMe (eviction, not loading)",
+        "Network → NVMe → HBM (bypassing DRAM)"
+      ],
+      "correct": 1,
+      "explanation": "ServerlessLLM implements a NVMe → DRAM → HBM tiered pipeline, achieving 10-200x latency reduction versus downloading weights cold. The hierarchy matches storage bandwidth: NVMe is faster than network, DRAM is faster than NVMe, HBM is fastest."
+    },
+    {
+      "stage": "post",
+      "question": "When should min_workers > 0 (warm pool) be mandated versus when is scale-to-zero acceptable?",
+      "options": [
+        "Always mandate warm pools regardless of workload type",
+        "Warm pools for SLO-critical interactive paths; scale-to-zero acceptable for background batch paths tolerating 5-10 minute cold starts",
+        "Scale-to-zero for all production paths; warm pools only for development environments",
+        "Warm pools only for models over 70B; scale-to-zero for smaller models"
+      ],
+      "correct": 1,
+      "explanation": "The lesson's warm-pool math: high-value interactive paths (chat, voice agents) need min_workers=1-2 to avoid SLO breaches. Background batch paths (nightly classification) can tolerate 5-10 minute cold starts since they are not user-facing."
+    },
+    {
+      "stage": "pre",
+      "question": "What speedup does the Run:ai Model Streamer provide for weight loading versus standard sequential loading?",
+      "options": ["~10x speedup", "~5x speedup", "~2x speedup", "~20x speedup"],
+      "correct": 2,
+      "explanation": "The Run:ai Model Streamer achieves approximately 2x weight-load speedup by streaming weights asynchronously while the model begins initialization. It is Layer 2 in the five-layer cold-start mitigation stack."
+    }
+  ]
+}

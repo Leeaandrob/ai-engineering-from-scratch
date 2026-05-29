@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is 'memory poisoning' in a multi-agent system with shared state?",
+      "options": ["A security attack where an adversary injects false data into the agent's external knowledge base", "One agent's hallucination enters shared memory, is treated as fact by downstream agents, and causes gradual accuracy decay that is hard to root-cause", "An agent overwriting another agent's memory entries, causing data loss", "Shared memory growing so large that retrieval latency degrades agent performance significantly"],
+      "correct": 1,
+      "explanation": "Memory poisoning: Agent A hallucinates '42% gain' instead of '4.2%.' It writes this to shared state. Agent B reads it and writes 'large 42% gain confirmed.' Agent C recommends adoption based on the '42% lift.' No crash, no exception — the hallucination is laundered into fact across agents. The root cause is three steps deep by the time it is noticed."
+    },
+    {
+      "stage": "pre",
+      "question": "When should a 'full message pool' be preferred over a 'blackboard with subscription'?",
+      "options": ["When there are more than 50 agents and context cost is the primary concern", "When agents are few (fewer than 10), heterogeneous, and the conversation is short-horizon with no need for topic-scoped routing", "When agents need to react to each other's outputs in real time without any latency", "When the system needs to comply with audit requirements and every message must be logged"],
+      "correct": 1,
+      "explanation": "Full pool wins when: few agents (context bloat is manageable), heterogeneous roles (everyone benefits from seeing everything), and short conversations (pool does not grow unmanageably). Blackboard wins at scale: many agents, homogeneous workers, long-running systems where routing by topic saves context and cost."
+    },
+    {
+      "stage": "post",
+      "question": "What are the three mitigations for memory poisoning that actually work in production?",
+      "options": ["Rate limiting writes, encrypting shared state, and requiring agent authentication before each write", "Provenance on every write, append-only versioned state, and a read-only verifier agent with independent source access", "Consensus voting before any write, LLM-based fact checking on every entry, and automatic rollback of low-confidence entries", "Restricting write access to one agent, compressing old entries after 24 hours, and adding a human review step for important writes"],
+      "correct": 1,
+      "explanation": "The three structural mitigations: (1) provenance — every write records writer, timestamp, prompt hash, source URI; (2) append-only log — corrections are new entries that reference the superseded one, never in-place updates; (3) read-only verifier — an agent that cannot write to the shared pool, re-fetches sources, and flags inconsistencies."
+    },
+    {
+      "stage": "post",
+      "question": "Why must a verifier agent be unable to write to the shared memory pool it is verifying?",
+      "options": ["To prevent the verifier from accidentally becoming the authoritative source for facts it was meant to check", "If the pool is poisoned and the verifier writes back into it, the verifier's own outputs get poisoned, destroying its independence and its ability to catch the original error", "Legal compliance requires that verification records be stored separately from operational data", "Writing to the pool during verification creates race conditions with other agents that are concurrently reading it"],
+      "correct": 1,
+      "explanation": "If the verifier writes to the same pool it monitors, a poisoned pool poisons the verifier's own context, which poisons its verification output, which re-enters the pool. The independence is destroyed. The verifier must have a separate write channel (a verification log) that is not readable by the main agents."
+    },
+    {
+      "stage": "post",
+      "question": "What is the Hayes-Roth blackboard pattern from 1985 and how does it relate to 2026 multi-agent systems?",
+      "options": ["A data structure for efficient key-value lookups used as inspiration for LangGraph's state reducers", "A 1985 architecture where specialist Knowledge Sources observe a global blackboard and contribute partial solutions; the 2026 equivalent has LLM agents as Knowledge Sources and JSON blobs as partial solutions", "A formal verification method for proving correctness of shared-state concurrent programs", "A hierarchical memory organization that inspired the Smallville generative agents memory stream design"],
+      "correct": 1,
+      "explanation": "Hayes-Roth 1985 described specialist Knowledge Sources that each watch a global blackboard for partial solutions they can extend, contribute updates, and trigger other sources. CA-MCP, Matrix, and similar 2026 systems are the same pattern with LLM agents as Knowledge Sources. The old literature has documented solutions to write contention and consistency that modern systems rediscover."
+    }
+  ]
+}

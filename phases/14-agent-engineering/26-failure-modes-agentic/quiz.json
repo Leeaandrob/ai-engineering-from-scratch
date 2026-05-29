@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does MASFT stand for and what does it catalog?",
+      "options": [
+        "Multi-Agent System Failure Taxonomy — 14 failure modes in 3 categories",
+        "Model Accuracy and Safety Fault Testing — 10 test scenarios",
+        "Machine Agent System Failure Tracking — real-time monitoring framework",
+        "Multi-Agent Safety Framework for Testing — evaluation benchmark"
+      ],
+      "correct": 0,
+      "explanation": "MASFT (Berkeley, arXiv:2503.13657) stands for Multi-Agent System Failure Taxonomy. It catalogs 14 failure modes clustered into 3 categories with inter-annotator Cohen's Kappa 0.88 — the categories are reliably distinguishable."
+    },
+    {
+      "stage": "pre",
+      "question": "What are the five industry-recurring agentic failure modes identified across field analyses?",
+      "options": [
+        "Slow execution, wrong answers, crashes, cost overruns, poor UX",
+        "Hallucinated actions, scope creep, cascading errors, context loss, tool misuse",
+        "Prompt injection, data leakage, infinite loops, memory overflow, tool timeouts",
+        "Model drift, retrieval failure, planning errors, execution bugs, evaluation gaps"
+      ],
+      "correct": 1,
+      "explanation": "Arize, Galileo, and NimbleBrain field analyses (2024-2026) converge on five recurring modes: hallucinated actions, scope creep (doing more than asked), cascading errors, context loss (forgetting early constraints), and tool misuse."
+    },
+    {
+      "stage": "post",
+      "question": "What is 'success hallucination' and why is cascading the 'killer' failure mode?",
+      "options": [
+        "Success hallucination is the model claiming to succeed when no API was called; cascading kills because it generates excessive logs",
+        "Success hallucination is the agent claiming done on a 400 error; cascading is the killer because agents cannot distinguish 'I failed' from 'impossible' and one wrong call can trigger a multi-system incident",
+        "Success hallucination means the model misunderstands the task; cascading occurs when multiple agents work simultaneously",
+        "Success hallucination is a CRITIC evaluation failure; cascading means the loop runs indefinitely"
+      ],
+      "correct": 1,
+      "explanation": "Success hallucination: the agent returns success when the target state is unchanged (claims success on a 400 error). Cascading is the killer: one phantom SKU hallucination can trigger four downstream API calls resulting in a multi-system incident, because agents cannot reliably distinguish failure from 'task is impossible'."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'instruction-following deviation' hallucination type from the LLM Agent Hallucinations Survey?",
+      "options": [
+        "The agent follows instructions too literally",
+        "The agent does not follow the system prompt or user constraint",
+        "The agent produces output that is too long",
+        "The agent calls tools in the wrong order"
+      ],
+      "correct": 1,
+      "explanation": "The LLM Agent Hallucinations Survey (arXiv:2509.18970) identifies two primary manifestations: Instruction-following Deviation (agent ignores system prompt or user constraint) and Long-range Contextual Misuse (agent forgets or misapplies context from earlier turns)."
+    },
+    {
+      "stage": "post",
+      "question": "What is the core claim of MASFT about agentic failures?",
+      "options": [
+        "Failures will be solved by better base models",
+        "Failures are fundamental design flaws in multi-agent systems, not LLM limitations to be fixed with better models",
+        "Failures are caused by insufficient training data",
+        "Failures are primarily infrastructure problems"
+      ],
+      "correct": 1,
+      "explanation": "MASFT's central claim: the identified failure modes are fundamental design flaws in multi-agent systems, not limitations of the base LLMs. Better models alone will not eliminate them — the design patterns must change."
+    },
+    {
+      "stage": "pre",
+      "question": "What mitigation approach does the lesson recommend for catching success hallucination?",
+      "options": [
+        "Trust the agent's self-reported status",
+        "Re-probe actual state after the agent claims success (was the file actually created, did the database record exist)",
+        "Run a second model to review the output",
+        "Add more detailed prompting about what success means"
+      ],
+      "correct": 1,
+      "explanation": "To detect success hallucination, re-probe the actual environment state after the agent claims success. Ask: is the file there? Did the API call succeed? Was the database record created? The CRITIC pattern (Lesson 05) grounds verification in external tool results."
+    }
+  ]
+}

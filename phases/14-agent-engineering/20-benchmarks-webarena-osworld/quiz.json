@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "How does WebArena evaluate agent task completion?",
+      "options": [
+        "Human reviewers check screenshots of completed tasks",
+        "Execution-based via gym APIs — checking actual state change (was the order placed, was the issue closed)",
+        "String matching against expected output text",
+        "LLM judges compare the agent's actions to a gold trajectory"
+      ],
+      "correct": 1,
+      "explanation": "WebArena uses execution-based evaluation via gym APIs — it checks whether the actual application state changed correctly (was the order placed, was the GitLab issue closed, was the CMS page updated), not just whether the agent said the right things."
+    },
+    {
+      "stage": "pre",
+      "question": "What were the human vs best-agent success rates for WebArena and OSWorld at release?",
+      "options": [
+        "Human: 50%, Best agent: 45% for both",
+        "WebArena: human 78.24% vs best agent 14.41%; OSWorld: human 72.36% vs best agent 12.24%",
+        "Human: 100%, Best agent: 80% for both",
+        "WebArena: human 90%, Best agent 70%; OSWorld: human 85%, Best agent 60%"
+      ],
+      "correct": 1,
+      "explanation": "At release: WebArena human 78.24% vs best GPT-4 agent 14.41%; OSWorld human 72.36% vs best model 12.24%. Significant gaps that have been narrowing since 2024."
+    },
+    {
+      "stage": "post",
+      "question": "What are the two primary OSWorld failure modes?",
+      "options": [
+        "Network latency and model hallucination",
+        "GUI grounding (pixel-to-element mapping) and operational knowledge (which menu, shortcut, preference pane)",
+        "Context length and planning horizon",
+        "Tool availability and action space coverage"
+      ],
+      "correct": 1,
+      "explanation": "OSWorld identified two primary failure modes: GUI grounding (models struggle to reliably localize UI elements in 1920x1080 screenshots) and operational knowledge (the long tail of 'which menu has the setting' knowledge humans build over years)."
+    },
+    {
+      "stage": "post",
+      "question": "What does OSWorld-Human reveal about agent trajectory efficiency?",
+      "options": [
+        "Agents take the same number of steps as humans",
+        "Top agents use 1.4-2.7x more steps than necessary compared to human expert gold trajectories",
+        "Agents are 2x more efficient than humans",
+        "Agents fail to complete most tasks within 3x the human step count"
+      ],
+      "correct": 1,
+      "explanation": "OSWorld-Human consists of manually curated gold action trajectories from human experts. It shows that top-performing agents use 1.4-2.7x more steps than the human minimum, revealing a trajectory-efficiency gap beyond just success/failure."
+    },
+    {
+      "stage": "post",
+      "question": "Why is the 'self-hosted' framing important for WebArena's evaluation quality?",
+      "options": [
+        "Self-hosted is cheaper than using cloud services",
+        "The benchmark apps are pinned and reproducible, preventing flaky evaluations from live web changes",
+        "Self-hosted allows faster execution",
+        "Self-hosted prevents data collection by the platform"
+      ],
+      "correct": 1,
+      "explanation": "WebArena's four apps (shopping site, forum, GitLab-like tool, business CMS) are self-hosted with pinned versions. This prevents flakiness from live web changes and makes results reproducible across research groups."
+    },
+    {
+      "stage": "pre",
+      "question": "Why does OSWorld use screenshots instead of accessibility APIs?",
+      "options": [
+        "Accessibility APIs are not available on all platforms",
+        "Screenshots test the actual grounding challenge: can the model localize UI elements in raw pixels as production computer-use agents must",
+        "Screenshots are faster to process than accessibility tree data",
+        "Accessibility APIs would make the benchmark too easy"
+      ],
+      "correct": 1,
+      "explanation": "OSWorld uses screenshots because production computer-use agents (Claude computer use, OpenAI CUA) must interpret raw pixels. Using accessibility APIs would bypass the core grounding challenge the benchmark is designed to measure."
+    }
+  ]
+}

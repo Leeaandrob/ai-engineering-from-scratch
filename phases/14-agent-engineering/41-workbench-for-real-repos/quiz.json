@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the five outcomes measured in the prompt-only vs workbench-guided comparison?",
+      "options": [
+        "Speed, accuracy, cost, test coverage, user satisfaction",
+        "tests_actually_run, acceptance_met, files_outside_scope, handoff_quality, reviewer_total",
+        "lines_of_code, bugs_fixed, tests_added, docs_updated, performance_improvement",
+        "tokens_used, time_taken, errors_caught, scope_violations, review_score"
+      ],
+      "correct": 1,
+      "explanation": "The five measured outcomes: tests_actually_run (most 'tests passed' claims are unverifiable), acceptance_met (the test proving the goal actually ran), files_outside_scope (dominant silent failure), handoff_quality (the next session pays for or benefits from this), and reviewer_total (qualitative judgment on top of the gate)."
+    },
+    {
+      "stage": "pre",
+      "question": "What does Vercel's '80% to 100%' achievement demonstrate about workbench design?",
+      "options": [
+        "Adding more models to the ensemble improves accuracy",
+        "Deleting 80% of the agent's tools moved success rate from 80% to 100% — smaller scope means fewer ways to fail",
+        "Larger context windows improve performance",
+        "Better system prompts are the primary driver of improvement"
+      ],
+      "correct": 1,
+      "explanation": "Vercel deleted 80% of its agent's tools, moving success from 80% to 100%. Negative space wins: a smaller, more focused tool surface with sharper scope leaves fewer failure paths. The workbench's scope design — not the model — drove the improvement."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'false negative' honest assessment in workbench benchmarking?",
+      "options": [
+        "Cases where the workbench incorrectly marks a good result as bad",
+        "Tasks where prompt-only would have been faster and the workbench overhead is real cost — these should be enumerated honestly",
+        "Evaluation cases that the benchmark misses",
+        "Failures that the workbench catches but are not real problems"
+      ],
+      "correct": 1,
+      "explanation": "A false negative in workbench benchmarking: tasks where prompt-only would have been faster (single-step factual tasks, one-line lints, memorized patterns). These should be enumerated honestly so the workbench is not framed as overkill. The workbench is still worth keeping, but honest accounting matters."
+    },
+    {
+      "stage": "post",
+      "question": "What does the '88% of enterprise AI agent projects fail to reach production' finding point to as the root cause?",
+      "options": [
+        "Insufficient model capability",
+        "Runtime failures: stale state, brittle retries, overgrown context, poor recovery from intermediate mistakes — not reasoning problems",
+        "Lack of training data",
+        "Insufficient compute resources"
+      ],
+      "correct": 1,
+      "explanation": "The preprints.org 'Harness Engineering for Language Agents' paper (March 2026) traces 88% of enterprise failure to runtime problems, not reasoning: stale state, brittle retries, overgrown context, poor recovery from intermediate mistakes. The workbench surfaces exist to absorb these."
+    },
+    {
+      "stage": "post",
+      "question": "What does the workbench-guided pipeline do that prompt-only does not?",
+      "options": [
+        "Uses a better model",
+        "Runs init script, reads scope contract, touches only allowed files, runs acceptance via feedback runner, runs verification gate, runs reviewer, generates handoff",
+        "Writes more thorough documentation",
+        "Sends results to a code review service"
+      ],
+      "correct": 1,
+      "explanation": "The workbench-guided pipeline: (1) run init script, (2) read scope contract, (3) read state, (4) edit only allowed files, (5) run acceptance command via feedback runner, (6) run verification gate, (7) run reviewer, (8) generate handoff. Eight surfaces vs prompt-only's four steps."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the 'long-context collapse' phenomenon relevant to agent workbenches?",
+      "options": [
+        "Models performing worse on long documents than short ones",
+        "WebAgent baselines dropping from 40-50% success to under 10% in long-context conditions, mostly from infinite loops and goal loss",
+        "Agent context windows filling up faster than expected",
+        "Memory usage growing uncontrollably with longer sessions"
+      ],
+      "correct": 1,
+      "explanation": "Long-context collapse: WebAgent baseline success drops from 40-50% to under 10% in long-context conditions, mostly from infinite loops and goal loss. The Ralph Loop (re-injecting original intent) and handoff packets (closing session before collapse) exist specifically to absorb this failure."
+    }
+  ]
+}

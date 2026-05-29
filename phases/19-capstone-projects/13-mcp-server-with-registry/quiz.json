@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is StreamableHTTP, and why is it the default MCP transport in 2026?",
+      "options": [
+        "A WebSocket variant optimized for low-latency token streaming",
+        "A stateless HTTP transport with bidirectional streaming that enables horizontal scaling behind a load balancer without session stickiness",
+        "An extension of the stdio transport that adds HTTP header authentication",
+        "A protocol for streaming binary model weights to MCP clients"
+      ],
+      "correct": 1,
+      "explanation": "StreamableHTTP is stateless by default: a single HTTP endpoint accepts JSON-RPC requests and streams responses. Stateless means any replica can serve any request, enabling horizontal scaling without sticky sessions."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the capability manifest published at .well-known/mcp-capabilities?",
+      "options": [
+        "A list of the installed Python packages on the MCP server host",
+        "A document exposing the server's tool list, auth requirements, transport URL, owner team, and SLO for registry discovery and validation",
+        "An OAuth 2.1 authorization server metadata endpoint",
+        "A health-check endpoint that returns the server's current connection count"
+      ],
+      "correct": 1,
+      "explanation": "The capability manifest is the server's self-description: tools it exposes (with schemas and scope labels), auth requirements, transport URL, owner team, and SLO. The registry polls this endpoint to index and validate the server."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'scope elevation' mechanism for destructive tools, and who grants it?",
+      "options": [
+        "A Kubernetes RBAC rolebinding that adds write verbs to the agent's service account",
+        "A short-lived approved:by:human scope granted via a Slack review card; the agent can only call destructive tools after a human approves within the last 15 minutes",
+        "An OPA policy update that temporarily allows the write verb for a specific tool",
+        "A database flag set by the registry admin granting permanent elevated access"
+      ],
+      "correct": 1,
+      "explanation": "Destructive tools require an elevated scope (approved:by:human) that is granted only through a Slack interactive message. This scope has a short TTL (15 minutes), ensuring humans remain in the loop for high-risk actions."
+    },
+    {
+      "stage": "pre",
+      "question": "What does OPA (Open Policy Agent) enforce in the MCP server architecture described here?",
+      "options": [
+        "Token budgets and rate limits per API key",
+        "Per-tool authorization rules: which OAuth scopes permit invocation, PII redaction requirements, and payload-size caps, evaluated on every tool call",
+        "SSL/TLS certificate rotation for the StreamableHTTP transport",
+        "Audit log retention policies for per-tenant JSONL buckets"
+      ],
+      "correct": 1,
+      "explanation": "OPA / Rego policies define per-tool rules: required scopes, PII redaction (e.g., strip columns named 'email' or 'ssn'), and payload caps. The policy decision service is called on every tool call, not just at session start."
+    },
+    {
+      "stage": "post",
+      "question": "What does the load test in this capstone demonstrate about StreamableHTTP scaling?",
+      "options": [
+        "That a single MCP server instance can handle 1000 concurrent clients without latency degradation",
+        "That adding a second replica allows the load balancer to redistribute 100 concurrent clients without requiring session stickiness",
+        "That the OPA policy decision service is the bottleneck at 50+ concurrent clients",
+        "That SPIFFE/SPIRE token issuance adds less than 10ms overhead per connection"
+      ],
+      "correct": 1,
+      "explanation": "The load test runs 100 concurrent clients and demonstrates that adding a second replica and load-balancing across them works transparently because StreamableHTTP is stateless, so any replica can serve any request."
+    },
+    {
+      "stage": "post",
+      "question": "What does the audit log record, and what PII handling does it require before writing?",
+      "options": [
+        "Raw request and response payloads; no PII handling is required for audit logs",
+        "Timestamp, user, tool name, redacted args, redacted response, and outcome; Presidio scrubs PII from args and responses before the record is written",
+        "Only failed and rejected tool calls; successful calls are omitted to reduce storage costs",
+        "Tool call metadata without any payload content, since logs are retained for legal discovery"
+      ],
+      "correct": 1,
+      "explanation": "The append-only JSONL audit log records timestamp, user, tool, args_redacted, response_redacted, and outcome per call. Presidio runs before write to scrub PII from both args and response, satisfying enterprise security review."
+    }
+  ]
+}

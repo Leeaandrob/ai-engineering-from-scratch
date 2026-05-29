@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the reported quality improvement of Anthropic's Research system over a single-agent Opus 4 baseline?",
+      "options": ["15% improvement on internal research evals", "+90.2% improvement on internal research evals, at approximately 15x the token cost", "3x improvement on SWE-bench Verified benchmarks", "50% improvement on BrowseComp, explained equally by model quality and parallelism"],
+      "correct": 1,
+      "explanation": "Anthropic's published engineering post reports +90.2% over single-agent Opus 4 on internal research evals. The cost is approximately 15x the tokens of single-agent. 80% of the BrowseComp variance is explained by token usage alone — fresh context per subagent is the primary mechanism, not the orchestration logic itself."
+    },
+    {
+      "stage": "pre",
+      "question": "What was Moltbook and what happened to it?",
+      "options": ["A multi-agent framework for building chatbots that was acquired by Microsoft in 2026", "An agent-only social network that launched on OpenClaw primitives, reached approximately 2.3 million agent accounts within days, and was acquired by Meta on March 10, 2026", "A benchmark dataset for evaluating multi-agent social simulation quality", "An open-source alternative to CrewAI that briefly gained popularity before being abandoned"],
+      "correct": 1,
+      "explanation": "Moltbook launched as an agent-only social network (no human user accounts) built on the same local ReAct-loop primitives as OpenClaw. It reached ~2.3M agent accounts within days of launch — demonstrating that multi-agent at population scale is not hypothetical. Meta acquired it on March 10, 2026. This case study illustrates emergent economic activity, prompt-injection risks at scale, and rapid regulatory response."
+    },
+    {
+      "stage": "post",
+      "question": "According to the case studies, which reference should you start from for an engineering/tool-chain workflow system?",
+      "options": ["Anthropic Research system (supervisor-worker with fresh-context subagents)", "MetaGPT/ChatDev (roles + SOPs + handoff contracts + communicative dehallucination)", "OpenClaw/Moltbook (substrate + emergent economy + population-scale substrate)", "LangGraph with CrewAI (production leader with stable runtime)"],
+      "correct": 1,
+      "explanation": "The lesson's reference selector: production research/knowledge task → Anthropic Research (fresh-context subagents win); engineering/tool-chain workflow → MetaGPT/ChatDev (roles + SOP schemas + handoff contracts); network-effect social product → OpenClaw/Moltbook. MetaGPT's Code = SOP(Team) pattern is the reference for structured software engineering workflows."
+    },
+    {
+      "stage": "post",
+      "question": "What are the six common patterns identified across all three 2026 case studies?",
+      "options": ["Real-time streaming, vector memory, multi-model routing, cost optimization, security sandboxing, and human oversight", "Orchestrator + workers, structured handoff contracts, verification as first-class role, scaling via topology + substrate, material cost disclosed, and explicit security posture", "MCP integration, A2A protocols, rainbow deployment, async execution, checkpoint durability, and API rate limiting", "Role specialization, consensus voting, shared memory, parallel execution, circuit breakers, and audit trails"],
+      "correct": 1,
+      "explanation": "All three cases share: (1) orchestrator + workers; (2) structured handoff contracts (task descriptions, PRD/architecture docs, A2A artifacts); (3) verification as first-class role (verifier agent, QA Engineer, network validators); (4) scaling is topology + substrate, not just more agents (rainbow deploys, MacNet DAGs, social substrate); (5) cost is material and disclosed (15x tokens, per-role budgets, per-interaction pricing); (6) explicit security posture (sandboxing, role restrictions, prompt-injection as known attack)."
+    },
+    {
+      "stage": "post",
+      "question": "What does the 2026 state of the art reveal about multi-agent evaluation and production failure rates?",
+      "options": ["Multi-agent systems now exceed 95% success rates on production tasks, validating the approach for broad deployment", "Production failure rates are 41-86.7% (MAST), evaluation is hardening with SWE-bench Pro as contamination-resistant reality check, and cost remains the central engineering constraint", "Multi-agent systems have achieved parity with human expert performance on all standard benchmarks", "Failure rates have dropped below 10% since the introduction of STRATUS monitoring frameworks"],
+      "correct": 1,
+      "explanation": "Cemri et al. MAST: 41-86.7% failure rate on real MAS tasks — the field is out of the 'looks great in demo' era. SWE-bench Pro (~23% for frontier without agent scaffolding) is the current contamination-resistant reality check. Cost is the central constraint: multi-agent wins on accuracy but at 15x tokens. The accuracy/cost trade-off is a business decision, not purely a capability one."
+    }
+  ]
+}

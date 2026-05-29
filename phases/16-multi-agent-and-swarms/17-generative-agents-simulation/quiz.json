@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the three components of the Smallville generative agent architecture (Park et al. 2023)?",
+      "options": ["Beliefs, desires, and intentions (BDI)", "Memory stream, reflection, and plan", "Observation, action, and reward", "Context window, system prompt, and tool list"],
+      "correct": 1,
+      "explanation": "Park et al.'s three components: memory stream (append-only log of observations, actions, reflections, plans with recency/importance/relevance scores), reflection (periodically generated higher-order syntheses re-ingested as memories), and plan (day-level and hour-level top-down decomposition that is revisable when observations contradict it)."
+    },
+    {
+      "stage": "pre",
+      "question": "How does memory retrieval work in the Smallville architecture, and what three factors determine which memories surface?",
+      "options": ["Random sampling weighted by age, combined with a keyword filter on the current query", "Recency (exponential decay by age), importance (self-rated 1-10 at write time), and relevance (cosine similarity to the current query) — top-k by weighted combination", "A fixed sliding window of the most recent N memories, filtered by the current agent's role", "A vector database search returning the semantically closest memories regardless of when they were created"],
+      "correct": 1,
+      "explanation": "Retrieval score = w_recency * exp(-decay * age) + w_importance * importance + w_relevance * cosine_similarity. Top-k entries by this combined score enter the current prompt. Importance is cached at write time (cheap LLM call). Relevance is computed fresh at retrieval time against the current query."
+    },
+    {
+      "stage": "post",
+      "question": "What does the Valentine's Day party emergence in Smallville demonstrate about multi-agent coordination?",
+      "options": ["That agents with shared goals can coordinate without any communication if given enough time", "That emergent system-level behavior (a party attended by 24 uninformed agents) can arise from local bilateral interactions without a central orchestrator", "That LLMs have reliable theory of mind and can accurately predict other agents' future plans", "That large simulations require at least 25 agents before emergence becomes observable"],
+      "correct": 1,
+      "explanation": "One agent, Isabella, has the party goal. She invites neighbors bilaterally. Each invitation becomes a memory in the neighbor's stream. Reflection generates belief 'Isabella is throwing a party.' Plan incorporates attending it. Neighbors invite others. At 5pm, several agents converge at the party location. Nobody had a global view; the coordination emerged from local two-agent interactions."
+    },
+    {
+      "stage": "post",
+      "question": "What are the documented failure modes of the Smallville architecture that production systems must handle explicitly?",
+      "options": ["Hallucinated memories, identity confusion between agents, and inability to handle multi-step plans", "Spatial norm errors (agents enter closed stores or share single-person bathrooms), memory overflow in long runs, and reflection hallucination (inventing relationships not in the stream)", "Context window overflow when reflection summaries grow too large and inability to handle concurrent agent actions", "Agents refusing to update plans when new observations contradict existing beliefs"],
+      "correct": 1,
+      "explanation": "Park et al. document three failure families: spatial/social norm errors (the model does not infer norms from environment alone — agents walk into closed stores), memory overflow (deep runs cause retrieval cost to grow — fix with compact-and-prune), and reflection hallucination (reflections invent relationships not in the stream — fix by including source memory IDs in reflection prompts)."
+    },
+    {
+      "stage": "post",
+      "question": "Why is the memory stream described as 'append-only' and what is the correct way to make a correction?",
+      "options": ["Append-only for performance reasons only; corrections can be made as in-place updates if done atomically", "Append-only to preserve audit trail; a correction is a new memory entry that supersedes the old one, never a mutation of an existing entry", "Append-only because the LLM cannot reliably identify which entry to update given the memory's natural-language format", "Append-only to prevent race conditions when multiple agents write to the same stream concurrently"],
+      "correct": 1,
+      "explanation": "The append-only rule is an architectural guarantee, not just a performance choice. If Agent A wrote a wrong fact, you do not delete or edit it — you add a new entry 'Correction: [original entry] was incorrect; the actual value is X.' The original entry is preserved for debugging and provenance. Any mutation of the log destroys the audit trail that makes the architecture debuggable."
+    }
+  ]
+}

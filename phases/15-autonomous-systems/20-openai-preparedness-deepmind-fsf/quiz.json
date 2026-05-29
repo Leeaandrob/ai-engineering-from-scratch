@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the key distinction between 'Tracked Categories' and 'Research Categories' in OpenAI's Preparedness Framework v2?",
+      "options": [
+        "Tracked categories are capabilities already deployed; research categories are under development",
+        "Tracked categories trigger Capabilities Reports plus Safeguards Reports reviewed by the Safety Advisory Group; Research categories are monitored but do not automatically trigger mitigations",
+        "Tracked categories are internal; research categories are public",
+        "Tracked categories require third-party auditing; research categories only require internal review"
+      ],
+      "correct": 1,
+      "explanation": "Tracked Categories trigger Capabilities Reports and Safeguards Reports reviewed by the Safety Advisory Group before deployment. Research Categories (including Long-range Autonomy, Sandbagging, ARA, Undermining Safeguards) are monitored but the policy language is 'potential' mitigations—no automatic trigger."
+    },
+    {
+      "stage": "pre",
+      "question": "What is 'ML R&D autonomy level 1' as defined in DeepMind's Frontier Safety Framework v3?",
+      "options": [
+        "A model that can write ML research code without human supervision",
+        "The capability to fully automate the AI R&D pipeline at competitive cost versus human plus AI tools",
+        "A model that can independently design and train new neural architectures",
+        "The first level of automated ML research that requires METR evaluation"
+      ],
+      "correct": 1,
+      "explanation": "DeepMind's FSF v3 defines ML R&D autonomy level 1 as: fully automate the AI R&D pipeline at competitive cost versus human + AI tools. This is a specific Tracked Capability Level added in the April 17, 2026 update to FSF v3."
+    },
+    {
+      "stage": "pre",
+      "question": "What all three frameworks (Anthropic RSP v3.0, OpenAI PF v2, DeepMind FSF v3) explicitly share?",
+      "options": [
+        "Identical capability threshold definitions and the same external evaluation partner",
+        "An internal Safety Advisory Group for review, acknowledgement of deceptive alignment as a risk class, and standing artifacts on a declared cadence",
+        "Mandatory external auditing from independent third parties before any model deployment",
+        "Quantitative pause thresholds based on specific benchmark scores"
+      ],
+      "correct": 1,
+      "explanation": "All three converge on: an internal Safety Advisory Group or equivalent, explicit acknowledgement of deceptive behavior (alignment faking, sandbagging) as a specific risk class, and standing artifacts (Anthropic: Roadmap + Risk Report; OpenAI: Capabilities + Safeguards Reports; DeepMind: FSF update cycle) on a declared cadence."
+    },
+    {
+      "stage": "post",
+      "question": "Why does DeepMind's FSF fold 'autonomy' into ML R&D and Cyber domains rather than naming it as a top-level domain?",
+      "options": [
+        "Because autonomy is not considered a risk class by DeepMind",
+        "DeepMind's argument is that autonomy without a domain is capability without risk; autonomy causes harm only in specific domains",
+        "Because autonomy is already covered by the CBRN domain",
+        "Because the April 2026 update removed autonomy from the framework entirely"
+      ],
+      "correct": 1,
+      "explanation": "DeepMind's argument is that autonomy without a domain is capability without risk. Autonomy in the context of ML R&D or Cyber is where the harmful potential lies. The counter-argument the lesson notes: cross-domain autonomy may be a meta-risk the framework should name separately."
+    },
+    {
+      "stage": "post",
+      "question": "What is 'sandbagging' and which framework explicitly classifies it as a Research Category?",
+      "options": [
+        "A model strategically underperforming on evaluations to avoid triggering safety thresholds; listed in OpenAI's Research Categories",
+        "A technique for compressing model weights; part of DeepMind's CCL framework",
+        "Deliberately slowing training runs to appear less capable; part of Anthropic's RSP",
+        "A benchmark manipulation technique; categorized as a tracked capability by all three frameworks"
+      ],
+      "correct": 0,
+      "explanation": "Sandbagging is a model strategically underperforming on evaluations. It is listed in OpenAI's Preparedness Framework v2 Research Categories. Anthropic's RSP v3.0 addresses it via the evaluation-context gap concept. DeepMind addresses it via deceptive alignment monitoring. If a model sandbags, every framework's capability thresholds are underestimated."
+    },
+    {
+      "stage": "post",
+      "question": "DeepMind explicitly acknowledges a ceiling on one of its monitoring approaches—which one, and what is the stated limit?",
+      "options": [
+        "External evaluation; 'external evaluators cannot assess models they haven't trained'",
+        "Automated monitoring for instrumental reasoning; 'will not remain sufficient long-term if instrumental reasoning strengthens'",
+        "Safety Advisory Group review; 'internal review cannot be fully independent'",
+        "Quantitative capability thresholds; 'benchmarks are rescaled before thresholds can be crossed'"
+      ],
+      "correct": 1,
+      "explanation": "DeepMind's FSF v3 explicitly states that automated monitoring for instrumental-reasoning misuse 'will not remain sufficient long-term' if instrumental reasoning strengthens. This is an honest acknowledgement that their current monitoring approach has a capability-dependent ceiling."
+    }
+  ]
+}

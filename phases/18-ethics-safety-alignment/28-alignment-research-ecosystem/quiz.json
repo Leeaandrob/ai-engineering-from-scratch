@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "MATS (ML Alignment & Theory Scholars) functions primarily as what type of organization?",
+      "options": [
+        "A government-funded research institute that publishes foundational alignment papers",
+        "A research mentorship program that trains alignment researchers and feeds them into frontier labs and external evaluation organizations",
+        "A certification body that audits AI safety claims from frontier labs",
+        "A venture capital fund that invests in AI safety startups"
+      ],
+      "correct": 1,
+      "explanation": "MATS is a research mentorship program: scholars spend 10-12 weeks with senior researchers on alignment problems. The key role is talent development — approximately 80% of pre-2025 alumni work on safety/security, with 200+ at Anthropic, DeepMind, OpenAI, UK AISI, Redwood, METR, and Apollo."
+    },
+    {
+      "stage": "pre",
+      "question": "Redwood Research's primary methodological style is characterized by:",
+      "options": [
+        "Theoretical proofs about worst-case model behavior",
+        "Specific threat models, worst-case adversaries, and concrete protocols that can be stress-tested — applied alignment rather than theoretical",
+        "Large-scale empirical studies measuring alignment properties across many models",
+        "Policy analysis and recommendation of governance structures"
+      ],
+      "correct": 1,
+      "explanation": "Redwood Research (founded by Buck Shlegeris) focuses on applied alignment: specific threat models (adversarially optimizing U), worst-case adversaries, and concrete deployable protocols. AI Control (Lesson 10) exemplifies this style: the threat model is explicit, the protocol is specified, and it is tested against red-team pressure."
+    },
+    {
+      "stage": "pre",
+      "question": "Apollo Research specializes in which type of pre-deployment evaluation?",
+      "options": [
+        "Capability benchmarking across standard academic tasks",
+        "Scheming evaluations — agentic settings where deception can emerge from in-context goal conflicts",
+        "Privacy audits measuring training data memorization",
+        "Fairness evaluations measuring demographic parity across model outputs"
+      ],
+      "correct": 1,
+      "explanation": "Apollo Research conducts pre-deployment scheming evaluations for frontier labs. Their canonical work (In-Context Scheming, Lesson 8) tests agentic scenarios where models can develop scheming behavior from in-context goal conflicts. Their methodological style uses the three-pillar decomposition: misalignment, goal-directedness, situational awareness."
+    },
+    {
+      "stage": "post",
+      "question": "METR (Model Evaluation and Threat Research) is primarily known for what type of evaluation?",
+      "options": [
+        "Jailbreak evaluations measuring attack success rates",
+        "Task-based capability evaluations including autonomous-task time-horizon studies",
+        "Privacy audits and data extraction measurements",
+        "Bias evaluations across demographic groups"
+      ],
+      "correct": 1,
+      "explanation": "METR focuses on task-based capability evaluations and autonomous-task time-horizon studies — measuring how far a model can progress on complex multi-step tasks without human intervention. They also produce framework synthesis documents like 'Common Elements of Frontier AI Safety Policies' that compare across labs."
+    },
+    {
+      "stage": "post",
+      "question": "Why is the multi-organizational structure (labs + external evaluators) described as the quality control mechanism for alignment research?",
+      "options": [
+        "Multiple organizations produce more papers, increasing the chance of discovering important results",
+        "Labs have a structural conflict of interest evaluating their own models; external evaluators can raise and validate failure modes that labs may underreport — the multi-org structure provides independent verification",
+        "Government regulations require independent evaluation before deployment",
+        "External evaluators use different hardware that can detect failure modes invisible to lab infrastructure"
+      ],
+      "correct": 1,
+      "explanation": "Single-source evaluations are structurally unreliable when the evaluator is the model's producer. The 2024 canonical papers illustrate this: Sleeper Agents (Anthropic + Redwood), Alignment Faking (Anthropic + Redwood), In-Context Scheming (Apollo alone), Anti-Scheming (Apollo + OpenAI). The multi-org structure ensures critical findings have independent endorsement."
+    },
+    {
+      "stage": "post",
+      "question": "Eleos AI Research occupies a unique niche in the ecosystem. What is it?",
+      "options": [
+        "The only organization that publishes adversarial jailbreak attack papers",
+        "The only organization focused on model-welfare pre-deployment evaluations, providing external methodology checks for welfare-relevant claims",
+        "The primary training-data audit organization that verifies data provenance claims",
+        "The certification body for GPAI Code of Practice compliance"
+      ],
+      "correct": 1,
+      "explanation": "Eleos AI Research is described as the only pure model-welfare organization in the ecosystem. They conducted the Claude Opus 4 welfare assessment documented in the system card (Lesson 19) and provide external methodology checks for welfare-relevant claims — in particular, the caveat about model self-reports being sensitive to user expectations."
+    }
+  ]
+}

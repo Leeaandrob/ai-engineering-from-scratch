@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why is DCGM_FI_DEV_GPU_UTIL a broken HPA signal for LLM serving with vLLM?",
+      "options": [
+        "It measures VRAM allocation, which vLLM always keeps near 100% regardless of load",
+        "It is a duty-cycle metric that reads 100% whether there are 10 or 100 concurrent requests",
+        "It only works with NVIDIA A100 GPUs and not H100s",
+        "It requires a custom Prometheus exporter that conflicts with vLLM's metrics endpoint"
+      ],
+      "correct": 1,
+      "explanation": "DCGM_FI_DEV_GPU_UTIL is a duty-cycle metric — it reports whether the GPU was doing work each sampling interval, not how many requests it is serving. 100% could mean 10 or 100 requests. Scaling on duty cycle is scaling blindly."
+    },
+    {
+      "stage": "pre",
+      "question": "What is gang scheduling and what failure mode does KAI Scheduler prevent?",
+      "options": [
+        "Scheduling all pods of a job atomically, preventing the partial-allocation trap where 7 of 8 GPUs idle",
+        "Grouping GPU nodes into gangs to share NVLink bandwidth more efficiently",
+        "Scheduling by priority queue so high-priority jobs preempt low-priority without waiting",
+        "Batching multiple small inference requests together to saturate a single GPU"
+      ],
+      "correct": 0,
+      "explanation": "Gang scheduling means all N pods of a distributed job must start together or none start at all. KAI Scheduler prevents the partial-allocation trap: without it, 7 of 8 required GPUs could start, sit idle, and burn money waiting for the last one."
+    },
+    {
+      "stage": "post",
+      "question": "What is the safe Karpenter consolidation policy for GPU inference node pools in 2026?",
+      "options": [
+        "consolidationPolicy: WhenEmptyOrUnderutilized with consolidateAfter: 0s",
+        "consolidationPolicy: WhenEmpty with consolidateAfter: 1h",
+        "consolidationPolicy: Never — GPU nodes should never be consolidated",
+        "consolidationPolicy: WhenUnderutilized with consolidateAfter: 30m"
+      ],
+      "correct": 1,
+      "explanation": "WhenEmpty with consolidateAfter: 1h allows Karpenter to reclaim truly empty nodes after an hour but never evicts running GPU workloads. The default WhenEmptyOrUnderutilized will terminate running GPU nodes mid-inference, causing request failures and model reload delays."
+    },
+    {
+      "stage": "post",
+      "question": "What are the two correct replacement HPA signals for vLLM scaling instead of GPU duty-cycle utilization?",
+      "options": [
+        "VRAM usage and CPU utilization",
+        "Queue depth and KV cache utilization",
+        "Network throughput and disk I/O",
+        "Model load time and active connection count"
+      ],
+      "correct": 1,
+      "explanation": "Queue depth (requests waiting for prefill) measures actual demand, not idle-vs-busy. KV cache utilization measures memory pressure on the decode pool. Both are inference-specific and avoid the problems of DCGM duty-cycle and memory-usage signals."
+    },
+    {
+      "stage": "post",
+      "question": "Karpenter provisions GPU nodes in approximately how long compared to Cluster Autoscaler?",
+      "options": [
+        "Karpenter: ~5-10 minutes vs Cluster Autoscaler: ~10-15 minutes",
+        "Karpenter: ~45-60 seconds vs Cluster Autoscaler: ~90-120 seconds",
+        "Karpenter: ~10-15 seconds vs Cluster Autoscaler: ~60-90 seconds",
+        "Both tools provision at the same speed; the difference is scheduling quality"
+      ],
+      "correct": 1,
+      "explanation": "The lesson states Karpenter provisions nodes in ~45-60 seconds versus Cluster Autoscaler's ~90-120 seconds for GPU nodes — roughly 40% faster. This matters when a request arrives at a cold cluster."
+    },
+    {
+      "stage": "pre",
+      "question": "In a disaggregated prefill/decode architecture, why should prefill pods and decode pods have separate HPA configurations?",
+      "options": [
+        "They run on different Kubernetes namespaces and cannot share an HPA",
+        "Prefill is compute-bound (scales on queue depth) and decode is memory-bound (scales on KV cache pressure)",
+        "Kubernetes only supports one HPA per deployment, so they must be split",
+        "Prefill pods require GPU while decode pods can run on CPU, requiring different node pools"
+      ],
+      "correct": 1,
+      "explanation": "Prefill is compute-bound and scales on queue depth; decode is memory-bound and scales on KV cache utilization. Using a single HPA in front of both would pick the wrong signal for at least one role."
+    }
+  ]
+}

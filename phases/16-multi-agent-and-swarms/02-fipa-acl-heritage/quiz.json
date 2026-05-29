@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is a 'performative' in FIPA-ACL terminology?",
+      "options": ["A tool the agent can call", "The intent class of a message such as inform, request, or propose", "The content language used to encode message payloads", "A version identifier on the agent communication layer"],
+      "correct": 1,
+      "explanation": "A performative is the verb of an ACL message. It states what the sender is doing with the utterance: informing, requesting, proposing, accepting, refusing. The performative is separate from the content, which carries the payload."
+    },
+    {
+      "stage": "pre",
+      "question": "Why did FIPA-ACL fade from industry around 2010?",
+      "options": ["It was superseded by a competing IEEE standard with better security", "Ontology overhead was too heavy, tooling was Java-only, and the web stack won with REST and JSON", "The performative catalog was too small to express modern agent behaviors", "FIPA required paid licensing that prevented open-source adoption"],
+      "correct": 1,
+      "explanation": "Three forces killed FIPA: requiring a shared ontology made integration a multi-year standards process; SL (Semantic Language) formal semantics were ignored by practitioners; and JADE was Java-only while REST+JSON was polyglot. The web won."
+    },
+    {
+      "stage": "pre",
+      "question": "Which 2026 protocol corresponds most closely to the FIPA 'request' performative?",
+      "options": ["A2A Agent Card discovery", "MCP tools/call", "ACP TrajectoryMetadata", "ANP DID verification"],
+      "correct": 1,
+      "explanation": "MCP tools/call carries the same envelope as a FIPA request: who, whom, intent, payload, correlation id. Both express 'I ask you to execute this action.' Liu et al. 2025 (arXiv:2505.02279) maps MCP to FIPA request/query-ref explicitly."
+    },
+    {
+      "stage": "post",
+      "question": "In the Contract Net Protocol, what does a 'cfp' (call for proposals) message accomplish?",
+      "options": ["It acknowledges receipt of a task and moves its state to working", "It cancels an ongoing negotiation that has reached deadlock", "It broadcasts a task description to potential bidders who may respond with proposals", "It confirms that a proposal has been accepted and execution can begin"],
+      "correct": 2,
+      "explanation": "Contract Net Protocol starts with the manager issuing a cfp to broadcast the task. Bidders respond with propose messages. The manager then sends accept-proposal to the winner and reject-proposal to the others. This is the canonical task-market pattern."
+    },
+    {
+      "stage": "post",
+      "question": "What is 'semantic drift' and which FIPA mechanism was designed to prevent it?",
+      "options": ["Agents slowly changing their system prompts during long runs; prevented by role pinning", "Two agents using the same word for different concepts without detection; prevented by requiring a shared ontology on message content", "A reply-with correlation id becoming stale after timeouts; prevented by re-issuing conversation ids", "Tool schemas becoming inconsistent across agent versions; prevented by pinning spec versions"],
+      "correct": 1,
+      "explanation": "Semantic drift: two agents both use 'customer' but mean different things. FIPA's ontology field required both parties to declare a shared ontology; the message was rejected at parse time if the receiver did not recognize it. Modern JSON protocols drop the ontology and let LLMs infer meaning, reintroducing this failure mode."
+    }
+  ]
+}

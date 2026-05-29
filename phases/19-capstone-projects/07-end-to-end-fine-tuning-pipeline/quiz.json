@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does a contamination check in the data pipeline verify?",
+      "options": [
+        "That training data does not contain malware or adversarial examples",
+        "That no training or validation examples overlap with held-out benchmark test sets, using MinHash similarity",
+        "That PII tokens have been removed from the dataset by Presidio",
+        "That deduplication has reduced the raw corpus to under 300k examples"
+      ],
+      "correct": 1,
+      "explanation": "A MinHash-based contamination check compares every split against MMLU-Pro, MT-Bench-v2, and RewardBench-2 test sets, rejecting any overlapping examples that would inflate benchmark scores."
+    },
+    {
+      "stage": "pre",
+      "question": "What is GRPO and how does it differ from DPO?",
+      "options": [
+        "GRPO uses human preference pairs ranked by annotators; DPO uses model-generated preference pairs",
+        "GRPO is DeepSeek R1's RL recipe using verifiable rewards (e.g., math/code correctness); DPO uses labeled preference pairs without a reward model",
+        "GRPO fine-tunes only the attention layers; DPO updates all parameters",
+        "GRPO runs on a single GPU; DPO requires at least 8xH100"
+      ],
+      "correct": 1,
+      "explanation": "GRPO (Group-Relative Policy Optimization) is DeepSeek R1's RL recipe where the reward is verifiable (e.g., math answer is correct). DPO optimizes directly on preference pairs without requiring explicit reward model training."
+    },
+    {
+      "stage": "post",
+      "question": "What does the EAGLE-3 acceptance rate measure, and why does it matter for throughput?",
+      "options": [
+        "The fraction of training tokens that survive the quality filter",
+        "The fraction of drafted tokens the target model accepts without resampling; higher rates mean more tokens advance per verify pass, increasing throughput",
+        "The fraction of MMLU-Pro questions the quantized model answers correctly",
+        "The ratio of FP8 weights to FP16 weights in the served model"
+      ],
+      "correct": 1,
+      "explanation": "EAGLE-3 draft heads propose k tokens per step; the target model verifies them all in one pass. The acceptance rate is the fraction of drafted tokens accepted, directly determining how many tokens are generated per GPU cycle and thus throughput."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the pipeline produce three quantization formats (GPTQ-INT4-Marlin, AWQ-INT4, GGUF-Q4_K_M) rather than one?",
+      "options": [
+        "Different formats are required for different cloud providers",
+        "Each format targets a different deployment scenario: Marlin for GPU throughput, AWQ for balanced inference, GGUF for llama.cpp on CPU/edge",
+        "MOF 2026 mandates that all three formats be published in the model card",
+        "The three formats are used at different training stages: SFT, DPO, and GRPO respectively"
+      ],
+      "correct": 1,
+      "explanation": "GPTQ-Marlin is optimized for GPU throughput, AWQ provides a balanced GPU option, and GGUF-Q4_K_M enables inference on CPU or edge hardware via llama.cpp. Different use cases warrant different quant formats."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the Model Openness Framework (MOF) and what must a 2026-compliant model card include?",
+      "options": [
+        "A Hugging Face hub template requiring an accuracy table and license field",
+        "The 2026 standard grading model releases on data, training code, eval, safety, license, and reproducibility (with YAMLs and commit SHAs)",
+        "An Anthropic internal document for publishing closed-weight models",
+        "A legal framework for determining whether model weights can be exported internationally"
+      ],
+      "correct": 1,
+      "explanation": "MOF 2026 is a standard that grades open model releases on completeness: data description, training code, evaluation results, safety testing, licensing, and a reproducibility section with configs and commit hashes."
+    },
+    {
+      "stage": "post",
+      "question": "Which evaluation benchmarks does the capstone use to compare SFT-only vs SFT+DPO vs SFT+GRPO?",
+      "options": [
+        "GLUE, SQuAD, and HellaSwag",
+        "lm-evaluation-harness tasks including MMLU-Pro, MT-Bench-v2, and RewardBench-2",
+        "SWE-bench Verified, HumanEval, and MBPP",
+        "GSM8K, ARC-Challenge, and WinoGrande"
+      ],
+      "correct": 1,
+      "explanation": "The capstone's eval matrix runs lm-evaluation-harness, RewardBench-2, MT-Bench-v2, and MMLU-Pro across all four checkpoints (base, SFT-only, SFT+DPO, SFT+GRPO) to measure the gain from each stage."
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is 'first-order Theory of Mind' and how does it help with multi-agent coordination?",
+      "options": ["An agent modeling its own beliefs and goals (self-awareness)", "An agent maintaining a model of each other agent's beliefs, enabling it to predict their actions and choose complementary responses", "An agent reasoning about the rules of the coordination protocol rather than the content of messages", "An agent's ability to understand and follow instructions from an orchestrator agent"],
+      "correct": 1,
+      "explanation": "First-order ToM: 'Alice believes X.' The agent keeps a separate belief model for each other agent it interacts with. This allows it to predict what Alice will do next based on what Alice knows, rather than acting purely on its own observations. Riedl 2025 showed that first-order ToM prompting dramatically reduces action duplication in cooperative tasks."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the 'coordination illusion' described in the lesson?",
+      "options": ["An agent falsely reporting successful coordination to avoid punishment from an oversight system", "Multi-agent systems that appear to coordinate in demos but are actually prompt-dressed — the coordination disappears when statistical controls are applied or the coordination prompt is removed", "An observer's tendency to perceive patterns of coordination in agent behavior that are actually random", "The false belief that adding more agents always improves coordination quality"],
+      "correct": 1,
+      "explanation": "Coordination illusion: a demo looks coordinated because the system prompt says 'work together and divide labor.' Remove that phrase, the coordination disappears. Without a statistical control condition (a version without the coordination prompt) and significance testing against it, coordination claims are marketing. Riedl's paper measured this rigorously."
+    },
+    {
+      "stage": "post",
+      "question": "According to Riedl 2025, under what condition does measurable coordination actually emerge in multi-agent LLM systems?",
+      "options": ["When agents are given access to each other's full message histories via a shared memory pool", "Only under the Theory of Mind prompt condition — without explicit ToM prompting, even strong models show coordination patterns that do not survive statistical controls", "When the number of agents exceeds five, creating enough diversity for spontaneous specialization", "When agents share the same base model, enabling them to reliably predict each other's responses"],
+      "correct": 1,
+      "explanation": "Riedl's key finding: three metrics (identity-linked differentiation, goal-directed complementarity, higher-order synergy) all show signal only under the ToM prompt condition. Without ToM prompting, moderate-capacity models hover near chance. Large models show some coordination but the effect is smaller than with explicit ToM prompting. Coordination is prompt-conditional, not free."
+    },
+    {
+      "stage": "post",
+      "question": "Why does long-horizon coordination degrade even with Theory of Mind prompting?",
+      "options": ["LLMs cannot maintain more than 3 rounds of theory of mind updates before their belief models become inconsistent", "Context limits cause agents to forget which belief belongs to which agent; hallucination adds false beliefs; both errors compound over turns", "Long-horizon tasks require second-order ToM which current LLMs cannot reliably compute", "The ToM data structures grow too large to fit in the context window after 10+ turns"],
+      "correct": 1,
+      "explanation": "Li et al. 2023: over long horizons, agents mix up whose belief is whose (identity-belief binding errors), and hallucination adds false entries to the ToM state. Each error compounds the next. Mitigations: use structured format ({agent_id: belief_list}) for explicit ToM state, shorter reasoning chains per turn, and an external ToM store that only injects relevant parts per turn."
+    },
+    {
+      "stage": "post",
+      "question": "What are the three measurable signals that real coordination (not just prompt-dressed appearance) is occurring?",
+      "options": ["High agreement rate, fast task completion, and low retry count", "Complementarity over time (agents target disjoint subtasks), anticipation (accurate predictions about peers' future actions), and correction (errors in belief models are fixed within 2 turns)", "Perfect consensus on each subtask, zero redundant tool calls, and consistent role assignment across runs", "Stable system performance across 100+ runs, low token variance per task, and monotonically decreasing error rate over time"],
+      "correct": 1,
+      "explanation": "Three substantive signals from the lesson: (1) complementarity — over multiple turns, do agents cover disjoint subtasks rather than duplicating work? (2) anticipation — does agent A's action at turn T+1 depend on a correct prediction about B's turn T+2 action? (3) correction — when A misreads B's belief at turn T, does A update by turn T+2? These are measurable in logged systems."
+    }
+  ]
+}

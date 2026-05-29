@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the core computational motivation behind Latent Diffusion Models (LDMs)?",
+      "options": [
+        "Running diffusion in latent space reduces the sequence length needed for text conditioning",
+        "Running diffusion in a compressed VAE latent space reduces FLOPs by roughly 64x compared to pixel-space diffusion at the same resolution",
+        "Latent representations allow the model to skip the VAE decoder at inference time",
+        "The latent space provides a Gaussian prior that stabilizes GAN-based training"
+      ],
+      "correct": 1,
+      "explanation": "Pixel-space diffusion on 512x512 requires the U-Net to process ~786k-dimensional tensors. The SD VAE compresses to 64x64x4 latents, roughly 1/16th the spatial area, making each denoising step approximately 64x cheaper in FLOPs."
+    },
+    {
+      "stage": "pre",
+      "question": "How does text conditioning reach the image in Stable Diffusion?",
+      "options": [
+        "The text is tokenized and concatenated to the noisy latent before the U-Net forward pass",
+        "Cross-attention in every U-Net block uses image features as queries and text token embeddings as keys and values",
+        "The text embedding is added to the noise schedule's beta values to bias the denoising direction",
+        "Text is encoded by the VAE alongside the image to produce a joint latent"
+      ],
+      "correct": 1,
+      "explanation": "Cross-attention layers in the U-Net take Q from the image features and K, V from the frozen text encoder's token embeddings. This is the only architectural path through which text influences the image generation."
+    },
+    {
+      "stage": "post",
+      "question": "What is the VAE scaling factor in Stable Diffusion and why does it matter?",
+      "options": [
+        "A resolution multiplier that upsamples the latent before diffusion begins",
+        "A constant (~0.18215 for SD 1.x) that divides encoded latents so diffusion operates in approximately unit-variance space",
+        "A hyperparameter that controls the KL weight in the VAE's ELBO during training",
+        "A step-size multiplier applied to the noise schedule at high resolutions"
+      ],
+      "correct": 1,
+      "explanation": "The VAE encoder produces latents with variance far from 1.0. Dividing by the scaling factor ensures the U-Net operates on unit-variance inputs, matching the diffusion schedule's assumptions. Forgetting this constant causes the model to train on latents with incorrect variance, degrading quality."
+    },
+    {
+      "stage": "post",
+      "question": "What trend in architecture does the progression from SD 1.5 to SD3 and Flux.1 represent?",
+      "options": [
+        "Replacing the VAE with a pure autoregressive tokenizer",
+        "Replacing the U-Net backbone with a Diffusion Transformer (DiT) over latent patches, and scaling the text encoder from CLIP to T5-XXL",
+        "Replacing cross-attention with self-attention to reduce text encoder dependency",
+        "Replacing the latent diffusion framework with pixel-space diffusion at higher resolution"
+      ],
+      "correct": 1,
+      "explanation": "The architectural trend is U-Net -> DiT (scales better as a transformer over patches) and CLIP-L -> T5-XXL (better prompt adherence for complex descriptions). SD3 introduced MMDiT with joint text-image attention, and Flux.1 scales this to 12B parameters."
+    },
+    {
+      "stage": "post",
+      "question": "What happens when classifier-free guidance scale w is set too high (e.g., w > 10)?",
+      "options": [
+        "The model produces diverse outputs but ignores the text prompt",
+        "The model produces saturated, oily images that over-fit the prompt at the cost of naturalness and diversity",
+        "The model reverts to unconditional generation because the CFG formula cancels",
+        "The VAE decode step produces NaN values due to out-of-range latents"
+      ],
+      "correct": 1,
+      "explanation": "High CFG amplifies the conditioning direction in latent space aggressively, pushing samples far from the natural distribution and toward extreme, saturated results. The typical sweet spot for quality and diversity is w=3-7."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the Diffusion Transformer (DiT) and how does it differ from the U-Net used in earlier Stable Diffusion versions?",
+      "options": [
+        "DiT uses pixel-wise convolutions while U-Net uses attention; DiT is slower but more accurate",
+        "DiT treats the latent as a sequence of patches and applies transformer attention over them, scaling better than the convolutional U-Net as model size increases",
+        "DiT replaces the VAE with a discrete tokenizer to avoid latent-space artifacts",
+        "DiT processes each channel of the latent independently with separate networks"
+      ],
+      "correct": 1,
+      "explanation": "DiT (Peebles & Xie, 2023) patchifies the latent grid and applies standard transformer blocks with AdaLN conditioning on the timestep and class/text. Transformer architectures scale more predictably with depth and width than convolutional U-Nets, enabling SD3's MMDiT and Flux.1's 12B-param model."
+    }
+  ]
+}

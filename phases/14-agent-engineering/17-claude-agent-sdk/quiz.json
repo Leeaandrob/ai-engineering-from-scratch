@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the key difference between the Anthropic Client SDK and the Claude Agent SDK?",
+      "options": [
+        "The Client SDK uses Claude 3; the Agent SDK uses Claude 4",
+        "The Client SDK provides raw Messages API access; the Agent SDK provides the full harness (tools, MCP, hooks, subagents, session store)",
+        "The Client SDK is for Python; the Agent SDK is for TypeScript",
+        "The Client SDK is free; the Agent SDK requires a paid plan"
+      ],
+      "correct": 1,
+      "explanation": "The Client SDK (anthropic) gives you raw Messages API access — you own the loop, tools, and state. The Agent SDK (claude-agent-sdk) provides the Claude Code harness as a library: built-in tool execution, MCP connections, hooks, subagent spawning, and session store."
+    },
+    {
+      "stage": "pre",
+      "question": "What are the two purposes of subagents in the Claude Agent SDK?",
+      "options": [
+        "Testing and production",
+        "Parallelization (run independent work concurrently) and context isolation (subagents use their own context window)",
+        "CPU-bound and I/O-bound tasks",
+        "Tool calls and memory operations"
+      ],
+      "correct": 1,
+      "explanation": "Subagents serve two documented purposes: parallelization (run 20 independent tasks as 20 concurrent subagents) and context isolation (each subagent uses its own context window; only results return to the orchestrator, preserving the orchestrator's budget)."
+    },
+    {
+      "stage": "post",
+      "question": "What are the session store operations in the Python Claude Agent SDK?",
+      "options": [
+        "read, write, update, delete",
+        "append, load, list_sessions, delete (with cascade), list_subkeys",
+        "push, pop, peek, clear",
+        "get, set, remove, enumerate"
+      ],
+      "correct": 1,
+      "explanation": "The Python SDK session store provides: append(session_id, message), load(session_id), list_sessions(), delete(session_id) with cascade to subagent sessions, and list_subkeys(session_id) to list subagent keys."
+    },
+    {
+      "stage": "post",
+      "question": "What lifecycle hooks does the Claude Agent SDK provide?",
+      "options": [
+        "OnStart, OnStop, OnError",
+        "PreToolUse, PostToolUse, SessionStart, SessionEnd, UserPromptSubmit, PreCompact, Stop, Notification",
+        "Before, During, After",
+        "Initialize, Execute, Finalize"
+      ],
+      "correct": 1,
+      "explanation": "The Claude Agent SDK provides lifecycle hooks: PreToolUse, PostToolUse (gate or audit tool calls), SessionStart, SessionEnd (setup/teardown), UserPromptSubmit (act on user input), PreCompact (before context compaction), Stop (cleanup on exit), and Notification (side-channel alerts)."
+    },
+    {
+      "stage": "post",
+      "question": "How does Claude Managed Agents differ from the self-hosted Claude Agent SDK?",
+      "options": [
+        "Managed Agents use a different model",
+        "Managed Agents is Anthropic-hosted for long-running async work with built-in prompt caching and compaction; self-hosted gives full control",
+        "Managed Agents only support Python; self-hosted supports all languages",
+        "Managed Agents are free; self-hosted requires a license"
+      ],
+      "correct": 1,
+      "explanation": "Claude Managed Agents (beta header managed-agents-2026-04-01) is Anthropic-hosted for long-running async work with built-in prompt caching and compaction. The trade is less control for managed infrastructure."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the W3C trace context feature of the Claude Agent SDK?",
+      "options": [
+        "A way to share traces with W3C committee for review",
+        "OTel spans active on the caller propagate into CLI subprocess so the whole multi-process trace appears as one trace in the backend",
+        "A standard for formatting trace IDs in log files",
+        "A protocol for transmitting agent state between sessions"
+      ],
+      "correct": 1,
+      "explanation": "The Claude Agent SDK propagates OTel spans from the caller into the CLI subprocess via W3C trace context headers. The entire multi-process trace (orchestrator + subagents) appears as one unified trace in your observability backend."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What paper introduced multi-agent debate and what conference was it presented at?",
+      "options": [
+        "Yao et al., NeurIPS 2023",
+        "Du et al., ICML 2024 (arXiv:2305.14325) — 'Society of Minds'",
+        "Shinn et al., NeurIPS 2023",
+        "Zhou et al., ICML 2024"
+      ],
+      "correct": 1,
+      "explanation": "Du et al. introduced multi-agent debate in 'Society of Minds' (arXiv:2305.14325), presented at ICML 2024. Original experiments used N=3 debaters, R=2 rounds due to token cost."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the debate protocol?",
+      "options": [
+        "One agent proposes, others vote, majority wins",
+        "N model instances independently propose answers, then over R rounds each reads others' proposals and critiques them, updating answers until convergence",
+        "Agents take turns proposing and the final agent's answer is used",
+        "All agents share memory and produce one joint answer"
+      ],
+      "correct": 1,
+      "explanation": "Multi-agent debate: N model instances independently propose answers, then over R rounds each model reads the others' proposals, critiques them, and updates their own answer. After R rounds, the convergent answer is returned."
+    },
+    {
+      "stage": "post",
+      "question": "What is a sparse topology in multi-agent debate and what is its advantage?",
+      "options": [
+        "A topology with fewer agents; advantage is lower cost",
+        "Agents read only a subset of peers (star, ring, hub-and-spoke); can match full-mesh accuracy at lower token cost",
+        "Agents that skip some rounds; advantage is faster convergence",
+        "Agents that communicate asynchronously; advantage is lower latency"
+      ],
+      "correct": 1,
+      "explanation": "Sparse topology means each debater sees only a subset of peers rather than all of them. Research showed sparse topologies (star, ring, hub-and-spoke) can match full-mesh accuracy at lower token cost — a star with N=5 uses 12 critique ops vs 60 for full mesh."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'convergence collapse' failure mode in multi-agent debate?",
+      "options": [
+        "The debate fails to converge within R rounds",
+        "All agents converge on the same wrong answer early, eliminating the diversity that makes debate valuable",
+        "One agent becomes dominant and others stop contributing",
+        "The debate produces multiple conflicting answers with no consensus"
+      ],
+      "correct": 1,
+      "explanation": "Convergence collapse: all agents converge on the first wrong answer put forward by one agent. Mitigation: require disagreement in round 1, use diverse prompts and/or different model families to prevent homogenization."
+    },
+    {
+      "stage": "post",
+      "question": "When does debate NOT help compared to a single model?",
+      "options": [
+        "When accuracy is the only concern",
+        "When latency-sensitive or cost-sensitive, or for simple factual lookups where single-model lookup is cheaper",
+        "When the task involves rule-following",
+        "When using frontier models"
+      ],
+      "correct": 1,
+      "explanation": "Debate hurts relative to single-model when: latency is tight (N×R serial rounds), cost is constrained (N×R tokens per question), or the task is a simple factual lookup where one retrieval is cheaper than five parallel debates."
+    },
+    {
+      "stage": "pre",
+      "question": "What finding from Du et al. shows the benefit of model heterogeneity in debate?",
+      "options": [
+        "More agents always produce better results",
+        "Cross-model combinations (ChatGPT + Bard together) beat single-model debates",
+        "Smaller models debate better than larger ones",
+        "Models from the same provider reach consensus faster"
+      ],
+      "correct": 1,
+      "explanation": "Du et al. found that cross-model combinations beat single-model debates: ChatGPT + Bard together outperformed either model debating with itself. This is why diverse prompts and/or different model families are recommended to prevent prompt homogenization."
+    }
+  ]
+}

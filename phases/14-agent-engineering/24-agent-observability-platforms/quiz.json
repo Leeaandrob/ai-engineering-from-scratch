@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the three top open-source agent observability platforms and their licenses?",
+      "options": [
+        "Langfuse (Apache 2.0), Phoenix (MIT), Opik (BSD)",
+        "Langfuse (MIT), Arize Phoenix (Elastic License 2.0), Comet Opik (Apache 2.0)",
+        "Datadog (proprietary), Langfuse (MIT), Phoenix (Apache 2.0)",
+        "Langfuse (GPL), Phoenix (Apache 2.0), Opik (MIT)"
+      ],
+      "correct": 1,
+      "explanation": "The three top open-source agent observability platforms: Langfuse (MIT, formerly commercial modules were open-sourced in June 2025), Arize Phoenix (Elastic License 2.0), and Comet Opik (Apache 2.0)."
+    },
+    {
+      "stage": "pre",
+      "question": "What is Langfuse strongest at?",
+      "options": [
+        "RAG relevancy and behavioral drift detection",
+        "End-to-end observability with prompt management versioning, playground, and evaluations",
+        "Automated prompt optimization through A/B experiments",
+        "GPU performance monitoring"
+      ],
+      "correct": 1,
+      "explanation": "Langfuse (MIT, 6M+ SDK installs/month) is strongest at end-to-end observability: tracing, prompt management with versioning and playground, evaluations (LLM-as-judge, user feedback, custom), and session replays."
+    },
+    {
+      "stage": "post",
+      "question": "What percentage of organizations had agent observability in place by 2026 per Maxim's field analysis?",
+      "options": [
+        "45%",
+        "67%",
+        "89%",
+        "100%"
+      ],
+      "correct": 2,
+      "explanation": "Per Maxim's 2026 field analysis, 89% of organizations have agent observability in place. Quality issues are the top production barrier, cited by 32% of respondents."
+    },
+    {
+      "stage": "post",
+      "question": "What should you use if your primary need is deep RAG evaluation and behavioral drift detection?",
+      "options": [
+        "Langfuse",
+        "Arize Phoenix",
+        "Comet Opik",
+        "Datadog"
+      ],
+      "correct": 1,
+      "explanation": "Arize Phoenix (Elastic License 2.0) is strongest for deep RAG evaluation (retrieval relevancy), trace clustering for behavioral drift, and anomaly detection. It pairs with managed Arize AX for production."
+    },
+    {
+      "stage": "post",
+      "question": "What is the most critical failure mode in agent observability deployments?",
+      "options": [
+        "Collecting too many traces and overwhelming storage",
+        "Tracing without evaluation — spending on tracing infrastructure without defining what good looks like",
+        "Running evaluations too frequently",
+        "Using the wrong OTel library version"
+      ],
+      "correct": 1,
+      "explanation": "The critical failure mode: tracing without evaluation is just expensive logging. You need an eval strategy that defines what good looks like, LLM-judge rubrics grounded in external tools, and prompt versions tied to traces for regression bisection."
+    },
+    {
+      "stage": "pre",
+      "question": "When should you choose Comet Opik over Langfuse or Phoenix?",
+      "options": [
+        "When you need the most permissive open-source license",
+        "When your primary need is automated prompt optimization through A/B experiments, guardrails, and LLM-judge hallucination detection",
+        "When you need the highest throughput observability",
+        "When you are using Anthropic models exclusively"
+      ],
+      "correct": 1,
+      "explanation": "Comet Opik (Apache 2.0) is strongest for automated prompt optimization via A/B experiments, guardrails (PII redaction, topical constraints), and LLM-judge hallucination detection. Pick it when optimization loop and automated experimentation are primary needs."
+    }
+  ]
+}

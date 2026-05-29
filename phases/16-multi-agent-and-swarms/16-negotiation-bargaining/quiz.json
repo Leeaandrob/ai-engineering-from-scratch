@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the OG-Narrator decomposition and why does it improve deal rates dramatically?",
+      "options": ["An offer generator that uses a large language model for both computing the offer and narrating it, reducing latency", "Separating the offer into two steps: a deterministic algorithm computes the price, and an LLM writes the natural-language framing — keeping offers in the bargaining zone while leveraging LLM writing ability", "A narrator agent that summarizes the negotiation history for both parties at each round to prevent communication errors", "A two-agent system where one agent generates offers and a second agent rejects any offer outside a predetermined range"],
+      "correct": 1,
+      "explanation": "OG-Narrator from arXiv:2402.15813: LLMs conflate computing the offer with narrating it. Left to their own devices, they anchor poorly and violate ZOPA. The fix: a deterministic Zeuthen/Rubinstein strategy computes the numeric offer; the LLM only writes the human-style framing. Deal rate jumps from ~27% to ~89% because prices stay strategically sound."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the ZOPA and why do naive LLM bargainers frequently violate it?",
+      "options": ["Zone of possible agreement — the overlap between the buyer's maximum willingness to pay and the seller's minimum acceptable price; LLMs violate it by generating offers that exceed or fall below these bounds", "Zone of protocol alignment — a constraint that all messages follow the same JSON schema; LLMs generate natural language that violates the schema", "Zero-overhead pricing algorithm — an optimization method LLMs cannot implement because they lack numerical precision", "Zone of probable agreement — a statistical range that LLMs expand incorrectly by misinterpreting probability distributions"],
+      "correct": 0,
+      "explanation": "ZOPA: if the buyer's maximum is $80 and the seller's minimum is $60, the ZOPA is $60-$80. Any offer in this range can theoretically close. LLMs anchor emotionally (offer $100 hoping to 'negotiate down'), ignore the counterpart's stated bounds, or counter at symbolic prices unrelated to the actual zone. OG-Narrator keeps both parties in the ZOPA by construction."
+    },
+    {
+      "stage": "post",
+      "question": "What was the key finding from the Large-Scale Autonomous Negotiation Competition (arXiv:2503.06416) about chain-of-thought in negotiations?",
+      "options": ["Agents that shared their chain-of-thought with counterparts achieved higher deal rates through transparency", "Agents that concealed their reasoning from counterparts won by keeping reservation prices and strategies private; public scratchpads let opponents exploit the revealed information", "Chain-of-thought reasoning had no impact on negotiation outcomes compared to direct response generation", "Longer chains of thought consistently produced worse outcomes by over-analyzing and missing time-sensitive offers"],
+      "correct": 1,
+      "explanation": "~180k negotiations studied. Winners concealed their reasoning. An agent that prints 'my reservation price is $70; I will not go below this' into a visible scratchpad has handed the opponent its bottom line. CoT concealment: private scratchpad for strategy; public channel contains only the offer and minimum narration. This is Aumann 1976 game theory applied to LLMs."
+    },
+    {
+      "stage": "post",
+      "question": "In the Contract Net Protocol, what happens after the manager receives proposals from all bidders?",
+      "options": ["The manager broadcasts all proposals to all bidders for a second round of bidding", "The manager selects a winner, sends accept-proposal to the winner, and sends reject-proposal to all other bidders; the winner performs the work", "All bidders vote on which proposal is best; the highest-voted proposal wins", "The manager forwards all proposals to a human supervisor who makes the final selection"],
+      "correct": 1,
+      "explanation": "Contract Net Protocol flow: manager issues cfp; bidders respond with propose; manager evaluates proposals based on price/eta/quality criteria; manager sends accept-proposal to one (or more) winner(s); manager sends reject-proposal to all others; winner executes the task. Rejected workers are freed to bid on other tasks."
+    },
+    {
+      "stage": "post",
+      "question": "What is the core engineering rule for LLM negotiation systems derived from 2024-2026 benchmarks?",
+      "options": ["Let the LLM compute offers; narration is just formatting and does not affect outcomes", "Let the LLM narrate; do not let the LLM compute the offer — prices and quantities should come from deterministic strategies", "Use the largest available model for both offer generation and narration to maximize strategic sophistication", "Avoid natural language narration entirely; structured JSON offers produce more reliable deal rates"],
+      "correct": 1,
+      "explanation": "Consistent finding across NegotiationArena, Measuring Bargaining Abilities, and the Competition: LLMs are good at writing plausible negotiation language but poor at computing strategic numeric offers. The fix: deterministic strategies (Zeuthen, tit-for-tat, Rubinstein) compute prices; LLMs produce the framing. This combination outperforms pure-LLM bargaining by 15-25 percentage points on deal rate."
+    }
+  ]
+}

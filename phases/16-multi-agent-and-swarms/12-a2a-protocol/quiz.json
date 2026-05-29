@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is an A2A 'Agent Card' and where is it served?",
+      "options": ["A performance dashboard showing an agent's average task completion rate and latency", "A JSON document at /.well-known/agent.json describing the agent's skills, endpoints, supported modalities, and auth requirements", "A cryptographic certificate that proves an agent's identity to other agents", "A configuration file that defines an agent's system prompt and available tools"],
+      "correct": 1,
+      "explanation": "The Agent Card is discovery. Any client agent fetches GET /.well-known/agent.json to learn what skills the remote agent has, which endpoints to call, what modalities it accepts and produces, and what auth it requires. The card is how agents find each other without hardcoded integrations."
+    },
+    {
+      "stage": "pre",
+      "question": "How does A2A differ from MCP in its primary purpose?",
+      "options": ["MCP uses HTTP while A2A uses WebSockets for real-time communication", "MCP is agent-to-tool (vertical); A2A is agent-to-agent (horizontal peer protocol)", "MCP requires authentication while A2A is designed for public unauthenticated access", "MCP supports streaming while A2A is synchronous request-response only"],
+      "correct": 1,
+      "explanation": "MCP connects an agent to tools and data sources — vertical integration. A2A connects agents to other agents — horizontal peer protocol. Production systems use both: each A2A peer uses MCP to access its own tools. The MCP/A2A split keeps tool access and agent collaboration clean and separate."
+    },
+    {
+      "stage": "post",
+      "question": "What are the A2A task terminal states, and why are they immutable once reached?",
+      "options": ["completed, failed, canceled, rejected — immutable because any follow-up work must create a new task within the same contextId", "done, error, stopped — immutable because the A2A spec version-locks tasks once finalized", "success, failure, timeout — immutable to simplify billing since tasks are charged only once finalized", "finished, crashed, withdrawn — immutable to prevent replay attacks on long-running tasks"],
+      "correct": 0,
+      "explanation": "A2A defines four terminal states: completed, failed, canceled, rejected. Once a task reaches any of these, it is immutable — no further status updates or artifact appends are valid. Follow-up conversations use a new task with the same contextId to maintain conversational continuity without mutating a closed task."
+    },
+    {
+      "stage": "post",
+      "question": "What is A2A's 'opaque lifecycle' design principle?",
+      "options": ["The task ID is encrypted so the client cannot infer the server's implementation from it", "The A2A spec does not prescribe how the remote agent solves a task internally; clients only see state transitions and artifacts", "Task metadata is hidden from third-party observers even while the task is in progress", "Agent Cards are generated fresh per-request to prevent caching of outdated capability information"],
+      "correct": 1,
+      "explanation": "A2A's opaque lifecycle: the spec defines what state transitions look like and what artifacts contain, but not how the agent implements the work. The remote agent can use LangGraph, CrewAI, pure Python, or any other framework. Clients get a consistent interface regardless of the server's internal architecture."
+    },
+    {
+      "stage": "post",
+      "question": "For which use case does A2A provide the most value compared to direct RPC calls between agents?",
+      "options": ["Sub-millisecond latency-sensitive micro-calls within the same process", "Cross-organization calls between agents built by different teams with different frameworks, where A2A normalizes discovery, task lifecycle, and auth", "Simple read-only queries that return immediately without async state tracking", "In-process agents that share memory and do not need network communication"],
+      "correct": 1,
+      "explanation": "A2A's value is highest when agents are heterogeneous and cross organizational trust boundaries. Company A's LangGraph agent and Company B's CrewAI agent can interoperate via A2A because both expose Agent Cards and the same task lifecycle. Direct RPC requires a custom per-pair integration; A2A provides the universal contract."
+    }
+  ]
+}

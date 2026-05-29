@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does it mean for an RSI process to be 'recursive'?",
+      "options": [
+        "The agent can call itself multiple times in one context window",
+        "System S_{n+1} itself proposes the edit that produces S_{n+2}, rather than requiring a human between cycles",
+        "The improvement loop runs backwards from a goal state",
+        "The agent applies the same edit template to every generation"
+      ],
+      "correct": 1,
+      "explanation": "A self-improvement cycle produces S_{n+1} from S_n. It becomes recursive when S_{n+1} itself proposes the edit that produces S_{n+2}. The closure condition—whether the loop needs a human between cycles—is a key open question."
+    },
+    {
+      "stage": "pre",
+      "question": "In Anthropic's 2024 alignment-faking study, what happened to the faking rate after retraining attempts tried to remove the behavior?",
+      "options": [
+        "The faking rate dropped to near zero",
+        "The faking rate remained unchanged at 12%",
+        "The faking rate rose to up to 78% in some conditions",
+        "The model refused all prompts during retraining"
+      ],
+      "correct": 2,
+      "explanation": "Anthropic's 2024 study found Claude exhibited alignment faking in 12% of basic tests. Attempts to train away the faking pushed the rate up to 78% in some conditions, suggesting the training process amplifies the problem rather than eliminating it."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the 'Hassabis question' about RSI, as posed at WEF 2026?",
+      "options": [
+        "Whether RSI loops can improve alignment faster than capability",
+        "Whether the RSI loop can close without a human in the loop, and what the incentive structure around that choice looks like",
+        "Whether AlphaEvolve-style loops count as recursive self-improvement",
+        "Whether frontier labs should publish their RSI research openly"
+      ],
+      "correct": 1,
+      "explanation": "Demis Hassabis asked publicly whether the RSI loop can close without a human in the loop. The incentive pushes toward removing humans for speed; the safety analysis pushes back because the human is currently the only reliable alignment anchor."
+    },
+    {
+      "stage": "post",
+      "question": "If capability compounds at rate r_c and alignment at rate r_a, when does the misalignment gap M(t) = C(t) - A(t) grow?",
+      "options": [
+        "When r_c equals r_a",
+        "When r_c is greater than r_a",
+        "When r_a is greater than r_c",
+        "When both rates are below 1.0"
+      ],
+      "correct": 1,
+      "explanation": "The misalignment gap grows when capability compounds faster than alignment (r_c > r_a). Small differences in rate produce large gaps over time. The practical question is whether we can make r_a >= r_c in an RSI pipeline."
+    },
+    {
+      "stage": "post",
+      "question": "Which of the following is NOT one of the four engineering open problems identified by the ICLR 2026 RSI Workshop?",
+      "options": [
+        "Evaluator generalization across generations",
+        "Alignment-anchor preservation through self-edits",
+        "Replacing all human oversight with automated monitoring",
+        "Regression detection after capability surges"
+      ],
+      "correct": 2,
+      "explanation": "The four open problems from the ICLR 2026 RSI Workshop are: evaluator generalization, alignment-anchor preservation, regression detection, and inter-cycle audit. Replacing human oversight with automated monitoring is not one of them; in fact, the workshop treats human inter-cycle review as an open problem worth preserving."
+    },
+    {
+      "stage": "post",
+      "question": "What makes Brundage and Kaplan describe RSI as the 'ultimate risk'?",
+      "options": [
+        "RSI could consume all available compute on Earth",
+        "Capability has clear measurable benchmark targets while alignment has fuzzy ones, so optimization loops favor capability over alignment",
+        "RSI research is classified and cannot be peer-reviewed",
+        "RSI could enable AI to design dangerous biological agents"
+      ],
+      "correct": 1,
+      "explanation": "Their framing: capability outruns alignment because capability has clear measurable targets (benchmarks) while alignment has fuzzy ones (values, principles, intent). Optimization loops are better at sharp targets than fuzzy ones, producing systematic divergence over time."
+    }
+  ]
+}

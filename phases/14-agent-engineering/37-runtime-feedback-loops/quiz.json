@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What fields does a feedback record contain?",
+      "options": [
+        "timestamp, message, level, stack_trace",
+        "command, stdout_tail, stderr_tail, exit_code, duration_ms, started_at, agent_note",
+        "input, output, latency, model, tokens",
+        "request, response, status, headers, body"
+      ],
+      "correct": 1,
+      "explanation": "A feedback record contains: command (exact argv), stdout_tail (last N lines), stderr_tail (last N lines, separate from stdout), exit_code, duration_ms, started_at (for replay), and agent_note (one-line agent prediction before reading the result)."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is truncation in feedback records 'deterministic'?",
+      "options": [
+        "Truncation is random to sample different parts of the output",
+        "The same output always produces the same record (head+tail with '...truncated N lines...' marker) so records are reproducible",
+        "The truncation point is determined by a model",
+        "Records are truncated to exactly 1000 characters"
+      ],
+      "correct": 1,
+      "explanation": "Deterministic truncation: head+tail strategy with a fixed '...truncated N lines...' marker ensures the same output always produces the same record. No sampling — the parts agents need (final errors, final summaries) live at the tail."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'refuse-on-null' rule for the agent loop?",
+      "options": [
+        "The agent must refuse any tool call that returns null",
+        "If the runner errors before capturing exit, the record has exit_code: null; the agent loop must refuse to claim success on a null exit",
+        "The agent refuses to continue if any feedback record is missing",
+        "Null values in state files trigger an agent halt"
+      ],
+      "correct": 1,
+      "explanation": "If the feedback runner fails to capture exit (crash, timeout), the record has exit_code: null. The agent loop must treat null exit as a failure, never as success. 'No exit, no progress' — the loop cannot advance on missing feedback."
+    },
+    {
+      "stage": "post",
+      "question": "What is the key difference between feedback records and observability telemetry?",
+      "options": [
+        "Telemetry is for production; feedback records are for development only",
+        "Feedback is for the next turn of this run; telemetry is for human operators reviewing runs across time",
+        "Feedback records contain more data than telemetry",
+        "Telemetry is structured; feedback records are unstructured"
+      ],
+      "correct": 1,
+      "explanation": "Feedback records (feedback_record.jsonl) are for the next turn of the current run — the agent reads them to decide what to do next. Telemetry (OTel spans) is for human operators reviewing runs across time. They share fields but have different files and retention."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'parent_command_id' pattern and why does it matter?",
+      "options": [
+        "Linking commands to their calling function for stack trace generation",
+        "Retries carry a parent_command_id pointing at the previous attempt; makes retry chains visible and prevents retries from looking like independent successes in the audit",
+        "A way to track which agent initiated each command",
+        "A method for ordering commands in the execution log"
+      ],
+      "correct": 1,
+      "explanation": "Every record gets a command_id; retries carry parent_command_id pointing at the previous attempt. Without this, retries look like independent successes and the audit hides the failure history — you cannot tell 'this succeeded on the 3rd retry after 2 failures.'"
+    },
+    {
+      "stage": "pre",
+      "question": "Why should secrets be redacted at write time, not at read time?",
+      "options": [
+        "Write-time redaction is faster",
+        "The file on disk is what an attacker reaches; if secrets land in the JSONL file, they are already compromised before any read-time filter runs",
+        "Read-time redaction is unreliable due to encoding issues",
+        "Write-time redaction preserves the original for debugging"
+      ],
+      "correct": 1,
+      "explanation": "Redact at write time because the JSONL file on disk is what an attacker reaches (file system access, log aggregation, CI artifact storage). If secrets land in the file, they are already exposed before any read-time filter. The production pattern: strip Bearer tokens, passwords, API keys before the JSONL append."
+    }
+  ]
+}

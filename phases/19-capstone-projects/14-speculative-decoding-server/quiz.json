@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the core mechanism of EAGLE-3 speculative decoding?",
+      "options": [
+        "A smaller model generates a complete response, which the target model scores and either accepts or rewrites",
+        "Draft heads trained on the target model's hidden states propose k candidate tokens; the target model verifies all k in a single forward pass",
+        "The target model generates N responses in parallel and selects the highest-probability one",
+        "A lookup cache maps common prompt prefixes to precomputed continuations"
+      ],
+      "correct": 1,
+      "explanation": "EAGLE-3 trains draft heads on the target model's hidden states. These heads propose k tokens per step. The target model verifies all k in one pass; accepted prefixes advance, rejected suffixes are resampled. This is the source of the 2.5-3x throughput gain."
+    },
+    {
+      "stage": "pre",
+      "question": "Why does tail latency (p99) worsen under rejection in speculative decoding?",
+      "options": [
+        "The target model must reload its weights after each rejected batch of draft tokens",
+        "When the draft is rejected, the verify pass still ran (cost paid) but produced no net throughput gain, so that request takes a full verify-pass overhead with no acceleration",
+        "Rejected batches trigger a fallback to ngram drafting, which has higher per-token latency",
+        "The HPA scales down replicas during high rejection phases, reducing available capacity"
+      ],
+      "correct": 1,
+      "explanation": "On a rejection, the verify pass consumed time and compute but yielded fewer accepted tokens than expected. High-rejection requests see worse tail latency than non-speculative decoding because the overhead of the verify pass is paid without the throughput benefit."
+    },
+    {
+      "stage": "post",
+      "question": "What is the acceptance rate and what distribution-related risk does it face in production?",
+      "options": [
+        "The fraction of input tokens that pass the content-safety filter before reaching the model",
+        "The fraction of drafted tokens the target model accepts; it drifts downward when the traffic distribution (e.g., domain data vs ShareGPT) diverges from the distribution the draft heads were trained on",
+        "The fraction of SWE-bench tasks where the agent's first proposed fix compiles without errors",
+        "The fraction of K8s HPA scale-out events that successfully reduce queue-wait below the target"
+      ],
+      "correct": 1,
+      "explanation": "Acceptance rate is the fraction of drafted tokens accepted by the target. It is traffic-distribution-dependent: a draft trained on ShareGPT may have a 75% acceptance rate on general chat but drop significantly on domain-specific or code-heavy traffic."
+    },
+    {
+      "stage": "pre",
+      "question": "What metric does the Kubernetes HPA use to scale the inference server, and why is it better than CPU?",
+      "options": [
+        "GPU memory utilization; GPU memory is the first resource exhausted during high load",
+        "Queue-wait time (time a request waits in the pending queue); this directly reflects user-visible latency, unlike CPU which may be low even when the GPU is the bottleneck",
+        "Tokens per second; a direct measure of throughput makes HPA decisions more accurate",
+        "Number of active WebSocket connections; each connection represents an active inference request"
+      ],
+      "correct": 1,
+      "explanation": "Queue-wait time is the time a request spends waiting before inference starts, directly measuring latency impact on users. CPU utilization is often low on GPU servers even under full load, making it a poor HPA signal."
+    },
+    {
+      "stage": "post",
+      "question": "What is P-EAGLE and how does it differ from serial EAGLE-3?",
+      "options": [
+        "P-EAGLE uses a pretrained language model as the draft instead of trained heads",
+        "P-EAGLE runs parallel speculation over a tree of draft branches verified in one target pass, enabling deeper draft trees than serial EAGLE-3",
+        "P-EAGLE is a pruned version of EAGLE-3 that uses 50% fewer draft head parameters",
+        "P-EAGLE applies speculative decoding only to the prefill phase, not the decode phase"
+      ],
+      "correct": 1,
+      "explanation": "P-EAGLE (from AWS 2026) extends EAGLE-3 with parallel speculation: instead of a single draft chain, it explores a tree of branches and verifies the entire tree in one target forward pass, enabling deeper speculation at higher acceptance rates on suitable traffic."
+    },
+    {
+      "stage": "post",
+      "question": "What does the cost comparison report in this capstone measure, and what is its credibility purpose?",
+      "options": [
+        "It compares GPTQ vs AWQ vs GGUF quantization cost at the same throughput level",
+        "It reports dollars per 1M output tokens for the self-hosted speculative-decoding setup vs Anthropic Claude Sonnet 4.7 and OpenAI GPT-5.4, demonstrating the economic case for self-hosted inference",
+        "It measures the incremental cost of training EAGLE-3 draft heads vs using ngram fallback",
+        "It benchmarks K8s HPA scale-out costs against a fixed-replica deployment"
+      ],
+      "correct": 1,
+      "explanation": "The cost comparison is the credibility lever: computing $/1M output tokens for your self-hosted vLLM + EAGLE-3 setup versus hosted Anthropic and OpenAI APIs on the same eval quantifies whether self-hosting is economically justified."
+    }
+  ]
+}

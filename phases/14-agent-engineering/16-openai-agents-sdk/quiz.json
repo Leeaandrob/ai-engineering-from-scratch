@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the five primitives of the OpenAI Agents SDK?",
+      "options": [
+        "Model, Prompt, Tool, Memory, Trace",
+        "Agent, Handoff, Guardrail, Session, Tracing",
+        "Actor, Message, Router, Worker, Monitor",
+        "Chain, Node, Edge, State, Checkpoint"
+      ],
+      "correct": 1,
+      "explanation": "The OpenAI Agents SDK has five primitives: Agent (LLM + instructions + tools + handoffs), Handoff (delegation to another agent), Guardrail (input/output/tool validation), Session (automatic conversation history), and Tracing (built-in spans)."
+    },
+    {
+      "stage": "pre",
+      "question": "How does the OpenAI Agents SDK represent handoffs to the model?",
+      "options": [
+        "As a special API call the runtime intercepts",
+        "As a function tool named 'transfer_to_<agent_name>' in the model's tool list",
+        "As a system prompt instruction to switch agents",
+        "As a metadata field in the message header"
+      ],
+      "correct": 1,
+      "explanation": "Handoffs are represented to the model as a function tool named transfer_to_<agent_name>. When the model calls this tool, the runtime copies conversation context and initializes the target agent to continue the run."
+    },
+    {
+      "stage": "post",
+      "question": "What is the difference between parallel and blocking guardrail modes?",
+      "options": [
+        "Parallel guardrails run before the main LLM; blocking guardrails run after",
+        "Parallel: guardrail LLM runs alongside the main LLM (lower latency, wastes tokens on trip); Blocking: guardrail runs first (no token waste but higher latency on trip)",
+        "Parallel guardrails check multiple conditions; blocking guardrails check one condition",
+        "Parallel guardrails are async; blocking guardrails are synchronous"
+      ],
+      "correct": 1,
+      "explanation": "Parallel mode (default): the guardrail LLM runs alongside the main LLM. Lower tail latency, but if the guardrail trips, the main LLM's tokens are wasted. Blocking mode: guardrail runs first. If it trips, no tokens wasted, but latency is higher."
+    },
+    {
+      "stage": "post",
+      "question": "What exception does a guardrail raise when it trips?",
+      "options": [
+        "GuardrailViolation",
+        "InputGuardrailTripwireTriggered or OutputGuardrailTripwireTriggered",
+        "AgentPolicyError",
+        "SafetyCheckFailed"
+      ],
+      "correct": 1,
+      "explanation": "When a guardrail detects a policy violation, it raises InputGuardrailTripwireTriggered (for input guardrails) or OutputGuardrailTripwireTriggered (for output guardrails). The agent can catch these and handle appropriately."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'handoff drift' failure mode and how is it mitigated?",
+      "options": [
+        "Handoffs take too long; mitigate by running them asynchronously",
+        "Agent A hands off to Agent B which hands back to Agent A indefinitely; mitigate by adding a hop counter",
+        "Handoffs lose context; mitigate by copying all messages",
+        "The model forgets what was being worked on after a handoff; mitigate with system prompt reminders"
+      ],
+      "correct": 1,
+      "explanation": "Handoff drift occurs when agents bounce between each other (A -> B -> A -> B) without converging. Add a hop counter that refuses handoffs after N transfers to prevent infinite bouncing."
+    },
+    {
+      "stage": "pre",
+      "question": "What does the OpenAI Agents SDK's tracing behavior by default?",
+      "options": [
+        "Tracing is disabled by default to protect privacy",
+        "Tracing is on by default: every LLM generation, tool call, handoff, and guardrail emits a span",
+        "Only errors are traced by default",
+        "Tracing must be explicitly configured per agent"
+      ],
+      "correct": 1,
+      "explanation": "The OpenAI Agents SDK has tracing on by default. Every LLM generation, tool call, handoff, and guardrail emits a span. Use OPENAI_AGENTS_DISABLE_TRACING=1 to opt out, or add_trace_processor() to fan spans to additional backends."
+    }
+  ]
+}

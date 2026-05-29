@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the six production runtime shapes for agents?",
+      "options": [
+        "Fast, slow, batch, stream, async, sync",
+        "Request-response, streaming, durable execution, queue-based/background, event-driven, scheduled",
+        "HTTP, WebSocket, gRPC, GraphQL, REST, SOAP",
+        "Synchronous, asynchronous, parallel, sequential, distributed, local"
+      ],
+      "correct": 1,
+      "explanation": "The six production runtime shapes are: request-response (synchronous HTTP, short tasks), streaming (SSE/WebSocket), durable execution (LangGraph checkpointing), queue-based/background (Celery, BullMQ, SQS), event-driven (trigger-based), and scheduled (cron-shaped)."
+    },
+    {
+      "stage": "pre",
+      "question": "When is request-response NOT viable as a runtime shape?",
+      "options": [
+        "When the task involves tool calls",
+        "When the task takes longer than approximately 30 seconds, because users hang up and workers pile up",
+        "When using streaming models",
+        "When the agent needs to use memory"
+      ],
+      "correct": 1,
+      "explanation": "Request-response (synchronous HTTP) is only viable for short tasks under approximately 30 seconds. For longer tasks, users hang up, workers pile up, and retries compound — making queue-based or durable execution the right choice."
+    },
+    {
+      "stage": "post",
+      "question": "What is a Dead Letter Queue (DLQ) and why is it critical for queue-based agents?",
+      "options": [
+        "A queue for low-priority tasks",
+        "A parking lot for failed jobs that cannot be processed; without it, failed jobs silently vanish with no recovery path",
+        "A queue for archived historical jobs",
+        "A testing queue used only in development"
+      ],
+      "correct": 1,
+      "explanation": "A Dead Letter Queue (DLQ) catches jobs that fail after all retries. Without a DLQ, failed jobs silently vanish — operators never know they failed. The DLQ enables inspection, debugging, and manual reprocessing."
+    },
+    {
+      "stage": "post",
+      "question": "Why is observability described as 'load-bearing' for multi-step agents?",
+      "options": [
+        "Observability adds performance overhead that must be factored into capacity planning",
+        "Without OTel spans plus an observability platform, debugging a multi-step agent that failed at step 40 is impossible — you must replay from scratch with more logging",
+        "Observability makes the agent run slower, which is acceptable because it enables debugging",
+        "Observability is legally required for production AI systems"
+      ],
+      "correct": 1,
+      "explanation": "Without OpenTelemetry GenAI spans plus a platform (Langfuse/Phoenix/Opik), you cannot debug a multi-step agent that failed at step 40. The alternative is replaying the entire run with more logging — massively expensive. Observability is not optional for production."
+    },
+    {
+      "stage": "post",
+      "question": "What production shape fits agents that react to new emails, PR events, or cron fires?",
+      "options": [
+        "Request-response",
+        "Event-driven (subscribe to triggers, react when they fire)",
+        "Streaming",
+        "Queue-based"
+      ],
+      "correct": 1,
+      "explanation": "Event-driven runtime is for agents that subscribe to triggers: new email, PR opened, cron fire. Claude Managed Agents covers this out of the box; CrewAI Flows structures event-driven deterministic workflows."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the 'wrong shape choice' failure mode in production runtimes?",
+      "options": [
+        "Using Python instead of TypeScript for the runtime",
+        "Picking request-response for a 5-minute task, causing users to hang up, workers to pile up, and retries to compound",
+        "Using a cloud provider instead of self-hosting",
+        "Choosing a framework that does not support the required programming language"
+      ],
+      "correct": 1,
+      "explanation": "The wrong shape choice is picking request-response for a task that takes minutes. Users hang up (HTTP timeout), workers pile up (new requests for failed jobs), retries compound the problem. For tasks over 30 seconds, use queue-based, durable execution, or event-driven shapes."
+    }
+  ]
+}

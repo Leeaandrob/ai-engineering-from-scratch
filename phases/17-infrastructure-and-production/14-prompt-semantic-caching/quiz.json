@@ -1,0 +1,71 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the difference between L2 (provider-level) prompt caching and L1 (app-level) semantic caching?",
+      "options": [
+        "L2 is faster; L1 is cheaper",
+        "L2 reuses attention KV for repeated prefixes at the provider; L1 skips the LLM entirely on embedding similarity hits",
+        "L2 works for all model providers; L1 only works with OpenAI",
+        "L2 requires explicit opt-in; L1 is always enabled by default"
+      ],
+      "correct": 1,
+      "explanation": "L2 (provider-level) caches the attention KV state for repeated prompt prefixes — the LLM still runs but uses cached computation. L1 (app-level) semantic caching matches incoming queries against a vector store and returns cached responses without calling the LLM at all."
+    },
+    {
+      "stage": "pre",
+      "question": "For Anthropic's Claude 3.5 Sonnet, what is the price of a cached read compared to a fresh input token?",
+      "options": [
+        "$3.00/M cached vs $0.30/M fresh (10x more expensive to cache)",
+        "$0.30/M cached vs $3.00/M fresh (roughly 10x cheaper)",
+        "$1.50/M cached vs $3.00/M fresh (50% discount)",
+        "$0.30/M cached vs $0.30/M fresh (same price)"
+      ],
+      "correct": 1,
+      "explanation": "Anthropic's prompt-caching rate card (2026-04): cache reads are $0.30/M vs $3.00/M for fresh input on Claude 3.5 Sonnet — roughly 10x cheaper. Advertised benefits include up to 90% cost reduction and 85% latency reduction on long prompts."
+    },
+    {
+      "stage": "post",
+      "question": "The parallelization anti-pattern can inflate LLM bills by how much, and what causes it?",
+      "options": [
+        "2-3x inflation; parallel requests compete for the same cache slot",
+        "5-10x inflation; N parallel requests issued before the first cache write all pay full input price",
+        "1.5x inflation; parallelization adds request scheduling overhead",
+        "No inflation; the provider deduplicates parallel requests automatically"
+      ],
+      "correct": 1,
+      "explanation": "When N parallel requests are issued before the first cache write completes, all N pay full input price. The lesson cites typical reports of 5-10x bill inflation from this pattern. The fix: serialize the first request, let the cache write, then parallelize."
+    },
+    {
+      "stage": "post",
+      "question": "ProjectDiscovery improved their cache hit rate from 7% to 74%. What change achieved this?",
+      "options": [
+        "Switching from OpenAI to Anthropic's caching implementation",
+        "Moving dynamic text out of the cacheable prefix",
+        "Increasing the cache TTL from 5 minutes to 1 hour",
+        "Implementing a vector similarity threshold above 0.95"
+      ],
+      "correct": 1,
+      "explanation": "ProjectDiscovery (2025-11 blog) reported moving from 7% to 74% cache hit rate by restructuring prompts to move dynamic content out of the prefix. Dynamic content inside the prefix prevents cache hits because the prefix hash never matches."
+    },
+    {
+      "stage": "post",
+      "question": "What is the typical semantic cache hit rate for open-ended chat workloads versus structured FAQ?",
+      "options": [
+        "Open-ended chat: 60-70%; structured FAQ: 10-15%",
+        "Open-ended chat: 10-15%; structured FAQ: 40-70%",
+        "Both have similar hit rates of 30-40%",
+        "Neither achieves meaningful hit rates above 5%"
+      ],
+      "correct": 1,
+      "explanation": "Semantic cache hit rates (community-reported production telemetry): open-ended chat ~10-15% because each query is unique; structured FAQ 40-70% because questions repeat. Voice agents repeating prompts can hit 50-80%."
+    },
+    {
+      "stage": "pre",
+      "question": "OpenAI prompt caching applies automatically for prompts above what token length?",
+      "options": ["256 tokens", "512 tokens", "1024 tokens", "2048 tokens"],
+      "correct": 2,
+      "explanation": "OpenAI's prompt caching activates automatically for prompts at or above 1,024 tokens, with cached input priced at roughly 90% off the fresh input rate. No explicit configuration is required."
+    }
+  ]
+}

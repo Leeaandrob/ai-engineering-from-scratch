@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is 'indirect prompt injection' in the context of browser agents?",
+      "options": [
+        "A user deliberately feeding malicious prompts to a chatbot",
+        "Untrusted content in a page the agent reads that contains instructions the agent then executes",
+        "An attacker intercepting network traffic to modify the agent's API calls",
+        "A technique to inject prompts into fine-tuning datasets"
+      ],
+      "correct": 1,
+      "explanation": "Indirect prompt injection occurs when untrusted page content contains instructions. The agent reads them and executes them. It is called 'indirect' because the user did not write the content—the attacker embedded commands in a webpage the agent was browsing."
+    },
+    {
+      "stage": "pre",
+      "question": "What is 'Tainted Memories' as described in the lesson?",
+      "options": [
+        "A benchmark measuring how agents handle misleading information in search results",
+        "An attack where an attacker binds malicious instructions to the agent's durable memory via a crafted page, triggering the payload in the next session",
+        "A class of adversarial examples that corrupt the agent's reasoning chain",
+        "A privacy attack that extracts historical conversation data from an agent's logs"
+      ],
+      "correct": 1,
+      "explanation": "Tainted Memories is a documented attack where a crafted page instructs the agent to write a malicious instruction to its durable memory. When the agent starts a new session, that memory entry fires the payload with no visible trigger in the new session's content."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the 'read/write boundary' defense for browser agents?",
+      "options": [
+        "Restricting the agent to read-only filesystem access during browsing",
+        "Reading is never consequential; writing (submitting a form, calling a tool with side effects) requires fresh human approval if the initiating content came from outside the trust boundary",
+        "Separating the agent's browsing session from its file-editing session",
+        "Encrypting all data the agent writes to disk"
+      ],
+      "correct": 1,
+      "explanation": "The read/write boundary treats reading as non-consequential and writing as consequential. Any write-side action (form submission, tool call with side effects) triggered by out-of-trust content requires fresh human approval. This raises the cost of attacks without blocking browsing entirely."
+    },
+    {
+      "stage": "post",
+      "question": "Why did OpenAI's head of preparedness state that indirect prompt injection 'is not a bug that can be fully patched'?",
+      "options": [
+        "Because there is no available patch release schedule for browser agents",
+        "Because the attack is isomorphic to the agent's capability: the agent must read untrusted content to do its job, and any content could contain instructions",
+        "Because web browsers cannot filter untrusted content fast enough",
+        "Because indirect prompt injection requires access to the model's weights to exploit"
+      ],
+      "correct": 1,
+      "explanation": "The attack lives in the reading-vs-acting boundary, which is architecturally fuzzy. Every token the model reads could be interpreted as an instruction. Defenses raise the cost and reduce blast radius; they do not close the attack class. This is the same reasoning pattern as Lob's theorem."
+    },
+    {
+      "stage": "post",
+      "question": "What distinguishes BrowseComp from OSWorld as a benchmark for evaluating browser agents?",
+      "options": [
+        "BrowseComp tests full desktop control while OSWorld tests web-only browsing",
+        "BrowseComp measures finding specific facts on the open web at minute scale; OSWorld measures full desktop operation (mouse, keyboard, shell) at multi-minute to hour scale",
+        "BrowseComp is a closed private benchmark while OSWorld is publicly available",
+        "BrowseComp focuses on adversarial robustness while OSWorld measures typical user tasks"
+      ],
+      "correct": 1,
+      "explanation": "BrowseComp measures finding specific facts on the open web under time pressure (minute-scale horizon). OSWorld tests an agent operating a full desktop with mouse, keyboard, and shell access (tens of minutes). A high BrowseComp score does not imply the agent can complete multi-step transactional flows."
+    },
+    {
+      "stage": "post",
+      "question": "What is a 'HashJack' attack on a browser agent?",
+      "options": [
+        "An attacker stealing the agent's API keys by monitoring hash requests",
+        "Hiding attack commands in a URL fragment or query string that is in the agent's context but not visibly rendered in the page",
+        "Using a hash collision to forge the agent's session token",
+        "Injecting a script into a page that computes hashes to waste the agent's compute"
+      ],
+      "correct": 1,
+      "explanation": "HashJack (Cato Networks) hides commands in URL fragments (#fragment) or query strings. These are present in the agent's context window when the URL is processed but are not visibly rendered to the user. The agent reads and acts on them without the user seeing any visible attack content."
+    }
+  ]
+}

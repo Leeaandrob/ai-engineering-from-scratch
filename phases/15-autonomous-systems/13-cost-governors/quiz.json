@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is 'Denial of Wallet' in the context of autonomous agents?",
+      "options": [
+        "An attacker stealing an agent's API keys to run up a bill",
+        "An agent loop generating spend with no cap to stop it, running unbounded until the budget is exhausted",
+        "A billing policy that blocks agent API access after a spending threshold",
+        "A security vulnerability where agents can forge payment requests"
+      ],
+      "correct": 1,
+      "explanation": "Denial of Wallet describes an agent that keeps reasoning, keeps tool-calling, and keeps billing with nothing designed to stop it. The loop is the failure mode, not an external attack. The real-world case: an e-commerce agent's monthly cost jumped from $1,200 to $4,800 after a new tool created an unbounded polling loop."
+    },
+    {
+      "stage": "pre",
+      "question": "What is a 'velocity limit' and which failure mode does it specifically address?",
+      "options": [
+        "A per-request token cap that limits how fast the model generates tokens",
+        "A per-minute or per-hour spend rate limit that catches runaway loops faster than monthly caps—fires within minutes when an agent enters a tight spending loop",
+        "A limit on the speed at which agents can be deployed",
+        "A rate limit on the number of parallel agent sessions"
+      ],
+      "correct": 1,
+      "explanation": "A velocity limit is a spend cap per short time window (e.g., $50 in 10 minutes). It catches runaway loops (a tight 5-second retry loop burning tokens) before monthly caps fire. A single monthly cap would not trigger until the wallet is largely gone."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is a layered cost-governor stack better than a single cap at one time scale?",
+      "options": [
+        "Single caps are not supported by cloud provider billing APIs",
+        "Different failure modes operate at different time scales: runaway loops caught by velocity limits, slow leaks by daily caps, bad releases by weekly/monthly caps",
+        "Single caps require more complex code to implement than layered caps",
+        "Regulators require at least three distinct cap levels for production AI systems"
+      ],
+      "correct": 1,
+      "explanation": "A single monthly cap catches a runaway agent only after the wallet is gone. A single per-request cap catches nothing at the session level. Runaway loops need velocity limits; slow leaks need daily caps; bad releases need monthly caps. The stack covers failure modes at appropriate time scales."
+    },
+    {
+      "stage": "post",
+      "question": "What does 'tiered model routing' accomplish as a cost-governor primitive?",
+      "options": [
+        "It routes different tasks to different cloud regions based on cost",
+        "It defaults to a cheaper smaller model and escalates to a larger model only when a classifier judges the task warrants it",
+        "It batches multiple small requests into one large model call to reduce overhead",
+        "It splits long contexts across multiple model calls to stay within token limits"
+      ],
+      "correct": 1,
+      "explanation": "Tiered routing defaults to a smaller, cheaper model and escalates to a larger one only when a classifier judges the task warrants it. This cuts cost significantly for the large fraction of agent steps that do not require frontier-level reasoning."
+    },
+    {
+      "stage": "post",
+      "question": "What key principle does the lesson derive from the real $1,200 to $4,800 cost increase case?",
+      "options": [
+        "Every new team member should review agent billing monthly",
+        "Every new tool surface is a potential new loop, and every new tool needs its own per-tool cap and per-tool alert",
+        "Agents should be limited to one tool at a time to prevent cost surprises",
+        "Monthly billing audits are sufficient to catch all agent cost failures"
+      ],
+      "correct": 1,
+      "explanation": "The real case: a new order-tracking tool allowed the agent to poll during every session with no per-tool cap or alert. The fix was a per-tool cap plus a daily-growth alert. The lesson: every new tool surface is a new potential loop and needs its own cap and its own alert."
+    },
+    {
+      "stage": "post",
+      "question": "Claude Code's `max_budget_usd` fires on session aggregate cost. What does the lesson recommend combining it with?",
+      "options": [
+        "A manually checked weekly billing review",
+        "A velocity limit enforced externally (spend per short window) plus explicit tool allowlists and per-tool caps",
+        "Disabling all tools except file writes to keep costs predictable",
+        "Using only the cheapest available model to prevent budget overruns"
+      ],
+      "correct": 1,
+      "explanation": "max_budget_usd fires on session aggregate—it catches bad releases and prolonged slow leaks but not a tight loop that burns $50 in 10 minutes. A complementary external velocity limit catches the loop-based burn. Tool allowlists and per-tool caps address new-tool-surface risk."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Anthropic's ASL tiers are modeled after which existing safety framework?",
+      "options": [
+        "NIST cybersecurity framework levels",
+        "Biosafety levels (BSL-1 through BSL-4)",
+        "IATA dangerous goods categories",
+        "EU AI Act risk tiers"
+      ],
+      "correct": 1,
+      "explanation": "Anthropic's AI Safety Levels (ASL-1 through ASL-5+) are explicitly modeled on biosafety levels. ASL-3 was activated in May 2025 for models with CBRN-relevant capabilities, analogous to BSL-3 requirements for working with serious pathogens."
+    },
+    {
+      "stage": "pre",
+      "question": "OpenAI Preparedness Framework v2 defines five criteria for a capability to be 'tracked.' Which of the following is NOT one of the five?",
+      "options": [
+        "Plausible — a reasonable threat model exists",
+        "Measurable — empirical evaluation is possible",
+        "Reversible — the harm can be undone",
+        "Severe — the harm is large"
+      ],
+      "correct": 2,
+      "explanation": "The five PF v2 criteria are: Plausible, Measurable, Severe, Net-new (not a scaled-up pre-existing risk), and Instantaneous-or-irremediable (harm occurs fast or cannot be undone). 'Reversible' is the inverse of Instantaneous-or-irremediable — actually, only irremediable harms are tracked. Reversibility is not a separate criterion."
+    },
+    {
+      "stage": "pre",
+      "question": "DeepMind's Frontier Safety Framework v3.0 (September 2025) introduced which new Critical Capability Level not present in earlier versions?",
+      "options": [
+        "Bioweapon Uplift",
+        "Harmful Manipulation — models that could substantially change beliefs or behavior in high-stakes contexts",
+        "ML R&D Acceleration",
+        "Cyber Uplift"
+      ],
+      "correct": 1,
+      "explanation": "FSF v3.0 (September 2025) added Harmful Manipulation as a new CCL: models that could substantially change beliefs or behavior in high-stakes contexts. Bioweapon Uplift, Cyber Uplift, and ML R&D Acceleration were already present in earlier versions."
+    },
+    {
+      "stage": "post",
+      "question": "A safety case is described as having a three-pillar structure. What are the three pillars?",
+      "options": [
+        "Evaluation, mitigation, and monitoring",
+        "Monitoring (can bad behavior be detected?), illegibility (does the model lack ability to execute a harmful plan?), and incapability (does the model lack the capability?)",
+        "Alignment, control, and interpretability",
+        "Documentation, testing, and deployment authorization"
+      ],
+      "correct": 1,
+      "explanation": "A safety case targets three independent pillars: (1) Monitoring — can we detect bad behavior if it occurs? (2) Illegibility — does the model lack the ability to execute a coherent plan to cause harm? (3) Incapability — does the model lack the capability to cause the harm? Different safety cases emphasize different pillars."
+    },
+    {
+      "stage": "post",
+      "question": "All three major labs (Anthropic, OpenAI, DeepMind) include competitor-adjustment clauses in their 2025 frameworks. What is the primary criticism of these clauses?",
+      "options": [
+        "They are unenforceable because labs cannot monitor competitors' deployments",
+        "They create a potential race to the bottom: if all three labs will reduce requirements when a competitor defects, the equilibrium can shift toward defection",
+        "They violate EU AI Act provisions against competitive disadvantage",
+        "They were included without public consultation and lack democratic legitimacy"
+      ],
+      "correct": 1,
+      "explanation": "The competitor-adjustment clause allows a lab to reduce safety requirements if a peer lab ships without comparable safeguards. Critics argue this creates a race-to-the-bottom equilibrium: if all labs will defect when any other defects, the stable equilibrium is mutual defection. Defenders argue unilateral safeguards produce worse outcomes if the defecting lab is less safety-conscious."
+    },
+    {
+      "stage": "post",
+      "question": "Anthropic's v3.0 RSP disaggregates 'AI R&D' into multiple sub-tiers. At which threshold does v3.0 require an affirmative safety case identifying misalignment risks?",
+      "options": [
+        "ASL-3, when CBRN-relevant capabilities are present",
+        "AI R&D-4 crossing — models that dramatically accelerate effective scaling",
+        "AI R&D-2 crossing — models that can automate entry-level AI research",
+        "ASL-5+, the theoretical maximum tier"
+      ],
+      "correct": 1,
+      "explanation": "RSP v3.0 specifies that once AI R&D-4 is crossed (models that dramatically accelerate effective scaling), an affirmative safety case is required that identifies misalignment risks from models potentially pursuing misaligned goals. This reflects the concern that models capable of accelerating AI research could amplify alignment failures."
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "According to Du et al. 2023, what is the key finding about agent count versus round count in multi-agent debate?",
+      "options": ["Only agent count matters; additional rounds provide no benefit beyond the first exchange", "Both agent count and round count contribute independently; you need both for the biggest gains", "Only round count matters; adding more agents without more rounds does not help", "Neither matters significantly; the base model quality is the only relevant factor"],
+      "correct": 1,
+      "explanation": "Du et al.'s ablation is explicit: agents-only (1 round, majority vote) beats single-agent but plateaus. Rounds-only (1 agent, self-reflection) barely helps — this is reflection's known weakness. Both together produce the large gains. The multi-round exchange between multiple agents is the mechanism."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the 'sycophancy cascade' failure mode in multi-agent debate?",
+      "options": ["All agents defer to the most confident-sounding agent regardless of whether its answer is correct", "Agents gradually copy each other's reasoning chains until all outputs are identical", "The first agent to answer biases all subsequent agents toward its phrasing style", "An agent with more tool calls per turn dominates the debate because it appears more capable"],
+      "correct": 0,
+      "explanation": "Sycophancy cascade: agents have no strong prior of their own and defer to whichever agent sounds most confident. The debate collapses to the loudest voice, not the most correct one. Prompting one agent to always argue the counter-position (adversarial role) helps break this."
+    },
+    {
+      "stage": "post",
+      "question": "Why does heterogeneous debate (different base models) outperform homogeneous debate (same model sampled multiple times)?",
+      "options": ["Different models have different latency characteristics, enabling better parallel scheduling", "Different models have uncorrelated errors; self-consistency samples from the same model share the same systematic biases", "Different models can be specialized for different subtasks within the debate structure", "Using different models makes the combined answer appear more authoritative to downstream readers"],
+      "correct": 1,
+      "explanation": "Self-consistency limitation: all N samples come from the same model, so correlated errors lead to confident wrong answers. Different base models have different training data and failure modes. Their errors are less correlated. The ensemble debates toward the dense correct cluster rather than a shared hallucination."
+    },
+    {
+      "stage": "post",
+      "question": "What practical caps does the lesson recommend for production debate deployments?",
+      "options": ["Maximum 10 agents and 10 rounds to allow full convergence", "Maximum 5 agents and 3 rounds, with at least one adversarial slot", "Maximum 2 agents to avoid sycophancy; more agents require human moderation", "No caps needed if agents are heterogeneous — heterogeneity prevents runaway"],
+      "correct": 1,
+      "explanation": "Du et al. show 3 rounds capture most of the gain; more is cost. Beyond 5 agents, context bloat and cost dominate the quality gain. The adversarial slot breaks sycophancy. These are the production-grade caps — not theoretical; each is justified by a concrete failure mode."
+    },
+    {
+      "stage": "post",
+      "question": "What does NLSOM refer to and what did it demonstrate about agent societies at scale?",
+      "options": ["A natural-language safety scoring mechanism that rates debate quality by alignment", "A 129-agent society studied by Zhuge et al. that showed specialization and self-organization emerge with scale, outperforming single-agent on complex tasks", "A neural-language ontology shared memory used in the FIPA-ACL heritage lesson", "A natural-language state operation model that manages shared memory in AutoGen GroupChat"],
+      "correct": 1,
+      "explanation": "NLSOM (Natural Language-Based Society of Mind) is Zhuge et al.'s 129-agent extension of Du et al.'s debate framework. At scale, specialization and self-organization emerged without being programmed. The society outperformed single-agent on visual question answering and similar complex tasks."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the three minimum files in the minimal agent workbench?",
+      "options": [
+        "README.md, requirements.txt, main.py",
+        "AGENTS.md (router), agent_state.json (system of record), task_board.json (queue)",
+        "config.yaml, tasks.json, memory.json",
+        "instructions.md, progress.json, backlog.csv"
+      ],
+      "correct": 1,
+      "explanation": "The three minimum files: AGENTS.md (a short router pointing to deeper docs and files), agent_state.json (the system of record tracking current task, touched files, assumptions, next action), and task_board.json (the work queue with status: todo/in_progress/done/blocked)."
+    },
+    {
+      "stage": "pre",
+      "question": "Why should AGENTS.md be short and act as a router rather than a long manual?",
+      "options": [
+        "Short files load faster",
+        "Long manuals get ignored; short routers get followed — they point to deeper docs loaded only when needed",
+        "AGENTS.md has a character limit",
+        "Short files are easier to version control"
+      ],
+      "correct": 1,
+      "explanation": "A short AGENTS.md router (pointing to state file, task board, deeper rules, verification command) gets followed. A 3000-line manual gets ignored — the model loads it, cannot summarize the parts it needs, and fails on the same surfaces anyway."
+    },
+    {
+      "stage": "post",
+      "question": "Why does state live in a file rather than in chat history?",
+      "options": [
+        "Files are faster to read than chat history",
+        "Chat history is volatile — sessions die, conversations get trimmed. Files persist across sessions and agent swaps",
+        "Chat history has size limits that files do not",
+        "Files are easier for external tools to access"
+      ],
+      "correct": 1,
+      "explanation": "Chat history is volatile: sessions die, conversations get trimmed, models change. The state file persists across sessions and survives agent swaps — the next session reads the file instead of replaying the chat."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'nested AGENTS.md with nearest-wins precedence' pattern?",
+      "options": [
+        "Multiple AGENTS.md files that conflict with each other",
+        "One AGENTS.md per subcomponent (e.g., OpenAI has 88 files); agents walk from working file toward root, concatenating each AGENTS.md found",
+        "AGENTS.md files that inherit from parent directories",
+        "A system where the most recent AGENTS.md overrides all others"
+      ],
+      "correct": 1,
+      "explanation": "Nested AGENTS.md: one file per subcomponent, walking from the working file toward the root. Claude Code, Cursor, Codex, and Copilot concatenate every AGENTS.md found on the path. Sub-directory files extend the root file."
+    },
+    {
+      "stage": "post",
+      "question": "What anti-pattern causes agents to drop from 48.8% to 28% resolve rate according to ICLR 2026 AMBIG-SWE?",
+      "options": [
+        "Using too many tools",
+        "Conflicting instructions (stacking them flat rather than numbering priorities)",
+        "Not having a state file",
+        "Having a task board with too many items"
+      ],
+      "correct": 1,
+      "explanation": "AMBIG-SWE (ICLR 2026) found conflicting instructions silently drop agents from interactive to greedy mode (48.8% -> 28% resolve rate). Fix: number priorities instead of stacking them flat."
+    },
+    {
+      "stage": "pre",
+      "question": "What is a 'task on the board' schema in the minimal workbench?",
+      "options": [
+        "A free-text description of what needs to be done",
+        "An entry with id, goal, status (todo/in_progress/done/blocked), owner (builder/reviewer/human), and acceptance criteria",
+        "A link to the relevant GitHub issue",
+        "A priority number and estimated time to complete"
+      ],
+      "correct": 1,
+      "explanation": "A task on the board has: id, goal (one sentence the reviewer can verify), status (todo/in_progress/done/blocked), owner (builder, reviewer, or human), and acceptance criteria. The board is intentionally small — when it grows past a screen, you have a planning problem."
+    }
+  ]
+}

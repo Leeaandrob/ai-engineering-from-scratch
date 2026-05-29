@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What approach do all three production computer-use models (Claude, OpenAI CUA, Gemini) share?",
+      "options": [
+        "All use OS accessibility APIs for reliable element targeting",
+        "All are vision-based: screenshot in, keyboard/mouse commands out; no OS accessibility APIs",
+        "All are restricted to browser-only use cases",
+        "All require browser extensions to function"
+      ],
+      "correct": 1,
+      "explanation": "All three 2026 production computer-use models are purely vision-based: screenshot input, keyboard/mouse output. None use OS accessibility APIs — Claude reads pixels, counts coordinates from reference points for resolution-independent targeting."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the shared 'untrusted input' contract all three models enforce?",
+      "options": [
+        "All inputs must be validated by an external service",
+        "Screenshots, DOM text, tool outputs, PDF content, and anything retrieved is untrusted; only direct user instructions count as permission",
+        "Tool outputs are trusted but retrieved web content is not",
+        "Everything is treated as untrusted except the system prompt"
+      ],
+      "correct": 1,
+      "explanation": "All three models treat screenshots, DOM text, tool outputs, PDF content, and any retrieved content as untrusted. OpenAI's CUA docs are explicit: 'only direct instructions from the user count as permission.' Retrieved content can contain prompt-injection payloads."
+    },
+    {
+      "stage": "post",
+      "question": "What benchmark numbers did OpenAI CUA report at launch?",
+      "options": [
+        "OSWorld 12%, WebArena 25%",
+        "OSWorld 38.1%, WebArena 58.1%, WebVoyager 87%",
+        "OSWorld 75%, WebArena 80%",
+        "Online-Mind2Web 70%, OSWorld 50%"
+      ],
+      "correct": 1,
+      "explanation": "OpenAI CUA (Operator, launched January 2025) reported at launch: OSWorld 38.1%, WebArena 58.1%, and WebVoyager 87%."
+    },
+    {
+      "stage": "post",
+      "question": "What distinguishes Gemini 2.5 Computer Use's safety approach?",
+      "options": [
+        "It uses a content filter applied to the final output",
+        "It has a per-step safety service that assesses each action before execution and rejects unsafe actions",
+        "It requires manual human approval for every action",
+        "It restricts the model to a pre-approved list of actions"
+      ],
+      "correct": 1,
+      "explanation": "Gemini 2.5 Computer Use (October 2025) introduced a per-step safety service: a classifier that assesses each action before execution and rejects unsafe ones. This has since become a convergence point for 2026 computer-use safety design."
+    },
+    {
+      "stage": "post",
+      "question": "What is the recommended defense for a malicious web page that tries to override agent instructions?",
+      "options": [
+        "Trust the model to ignore injected instructions",
+        "Per-step safety classifier, allowlist navigation, human-in-the-loop for sensitive actions, and hard-coded refusals for directives found in retrieved text",
+        "Only allow the agent to visit verified websites",
+        "Run the agent in a sandboxed environment with no network access"
+      ],
+      "correct": 1,
+      "explanation": "The 2026 defense doctrine combines: per-step safety classifier, allowlist/blocklist navigation, human-in-the-loop for login/purchase/CAPTCHA, content capture with external storage, and hard-coded refusals for directive-shaped text found in retrieved content."
+    },
+    {
+      "stage": "pre",
+      "question": "When should you use Claude computer use vs Gemini 2.5 Computer Use?",
+      "options": [
+        "Claude for math; Gemini for writing",
+        "Claude for richest desktop support (Ubuntu/Linux automation); Gemini for browser-only tasks with per-step safety built in",
+        "Claude for consumer applications; Gemini for enterprise applications",
+        "They are interchangeable; pick based on price"
+      ],
+      "correct": 1,
+      "explanation": "Claude computer use has the richest desktop support and is best for Ubuntu/Linux automation. Gemini 2.5 Computer Use is browser-only (13 actions) but offers lower latency and has per-step safety built in."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the four recurring orchestration patterns in 2026 agent frameworks?",
+      "options": [
+        "Sequential, Parallel, Conditional, Loop",
+        "Supervisor-worker, Swarm/peer-to-peer, Hierarchical, Debate",
+        "Plan-execute, Monitor-act, Sense-plan-act, Reactive",
+        "Chain, Tree, Graph, Star"
+      ],
+      "correct": 1,
+      "explanation": "The four recurring orchestration patterns are: Supervisor-worker (central router dispatches to specialists), Swarm/peer-to-peer (direct handoffs, no central router), Hierarchical (supervisors managing sub-supervisors), and Debate (parallel proposers with cross-critique)."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the 2026 LangChain recommendation for implementing supervision?",
+      "options": [
+        "Always use create_supervisor() for consistency",
+        "Do supervision through direct tool calls rather than create_supervisor(), for finer context engineering control",
+        "Use hierarchical rather than supervisor for any production system",
+        "Avoid supervision patterns entirely and use swarm instead"
+      ],
+      "correct": 1,
+      "explanation": "LangChain's 2026 recommendation: do supervision through direct tool calls rather than the create_supervisor() library function. This gives finer context engineering control — you decide exactly what each specialist sees."
+    },
+    {
+      "stage": "post",
+      "question": "What is Anthropic's guidance on when to add multi-agent topology?",
+      "options": [
+        "Always start with multi-agent to avoid refactoring later",
+        "Add topology only when a single agent plus five workflow patterns is insufficient; success is about the right system for your needs",
+        "Use multi-agent for any task with more than 3 steps",
+        "Multi-agent is only needed for tasks that take more than an hour"
+      ],
+      "correct": 1,
+      "explanation": "Anthropic: 'Success in the LLM space isn't about building the most sophisticated system. It's about building the right system for your needs.' Decision order: 1) single agent + workflow patterns, 2) supervisor-worker, 3) swarm, 4) hierarchical, 5) debate."
+    },
+    {
+      "stage": "post",
+      "question": "What is the key advantage of swarm over supervisor topology, and its key disadvantage?",
+      "options": [
+        "Advantage: easier to debug; disadvantage: more expensive",
+        "Advantage: lower latency (fewer routing hops); disadvantage: harder to reason about (no single point of control)",
+        "Advantage: more accurate; disadvantage: slower convergence",
+        "Advantage: cheaper; disadvantage: requires more specialized agents"
+      ],
+      "correct": 1,
+      "explanation": "Swarm's advantage: lower latency because agents hand off directly without going through a central router. Disadvantage: harder to reason about and debug because there is no single point of control — hop counters are needed to prevent A->B->A bouncing."
+    },
+    {
+      "stage": "post",
+      "question": "When should you use hierarchical topology?",
+      "options": [
+        "For any system with more than 5 agents",
+        "Only when a single supervisor's context budget cannot hold descriptions of all specialists",
+        "When all agents need to communicate with all others",
+        "When you need the lowest possible latency"
+      ],
+      "correct": 1,
+      "explanation": "Hierarchical (supervisors managing sub-supervisors) is appropriate only when a single supervisor cannot hold descriptions of all specialists within its context budget. Adding hierarchy for fewer agents creates complexity without benefit."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the 'topology-first thinking' anti-pattern?",
+      "options": [
+        "Spending too much time designing the topology before writing any code",
+        "Reaching for multi-agent before identifying what specific problem multi-agent actually solves",
+        "Choosing a topology based on familiarity rather than requirements",
+        "Implementing all four topologies and switching between them"
+      ],
+      "correct": 1,
+      "explanation": "Topology-first thinking is the anti-pattern of deciding 'we need multi-agent' before identifying what problem multi-agent solves. Always start with single agent + workflow patterns and escalate only when those fall short."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is included in the agent-workbench-pack directory layout?",
+      "options": [
+        "model weights, training data, eval scripts, deployment configs",
+        "AGENTS.md, docs/ (rules + policy + protocol + rubric), schemas/ (state + board + scope), scripts/ (init + feedback + verify + handoff), bin/install.sh",
+        "README.md, requirements.txt, src/, tests/, Dockerfile",
+        "config.yaml, tools/, memory/, prompts/, workflows/"
+      ],
+      "correct": 1,
+      "explanation": "The pack layout: AGENTS.md, docs/ (agent-rules.md, reliability-policy.md, handoff-protocol.md, reviewer-rubric.md), schemas/ (agent_state, task_board, scope_contract schemas), scripts/ (init_agent.py, run_with_feedback.py, verify_agent.py, generate_handoff.py), bin/install.sh."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the VERSION file's role and what triggers a major version bump?",
+      "options": [
+        "VERSION tracks git commits; major bump on any code change",
+        "VERSION is the contract: major bumps for schema/script changes requiring migrations, minor for other changes, patch for doc-only changes",
+        "VERSION is for marketing purposes only",
+        "VERSION tracks the number of tasks completed"
+      ],
+      "correct": 1,
+      "explanation": "VERSION is the contract. Major bumps: schema changes or script changes that require state migrations. Minor bumps: other changes requiring a checker re-run. Patch bumps: doc-only changes. The installer writes .workbench-version into the target repo; lint_pack.py refuses to ship if they disagree."
+    },
+    {
+      "stage": "post",
+      "question": "What does the 'single source for cross-tool distribution' pattern produce?",
+      "options": [
+        "One master AGENTS.md that is manually copied to each tool's config directory",
+        "Symlinks (ln -s AGENTS.md CLAUDE.md, .github/copilot-instructions.md, .cursorrules) so one source fans out to all coding agents automatically",
+        "A CI job that regenerates tool configs from a central config",
+        "A shared cloud storage location that all tools read from"
+      ],
+      "correct": 1,
+      "explanation": "Single source distribution: use symlinks (ln -s AGENTS.md CLAUDE.md, ln -s AGENTS.md .github/copilot-instructions.md, ln -s AGENTS.md .cursorrules) so all coding agents read from one source of truth. Nx's nx ai-setup automates this across Claude Code, Cursor, Copilot, Gemini, Codex, OpenCode."
+    },
+    {
+      "stage": "post",
+      "question": "What should the uninstall script refuse to do?",
+      "options": [
+        "Remove any files from the target repo",
+        "Delete agent_state.json, task_board.json, or outputs/ if they have uncommitted changes — state belongs to the user, not the pack",
+        "Run if the pack was not installed by bin/install.sh",
+        "Complete if any tests are currently failing"
+      ],
+      "correct": 1,
+      "explanation": "The uninstaller removes schemas, scripts, docs, and AGENTS.md (with --keep-agents-md opt-out) but refuses to proceed if state files have any uncommitted changes. State belongs to the user — the pack does not own it. Accidental deletion of agent_state.json or task_board.json would be catastrophic."
+    },
+    {
+      "stage": "post",
+      "question": "What stays OUT of the agent-workbench-pack?",
+      "options": [
+        "The init script and verification gate",
+        "Project-specific tasks, vendor SDK calls, and onboarding prose — these belong in the target repo, not in the portable pack",
+        "The schemas and documentation",
+        "The feedback runner and handoff generator"
+      ],
+      "correct": 1,
+      "explanation": "The pack excludes: project-specific tasks (belong on the target repo's board), vendor SDK calls (the pack is framework-agnostic), and onboarding prose (the pack lives next to existing onboarding, not inside it). What stays in: surface schemas, the four scripts, and the four docs."
+    },
+    {
+      "stage": "pre",
+      "question": "What is SkillKit-style distribution for the workbench pack?",
+      "options": [
+        "Publishing the pack to npm or PyPI",
+        "The pack ships as a SkillKit skill (skillkit install agent-workbench-pack) installable across 32 AI agents from a single source",
+        "Distributing the pack via email to team members",
+        "Publishing the pack as a Docker image"
+      ],
+      "correct": 1,
+      "explanation": "SkillKit-style distribution: the pack ships as a SkillKit skill installable with skillkit install agent-workbench-pack across 32 AI coding agents from one source. The pack repo is the source of truth; SkillKit is the distribution channel. Vendor lock-in collapses because the seven surfaces stay the same."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the seven fields in a scope contract?",
+      "options": [
+        "title, description, owner, priority, deadline, status, tags",
+        "task_id, goal, allowed_files, forbidden_files, acceptance_criteria, rollback_plan, approvals_required",
+        "scope, budget, timeline, deliverables, risks, dependencies, success_metrics",
+        "input, output, constraints, assumptions, preconditions, postconditions, invariants"
+      ],
+      "correct": 1,
+      "explanation": "A scope contract has: task_id (links to board), goal (one verifiable sentence), allowed_files (globs the agent may write), forbidden_files (globs must not touch even by accident), acceptance_criteria (test commands proving done), rollback_plan (operator runbook), and approvals_required (actions needing human sign-off)."
+    },
+    {
+      "stage": "pre",
+      "question": "Why are globs preferred over raw file paths in scope contracts?",
+      "options": [
+        "Globs are faster to evaluate",
+        "Real repos move files; globs (app/**/*.py) survive a refactor between sessions that would invalidate a raw path contract",
+        "Globs use less storage space",
+        "Globs are supported by all version control systems"
+      ],
+      "correct": 1,
+      "explanation": "Raw paths become stale when files are renamed or moved during refactoring. Globs like app/**/*.py or tests/test_signup*.py continue matching the right files even after a refactor between sessions."
+    },
+    {
+      "stage": "post",
+      "question": "The 'specsmaxxing' practice of writing scope contracts before invoking the agent reduced what metric from 52% to 21%?",
+      "options": [
+        "Task failure rate",
+        "Rabbit-hole rate (scope creep incidents)",
+        "Token usage per task",
+        "Time to complete tasks"
+      ],
+      "correct": 1,
+      "explanation": "A practitioner using 'specsmaxxing' (scope contracts in YAML before invoking the agent) reported the rabbit-hole rate (scope creep incidents) dropped from 52% to 21% in three weeks. The contract did the work, not the model."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'violation budget' pattern in scope checking?",
+      "options": [
+        "Allowing a certain number of failed tasks before raising an alert",
+        "Minor scope slips within a budget trigger warnings; only when the budget is exceeded does the merge gate refuse — allows a gate that ships vs one that gets disabled",
+        "Tracking the cost of scope violations over time",
+        "Setting a maximum number of files the agent is allowed to touch"
+      ],
+      "correct": 1,
+      "explanation": "agent-guardrails ships a violationBudget per task: minor scope slips within budget surface as warnings; only when exceeded does the merge gate refuse. This is the difference between a gate teams respect vs one they disable because it's too strict."
+    },
+    {
+      "stage": "post",
+      "question": "What does the rollback plan field in a scope contract enforce about thinking?",
+      "options": [
+        "It enforces that all changes are reversible",
+        "Listing a rollback plan forces the contract author to think about what could go wrong — a contract without a rollback plan should not be approved",
+        "It provides a template for automated rollback scripts",
+        "It determines the maximum risk level for the task"
+      ],
+      "correct": 1,
+      "explanation": "Including a rollback plan forces the author to reason about failure modes. 'A contract you cannot roll back from is a contract that should not be approved.' This is a quality gate for the task definition, not just for the agent's execution."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the multi-contract merge semantics for allowed_files?",
+      "options": [
+        "Union both allowed_files lists (the path allowed by either contract is allowed)",
+        "Intersect both allowed_files lists (both contracts must permit the path)",
+        "Use the more permissive contract's allowed_files",
+        "Use the most recently created contract's allowed_files"
+      ],
+      "correct": 1,
+      "explanation": "When two scope contracts apply, merge semantics follow least privilege: allowed_files is intersected (both must permit), forbidden_files is unioned (either can prohibit), time_budget_minutes uses the minimum, approvals_required accumulates."
+    }
+  ]
+}

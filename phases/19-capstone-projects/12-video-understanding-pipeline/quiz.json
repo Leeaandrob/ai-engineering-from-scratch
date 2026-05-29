@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What three representations does each video scene get in the multi-vector Qdrant index?",
+      "options": [
+        "Raw pixel array, compressed JPEG, and frame hash",
+        "Caption embedding, keyframe embedding, and transcript embedding",
+        "Scene start timestamp, scene end timestamp, and keyframe URL",
+        "Dense vector, BM25 sparse vector, and scene duration"
+      ],
+      "correct": 1,
+      "explanation": "Each scene is indexed with three named vectors in Qdrant: a caption embedding (from the VLM caption), a keyframe embedding (from the visual frame), and a transcript embedding (from the ASR output), enabling multi-modal retrieval."
+    },
+    {
+      "stage": "pre",
+      "question": "What does temporal grounding refine after the initial retrieval step?",
+      "options": [
+        "The captions for scenes that were poorly described by the VLM",
+        "The (start, end) timestamp window within the top retrieved scene to localize exactly when the queried event occurs",
+        "The ordering of retrieved scenes by chronological position in the video",
+        "The ASR transcript to correct words that are obscured by background noise"
+      ],
+      "correct": 1,
+      "explanation": "After retrieval returns the top scenes, a temporal-grounding adapter (TimeLens-style) refines the coarse scene-level window to a precise (start, end) sub-interval where the queried event actually occurs."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the capstone explicitly measure counting and action-type question accuracy separately from descriptive questions?",
+      "options": [
+        "ActivityNet-QA and NeXT-GQA only contain counting and action questions",
+        "These question types are known hard failure modes for VLMs; miscounting and incorrect action attribution are the most common hallucination patterns in video QA",
+        "Counting questions require a different retrieval strategy than descriptive questions",
+        "Temporal grounding only applies to counting and action questions, not descriptive ones"
+      ],
+      "correct": 1,
+      "explanation": "VLMs reliably hallucinate on counting ('how many cars?') and action sequencing ('did X happen before Y?') questions. Measuring these separately surfaces the specific failure mode rather than masking it in an overall accuracy number."
+    },
+    {
+      "stage": "pre",
+      "question": "What does RRF fusion do in the query step of this video pipeline?",
+      "options": [
+        "Re-runs failed scene-detection passes at a higher sensitivity threshold",
+        "Merges ranked result lists from multiple vector queries (caption, keyframe, transcript) into a single unified ranking",
+        "Normalizes the embedding vectors from different VLM models to a common scale",
+        "Compresses frame embeddings by removing the lowest-scoring patch vectors"
+      ],
+      "correct": 1,
+      "explanation": "Reciprocal Rank Fusion merges the separate ranked lists from caption, keyframe, and transcript vector queries into one unified top-k ranking, a standard technique for combining multiple retrieval signals."
+    },
+    {
+      "stage": "post",
+      "question": "What is the role of Whisper-v3-turbo with word timestamps in the ingest pipeline?",
+      "options": [
+        "It transcribes the video audio and assigns each word a precise timestamp, producing per-scene transcript slices aligned to scene boundaries",
+        "It detects scene transitions by identifying audio cuts and silence gaps",
+        "It runs speaker diarization to separate multiple speaker channels before captioning",
+        "It generates the natural-language captions used as the primary retrieval signal"
+      ],
+      "correct": 0,
+      "explanation": "Whisper-v3-turbo runs on the audio track and produces word-level timestamps. These timestamps are split at scene boundaries to yield a per-scene transcript slice, which is embedded as the third vector type in the index."
+    },
+    {
+      "stage": "post",
+      "question": "What does 'temporal grounding IoU' measure in the evaluation rubric?",
+      "options": [
+        "The overlap between two competing VLM captions for the same scene",
+        "Intersection-over-union between the predicted (start, end) window and the ground-truth window on a held-out grounding set",
+        "The ratio of correctly transcribed words to total words in the ASR output",
+        "The fraction of retrieved scenes whose keyframe appears within 2 seconds of the ground-truth moment"
+      ],
+      "correct": 1,
+      "explanation": "Temporal grounding IoU is intersection-over-union between the time window the pipeline predicts and the human-labeled ground-truth window for a grounding question, measuring how precisely the system localizes events."
+    }
+  ]
+}

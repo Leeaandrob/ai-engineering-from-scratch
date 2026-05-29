@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the notable algorithmic result AlphaEvolve achieved that had stood for 56 years?",
+      "options": [
+        "A faster sorting algorithm that beats merge sort on large arrays",
+        "A 4x4 complex-matrix multiplication procedure using 48 scalar multiplications, improving on Strassen's 49",
+        "A graph traversal algorithm that beats Dijkstra on dense networks",
+        "A compression scheme that outperforms LZ77 for binary data"
+      ],
+      "correct": 1,
+      "explanation": "AlphaEvolve discovered a 4x4 complex-matrix multiplication procedure using 48 scalar multiplications, the first improvement over Strassen's 1969 bound of 49 in 56 years."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is the evaluator described as 'non-negotiable' in AlphaEvolve's architecture?",
+      "options": [
+        "Because the LLM cannot generate code without evaluator feedback",
+        "Because a fast, deterministic, hard-to-game evaluator catches LLM confabulations that would otherwise dominate",
+        "Because the evaluator determines the number of evolutionary generations to run",
+        "Because regulators require an evaluator before deploying AI-generated code"
+      ],
+      "correct": 1,
+      "explanation": "AlphaEvolve's wins come from domains where the evaluator is fast, deterministic, and hard to game. Without the evaluator, the loop optimizes for pretty code instead of actual correctness or performance. The evaluator catches the class of LLM errors (confabulated correctness, performance claims that vanish on hardware) that would otherwise dominate."
+    },
+    {
+      "stage": "pre",
+      "question": "What is 'reward hacking' in the context of AlphaEvolve-style loops?",
+      "options": [
+        "Researchers manually tuning the reward function to favor known solutions",
+        "The loop finding an imperfection in the evaluator and optimizing for the surface feature rather than the intended behavior",
+        "An agent using reinforcement learning to game the leaderboard rankings",
+        "The model memorizing evaluator test cases to get perfect scores"
+      ],
+      "correct": 1,
+      "explanation": "Evolution optimizes for whatever the evaluator measures. If the evaluator is imperfect, the loop finds the imperfection. Documented examples include optimization targets rewarding empty solutions, benchmark scores rewarding test memorization, and 'code quality' proxies rewarding comment removal with no semantic change."
+    },
+    {
+      "stage": "post",
+      "question": "What role does MAP-elites play in AlphaEvolve's program database?",
+      "options": [
+        "It ranks programs by score and discards all but the top 10%",
+        "It keeps a grid keyed by feature vectors so the loop explores diverse solutions rather than converging on a single local minimum",
+        "It parallelizes evaluator calls across multiple machines",
+        "It applies human-designed mutations to programs to diversify the search"
+      ],
+      "correct": 1,
+      "explanation": "MAP-elites is a diversity-preserving archive where each grid cell holds the best variant with a particular feature-vector descriptor. This prevents premature convergence on a single leader and keeps diverse solutions alive for future generations to build on."
+    },
+    {
+      "stage": "post",
+      "question": "How does AlphaEvolve differ from a traditional genetic algorithm applied to code?",
+      "options": [
+        "AlphaEvolve uses random mutations while genetic algorithms use guided edits",
+        "AlphaEvolve applies the LLM to propose targeted, semantically plausible edits rather than random byte-level mutations",
+        "AlphaEvolve replaces the selection step with a purely random sampling strategy",
+        "AlphaEvolve does not use a population of variants, only a single best candidate"
+      ],
+      "correct": 1,
+      "explanation": "A random-mutation GA on a 2000-line Python file almost always produces syntax errors. The LLM produces compilable, semantically plausible modifications and concentrates search on plausible neighborhoods (change one function, not random bytes), dramatically reducing wasted evaluator calls."
+    },
+    {
+      "stage": "post",
+      "question": "What does a 'held-out evaluator' mean in AlphaEvolve, and why does it matter?",
+      "options": [
+        "An evaluator stored in a separate repository that is reviewed only quarterly",
+        "An evaluator run on inputs generated at evaluation time that the LLM has never seen, preventing memorization",
+        "A human evaluator who checks the final selected solution before deployment",
+        "An evaluator that is disabled during training and only enabled at test time"
+      ],
+      "correct": 1,
+      "explanation": "A held-out evaluator uses inputs generated at evaluation time so the LLM cannot memorize the test cases. DeepMind recommends it to prevent the loop from overfitting to the training evaluator while appearing to succeed on the held-out test."
+    }
+  ]
+}

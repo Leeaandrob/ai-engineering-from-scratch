@@ -1,0 +1,66 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which hyperscaler strategy is best described as a model marketplace — offering Claude, Llama, Titan, Cohere, and Stability behind a single API?",
+      "options": ["Azure OpenAI", "AWS Bedrock", "Vertex AI", "Fireworks AI"],
+      "correct": 1,
+      "explanation": "AWS Bedrock is the marketplace: multiple third-party and first-party models behind one API and one IAM surface. Azure OpenAI is an exclusive OpenAI partnership; Vertex AI is Gemini-first."
+    },
+    {
+      "stage": "pre",
+      "question": "What are Provisioned Throughput Units (PTUs) in Azure OpenAI?",
+      "options": [
+        "Per-token credits that roll over monthly",
+        "Reserved blocks of inference GPU capacity priced per hour",
+        "Shared on-demand GPU pools shared across all tenants",
+        "Rate-limit tokens that throttle requests above a threshold"
+      ],
+      "correct": 1,
+      "explanation": "PTUs reserve dedicated GPU capacity for your tenant, eliminating contention with other customers. That is why Azure OpenAI can achieve ~50 ms median TTFT versus Bedrock on-demand's ~75 ms on equivalent models."
+    },
+    {
+      "stage": "post",
+      "question": "Artificial Analysis benchmarks show Azure OpenAI at ~50 ms median TTFT on Llama 3.1 405B-class deployments versus Bedrock at ~75 ms. What best explains this gap?",
+      "options": [
+        "Azure uses newer H200 GPUs while Bedrock still runs H100s",
+        "Azure PTUs provide dedicated capacity while Bedrock defaults to shared on-demand",
+        "Bedrock routes through an additional IAM layer adding latency",
+        "Azure compresses responses at the edge before delivery"
+      ],
+      "correct": 1,
+      "explanation": "PTUs reserve capacity — your tenant is not competing with others. Bedrock's on-demand model uses shared capacity, so latency varies with overall cluster load. The gap is a capacity-model difference, not a hardware difference."
+    },
+    {
+      "stage": "post",
+      "question": "Which FinOps attribution mechanism is described as the cleanest native solution for per-feature cost breakdown in 2026?",
+      "options": [
+        "Vertex AI project-per-team with BigQuery billing export",
+        "Azure resource-group tags with Application Insights",
+        "Bedrock Application Inference Profiles with CloudWatch",
+        "OpenAI organization usage dashboard with per-key reporting"
+      ],
+      "correct": 2,
+      "explanation": "Bedrock Application Inference Profiles (added 2025) let you tag a profile with team/product/feature and route all invocations through it; CloudWatch breaks out cost per profile without post-processing. It is described as the most granular hyperscaler-native attribution."
+    },
+    {
+      "stage": "post",
+      "question": "What is the recommended policy to mitigate single-hyperscaler lock-in for product-critical LLM calls in 2026?",
+      "options": [
+        "One-provider minimum with a quarterly review of alternatives",
+        "Two-provider minimum with failover between them via a gateway",
+        "Three-provider minimum — one per hyperscaler — with round-robin routing",
+        "Use only the Anthropic direct API to avoid lock-in to any hyperscaler"
+      ],
+      "correct": 1,
+      "explanation": "The lesson prescribes a two-provider minimum — commonly Bedrock plus Azure OpenAI — with a gateway routing optimally between them. Single-hyperscaler commitment is the expensive mistake because the frontier model changes quarterly across providers."
+    },
+    {
+      "stage": "pre",
+      "question": "At approximately what sustained utilization does an Azure PTU reservation break even versus on-demand pricing?",
+      "options": ["10-20%", "40-60%", "70-80%", "90-100%"],
+      "correct": 1,
+      "explanation": "The lesson states PTU break-even is usually around 40-60% sustained utilization. Below that, on-demand is cheaper because you avoid paying for idle reserved capacity. At high utilization PTUs offer up to 70% savings."
+    }
+  ]
+}

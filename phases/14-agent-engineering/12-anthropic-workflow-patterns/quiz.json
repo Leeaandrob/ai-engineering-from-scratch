@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the key distinction between a workflow and an agent in Anthropic's framing?",
+      "options": [
+        "Workflows use GPT-4 and agents use Claude",
+        "Workflows have predefined code-owned paths; agents have model-owned dynamic paths",
+        "Workflows are for production; agents are only for research",
+        "Workflows use one LLM call; agents use multiple"
+      ],
+      "correct": 1,
+      "explanation": "In Anthropic's framing, workflows are LLMs and tools orchestrated through predefined code paths (engineer-owned graph) while agents dynamically direct their own tools and take their own steps (model-owned graph)."
+    },
+    {
+      "stage": "pre",
+      "question": "What are Anthropic's five workflow patterns?",
+      "options": [
+        "Plan, Execute, Verify, Review, Handoff",
+        "Prompt chaining, Routing, Parallelization, Orchestrator-workers, Evaluator-optimizer",
+        "Retrieval, Generation, Evaluation, Refinement, Output",
+        "Input, Process, Validate, Output, Log"
+      ],
+      "correct": 1,
+      "explanation": "Anthropic's five workflow patterns (Schluntz and Zhang, Dec 2024): prompt chaining, routing, parallelization (sectioning and voting), orchestrator-workers, and evaluator-optimizer."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'parallelization' workflow pattern, and what are its two shapes?",
+      "options": [
+        "Running the same agent on multiple machines; shapes: horizontal and vertical scaling",
+        "Running N LLM calls concurrently and aggregating; shapes: sectioning (different chunks) and voting (same prompt, N runs)",
+        "Running multiple tools in parallel; shapes: dependent and independent",
+        "Running a pipeline in parallel stages; shapes: map and reduce"
+      ],
+      "correct": 1,
+      "explanation": "Parallelization runs N LLM calls concurrently and aggregates results. Sectioning splits different chunks of work across calls; voting runs the same prompt N times and takes a majority or synthesized result."
+    },
+    {
+      "stage": "post",
+      "question": "When should you prefer a workflow over an agent?",
+      "options": [
+        "When the task is open-ended research with unknown next steps",
+        "When steps are predictable, cost is constrained, or compliance requires an auditable graph",
+        "When the task takes more than an hour to complete",
+        "When the task involves multiple modalities"
+      ],
+      "correct": 1,
+      "explanation": "Workflows beat agents when tasks are predictable (steps can be enumerated), cost-bound (workflows have bounded step counts), or compliance-bound (auditors need to read the graph, not infer it from trajectories)."
+    },
+    {
+      "stage": "post",
+      "question": "What is the 'augmented LLM' concept that underlies all five patterns?",
+      "options": [
+        "An LLM with a larger context window",
+        "One LLM with three capabilities wired in: search (retrieval), tools (actions), and memory (persistence)",
+        "An LLM that has been fine-tuned on tool use",
+        "Multiple LLMs working together"
+      ],
+      "correct": 1,
+      "explanation": "The augmented LLM is the atomic unit: one LLM with search (retrieval), tools (actions), and memory (persistence) wired in. All five workflow patterns combine augmented LLMs in different topologies."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the evaluator-optimizer workflow pattern?",
+      "options": [
+        "An optimizer that automatically tunes LLM hyperparameters",
+        "One LLM proposes an answer, another evaluates and produces a critique, iterate until the evaluator passes",
+        "A pipeline that optimizes prompt length automatically",
+        "A system that routes queries to the best model"
+      ],
+      "correct": 1,
+      "explanation": "The evaluator-optimizer pattern has two roles: one LLM proposes an output, another evaluates it and produces a critique. The loop iterates until the evaluator passes. This is Self-Refine (Lesson 05) generalized and named in Anthropic's workflow vocabulary."
+    }
+  ]
+}

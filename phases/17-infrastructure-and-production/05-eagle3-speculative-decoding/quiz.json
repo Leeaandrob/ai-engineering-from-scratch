@@ -1,0 +1,71 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does the acceptance rate alpha measure in speculative decoding?",
+      "options": [
+        "The fraction of draft tokens that the target model accepts as correct",
+        "The throughput ratio of the draft model versus the target model",
+        "The percentage of requests that benefit from speculative decoding",
+        "The calibration accuracy of the draft model on held-out prompts"
+      ],
+      "correct": 0,
+      "explanation": "Alpha is the fraction of draft tokens accepted by the target model in a single verify pass. An alpha of 0.7 means 70% of K draft tokens are accepted. Expected speedup = 1/(1-alpha) minus draft overhead — so alpha is the key metric."
+    },
+    {
+      "stage": "pre",
+      "question": "What improvement does EAGLE-3 introduce over EAGLE-1?",
+      "options": [
+        "EAGLE-3 uses a larger separate draft model rather than a single attached head",
+        "EAGLE-3 trains the draft head on multiple target model layers rather than just the last layer",
+        "EAGLE-3 adds tree-based draft verification to accept multiple branches per target pass",
+        "EAGLE-3 supports adaptive draft length while EAGLE-1 used fixed K"
+      ],
+      "correct": 1,
+      "explanation": "EAGLE-3 trains its draft head on hidden states from multiple target model layers (not just the last), giving better alignment and pushing acceptance rate alpha into the 0.6-0.8 band on general chat versus EAGLE-1's ~0.5-0.6. Tree-based drafts are an EAGLE-2 feature."
+    },
+    {
+      "stage": "post",
+      "question": "Below what alpha value does speculative decoding become net negative at high concurrency?",
+      "options": ["0.3", "0.45", "0.55", "0.65"],
+      "correct": 2,
+      "explanation": "At high concurrency, the cost of every rejected draft is a second target forward pass. The lesson states that if alpha drops below ~0.55, speculative decoding is net negative — you pay more target compute than you save."
+    },
+    {
+      "stage": "post",
+      "question": "Why does speculative decoding hurt P99 tail latency even when mean latency improves?",
+      "options": [
+        "The draft model occasionally crashes and requires a fallback to the target",
+        "Rejected drafts require the target to run an extra verify pass, adding latency to that request",
+        "Loading the draft model increases GPU memory pressure, causing occasional preemptions",
+        "The batch scheduler deprioritizes speculative requests when draft queues fill up"
+      ],
+      "correct": 1,
+      "explanation": "Each rejected draft forces a second target forward pass for verification. On average this is hidden by accepted tokens, but at P99 you hit sequences where alpha is low (e.g., code or specialized domains), and every rejection adds a full target-model latency to that request."
+    },
+    {
+      "stage": "post",
+      "question": "The lesson recommends measuring alpha before enabling speculative decoding in production. What combination is documented as incompatible in vLLM v0.18.0?",
+      "options": [
+        "N-gram GPU spec decode plus chunked prefill",
+        "Draft-model spec decode plus --enable-chunked-prefill",
+        "EAGLE-3 draft head plus PagedAttention V2",
+        "Speculative decoding plus FP8 quantization"
+      ],
+      "correct": 1,
+      "explanation": "vLLM v0.18.0 documents that draft-model speculative decoding combined with --enable-chunked-prefill does not compile. The documented safe exception is N-gram GPU spec decode in V1 mode."
+    },
+    {
+      "stage": "pre",
+      "question": "Which workload type is explicitly called out as a case where speculative decoding should NOT be used?",
+      "options": [
+        "RAG pipelines with long shared system prompts",
+        "Voice agents requiring low TTFT",
+        "Batch-1 offline generation where latency does not matter",
+        "Chat with temperature > 0.8"
+      ],
+      "correct": 2,
+      "explanation": "For batch-1 offline generation, latency does not matter and throughput is the goal. The draft model adds parameter overhead and the verify pass adds compute — neither helps throughput at batch size 1. Use the plain target model."
+    }
+  ]
+}

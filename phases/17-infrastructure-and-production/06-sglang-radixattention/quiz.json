@@ -1,0 +1,71 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What data structure does SGLang use to store and reuse KV cache blocks across requests?",
+      "options": [
+        "A hash map keyed by full prompt text",
+        "A radix tree keyed by prefix tokens",
+        "A least-recently-used (LRU) eviction list",
+        "A circular buffer of fixed-size cache pages"
+      ],
+      "correct": 1,
+      "explanation": "SGLang's RadixAttention stores the KV cache in a radix tree. Nodes in the tree correspond to token sequences; requests sharing a common prefix share the same tree branch and its cached KV blocks, with no redundant computation."
+    },
+    {
+      "stage": "pre",
+      "question": "What does cache-aware scheduling in SGLang do differently from vLLM's default FCFS scheduling?",
+      "options": [
+        "It routes requests to replicas based on model version affinity",
+        "It prioritizes requests with longer shared prefixes to keep hot branches in HBM",
+        "It delays short requests so longer ones do not experience head-of-line blocking",
+        "It batches requests with identical output lengths to minimize padding waste"
+      ],
+      "correct": 1,
+      "explanation": "Where vLLM schedules requests first-come-first-served, SGLang's cache-aware scheduler performs a depth-first radix traversal and prioritizes requests whose prefix is already resident in HBM. This maximizes cache hit rate and reuse."
+    },
+    {
+      "stage": "post",
+      "question": "On Llama 3.1 8B with ShareGPT-like 1K prompts, what throughput advantage does SGLang hold over vLLM?",
+      "options": [
+        "SGLang: ~8,100 tok/s vs vLLM: ~12,500 tok/s (vLLM wins)",
+        "SGLang: ~16,200 tok/s vs vLLM: ~12,500 tok/s (SGLang ~29% ahead)",
+        "SGLang: ~50,000 tok/s vs vLLM: ~12,500 tok/s (SGLang 4x ahead)",
+        "Both achieve ~12,500 tok/s; the difference only appears on prefix-heavy workloads"
+      ],
+      "correct": 1,
+      "explanation": "On Llama 3.1 8B, H100, ShareGPT 1K prompts, SGLang hits ~16,200 tok/s versus vLLM's ~12,500 — a ~29% edge. On prefix-heavy RAG workloads the advantage can reach 6.4x."
+    },
+    {
+      "stage": "post",
+      "question": "What is the engineer's lever that makes the 6.4x RAG speedup real rather than a marketing number?",
+      "options": [
+        "Enabling flash attention V3 in SGLang's compilation flags",
+        "Maintaining consistent prefix ordering so the same prefix is always sent first",
+        "Increasing the block size from 16 to 64 tokens in the radix tree config",
+        "Pinning each user session to the same SGLang replica via consistent hashing"
+      ],
+      "correct": 1,
+      "explanation": "The lesson explicitly states the 6.4x number evaporates when prefix ordering is inconsistent. If dynamic content is interleaved into the prefix position, the radix tree gets no hits. Ordering is the engineer's lever."
+    },
+    {
+      "stage": "post",
+      "question": "On which workload type does RadixAttention provide the least benefit?",
+      "options": [
+        "RAG pipelines with the same retrieval preamble and varying question",
+        "Agent workflows with identical tool schema headers",
+        "Single-shot code completion with unique per-request prompts",
+        "Voice cloning with a repeated speaker preamble"
+      ],
+      "correct": 2,
+      "explanation": "Single-shot generation with unique prompts offers no shared prefix to cache. The lesson lists this as a case where RadixAttention does not win — every request is a cold prefill regardless of scheduling policy."
+    },
+    {
+      "stage": "pre",
+      "question": "Approximately how many GPUs was SGLang deployed across in 2026?",
+      "options": ["~40,000", "~100,000", "400,000+", "~1,000,000"],
+      "correct": 2,
+      "explanation": "The lesson cites SGLang deployed on 400,000+ GPUs in 2026 across xAI, LinkedIn, Cursor, Oracle, GCP, Azure, and AWS — a strong indicator of production-readiness and ecosystem momentum."
+    }
+  ]
+}

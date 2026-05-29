@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does FID (Frechet Inception Distance) measure and in which space is it computed?",
+      "options": [
+        "The pixel-level L2 distance between generated and real images, averaged over the dataset",
+        "The Frechet distance between Gaussian fits to Inception-v3 feature distributions of real and generated images",
+        "The CLIP cosine similarity between text prompts and generated images",
+        "The Inception Score's KL divergence between predicted class distributions"
+      ],
+      "correct": 1,
+      "explanation": "FID extracts 2048-D Inception-v3 features for N real and N generated images, fits Gaussians to each pool, and computes the Frechet distance between those Gaussians: ||mu_r - mu_g||^2 + Tr(Sigma_r + Sigma_g - 2*(Sigma_r*Sigma_g)^0.5). Lower means more similar distributions."
+    },
+    {
+      "stage": "pre",
+      "question": "What does the CLIP score measure in text-to-image evaluation?",
+      "options": [
+        "The perceptual quality of generated images as judged by a pretrained image classifier",
+        "The cosine similarity between the CLIP image embedding of the generated image and the CLIP text embedding of the prompt",
+        "The frequency of clip-able artifacts in high-frequency regions of the generated image",
+        "The diversity of generated images as measured by pairwise CLIP feature distances"
+      ],
+      "correct": 1,
+      "explanation": "CLIP score = cos_sim(CLIP_image(x_gen), CLIP_text(prompt)), averaged over a large batch of generated images. Higher scores indicate the image content is more aligned with the text prompt. It measures prompt adherence, not absolute image quality."
+    },
+    {
+      "stage": "post",
+      "question": "Why is FID unreliable when computed on fewer than 10,000 samples?",
+      "options": [
+        "Inception features become correlated at small N, inflating the covariance estimate",
+        "Small N underestimates the covariance of the feature distribution, producing falsely low FID scores that do not reflect true sample quality",
+        "The Inception network produces inconsistent features on small batches due to batch normalization",
+        "Small sample counts make the Frechet distance computation numerically unstable"
+      ],
+      "correct": 1,
+      "explanation": "FID fits a Gaussian to the feature distribution. With small N the sample covariance is a biased underestimate of the true covariance, producing an artificially low FID that does not correlate with perceived image quality. The community standard minimum is N >= 10,000."
+    },
+    {
+      "stage": "post",
+      "question": "What is CMMD and what failure of FID does it address?",
+      "options": [
+        "CMMD is a metric based on Inception features that adds a sample-complexity correction term to FID",
+        "CMMD uses CLIP features and Maximum Mean Discrepancy instead of Inception features and Frechet distance, reducing the Gaussian assumption and ImageNet domain bias of FID",
+        "CMMD replaces FID's feature extractor with a self-supervised DINOv2 model for better generalization",
+        "CMMD is a human preference metric that aggregates pairwise comparisons using Bradley-Terry"
+      ],
+      "correct": 1,
+      "explanation": "CMMD (Jayasumana et al., 2024) replaces FID's Inception-v3 features with CLIP features (broader domain coverage) and Frechet distance with Maximum Mean Discrepancy (no Gaussian assumption). It is less biased at small N and better at detecting subtle quality differences."
+    },
+    {
+      "stage": "post",
+      "question": "What is the standard Elo update rule used in human preference evaluation of generative models?",
+      "options": [
+        "r_a += k * (actual_a - expected_a), where expected_a = 1/(1 + 10^((r_b - r_a)/400))",
+        "r_a += k * log(actual_a / expected_a), where expected is derived from a Bradley-Terry model",
+        "r_a = (wins_a / total_games_a) * 1000, normalized to start at 500",
+        "r_a += k * actual_a * (1 - win_rate), where win_rate is the model's historical average"
+      ],
+      "correct": 0,
+      "explanation": "The standard Elo update computes the expected win probability as expected_a = 1/(1+10^((r_b-r_a)/400)), then updates r_a += k*(actual_a - expected_a) where actual_a is 1 for a win, 0 for a loss. This is the Bradley-Terry aggregation used in Chatbot Arena-style image preference arenas."
+    },
+    {
+      "stage": "pre",
+      "question": "According to the lesson, why is reporting a single evaluation metric insufficient for a production model release?",
+      "options": [
+        "Each metric takes too long to compute; multiple metrics are needed to parallelize the evaluation",
+        "FID, CLIP score, and human preference each have known failure modes that can be gamed; corroborating all three plus qualitative analysis is needed to make a credible claim",
+        "No single metric is standardized across the research community",
+        "Models trained on different datasets cannot be compared with a single metric"
+      ],
+      "correct": 1,
+      "explanation": "FID can be gamed by Inception-prior overfitting; CLIP score is inflated by short prompts and 'masterpiece' style tokens; human preference depends on annotator demographics and prompt selection. The lesson states: 'Any single metric is a lie. Three corroborating metrics + qualitative review are a claim.'"
+    }
+  ]
+}

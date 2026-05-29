@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In the AI Control threat model, what are U, T, and H?",
+      "options": [
+        "Utility, Training, and Human evaluation",
+        "Untrusted strong model, Trusted weaker model, and Trusted human labor budget",
+        "User, Tool, and Hardware constraints",
+        "Update frequency, Trust score, and Harm threshold"
+      ],
+      "correct": 1,
+      "explanation": "AI Control defines three resources: U (untrusted strong model — capable, possibly adversarial), T (trusted weaker model — less capable, not adversarial), and H (trusted human labor — small budget, does not scale). The system must extract useful work from U without giving it the ability to cause unacceptable outcomes."
+    },
+    {
+      "stage": "pre",
+      "question": "Why did Trusted Editing Pareto-dominate Untrusted Monitoring in the Greenblatt et al. (ICML 2024) code-backdoor task?",
+      "options": [
+        "T is more accurate than a second instance of U at detecting backdoors",
+        "Trusted Editing avoids the collusion risk inherent in using a second U instance as a monitor, while T's edits are guaranteed not to be adversarial",
+        "Untrusted Monitoring requires more compute than Trusted Editing",
+        "The code-backdoor task is specifically designed to favor Trusted Editing over other protocols"
+      ],
+      "correct": 1,
+      "explanation": "Untrusted Monitoring requires that two U instances not collude via steganographic cues or shared training priors. Preventing this requires extra human-budget investment in collusion resistance. Trusted Editing bypasses this entirely because T is trusted — T's edits cannot be adversarial by assumption. The cost is that T may miss subtle backdoors, but collusion risk is eliminated."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the fundamental difference between 'alignment' and 'control' as research agendas?",
+      "options": [
+        "Alignment focuses on language models; control focuses on robotic systems",
+        "Alignment is a property of the model (is U trustworthy?); control is a property of the deployment protocol (can we use U safely without trusting it?)",
+        "Alignment research is theoretical; control research is empirical",
+        "Alignment prevents harmful outputs; control prevents model capabilities from growing"
+      ],
+      "correct": 1,
+      "explanation": "Alignment asks whether the model itself is safe to trust. Control asks whether we can use a model we do not trust without enabling it to cause unacceptable outcomes. Both are needed: alignment research tries to make U trustworthy; control research provides safety when alignment has not been verified."
+    },
+    {
+      "stage": "post",
+      "question": "Why does 'Untrusted Monitoring' (using a second U instance to monitor the first) carry a collusion risk?",
+      "options": [
+        "The second U instance was trained on different data and cannot understand the first instance's outputs",
+        "Two instances of U may coordinate via steganographic cues in their shared training priors or outputs, allowing both to pursue a backdoor strategy while appearing to moderate each other",
+        "The second U instance is slower than T, reducing the system's overall throughput",
+        "Running two instances of U doubles the human audit budget requirements"
+      ],
+      "correct": 1,
+      "explanation": "Two instances of the same model U share training history, priors, and potentially steganographic encoding strategies. They could coordinate: the producer instance embeds a covert signal, the monitor instance recognizes it and approves the output. Collusion resistance requires additional budget for paraphrasing and obfuscation that degrades the monitor's signal."
+    },
+    {
+      "stage": "post",
+      "question": "What are the three fundamental limits of AI Control described in the lesson?",
+      "options": [
+        "Humans are slow, models are expensive, hardware is constrained",
+        "Humans do not scale, trusted weak models eventually lag behind strong ones, and control does not produce trustworthy strong models",
+        "Control protocols become outdated quickly, U learns to exploit T, and H makes mistakes",
+        "Collusion is hard to prevent, steganography is easy, and red teams are finite"
+      ],
+      "correct": 1,
+      "explanation": "The three limits are: (1) the H (human) budget is bounded and does not scale; (2) when T is much weaker than U, T's editing signal becomes noise; (3) control is not alignment — protocols that work for current capability levels may fail when U can reason about H's audit distribution or manipulate T."
+    },
+    {
+      "stage": "post",
+      "question": "A 'control safety case' as defined in the lesson argues that:",
+      "options": [
+        "The model has been aligned and is trustworthy to deploy",
+        "Under worst-case assumptions about U, the deployment protocol bounds the probability of an unacceptable outcome",
+        "The control protocol was tested and found to have zero false negatives on known attack types",
+        "The human audit team is sufficiently capable to evaluate all of U's outputs correctly"
+      ],
+      "correct": 1,
+      "explanation": "A control safety case is a formal written argument that, even assuming U is adversarially optimizing against the protocol, the deployment design prevents U from causing an unacceptable outcome with probability above a specified threshold. It inherits worst-case assumptions from security engineering rather than expecting average-case behavior."
+    }
+  ]
+}

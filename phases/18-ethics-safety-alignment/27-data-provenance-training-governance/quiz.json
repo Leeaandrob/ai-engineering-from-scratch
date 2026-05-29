@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "California AB 2013 requires generative AI developers to publish how many mandated fields in their training-data documentation?",
+      "options": [
+        "6 fields",
+        "12 fields",
+        "20 fields",
+        "8 fields"
+      ],
+      "correct": 1,
+      "explanation": "California AB 2013 (signed 2024) requires training-data documentation posted by January 1, 2026 (for systems released on or after January 1, 2022) with exactly 12 mandated statutory fields, including data sources, copyright status, personal information, synthetic data use, and collection time period."
+    },
+    {
+      "stage": "pre",
+      "question": "The 'irreversibility problem' in training-data governance refers to:",
+      "options": [
+        "Training data cannot be re-used across different models once it has been used once",
+        "Once data enters model weights, surgical erasure is impossible — unlike cookie-consent frameworks designed for real-time reversible tracking, the only full remediation is retraining from scratch",
+        "Training datasets cannot be retroactively documented after the model has been deployed",
+        "Data licenses cannot be renegotiated after training has commenced"
+      ],
+      "correct": 1,
+      "explanation": "Cookie-consent frameworks assume reversibility: data collection can be stopped and existing data deleted. LLM training is irreversible: once knowledge is in the model weights, it cannot be surgically removed. GDPR right-to-erasure has no practical equivalent. The compliance window is at data collection time, not at deployment time."
+    },
+    {
+      "stage": "pre",
+      "question": "The Data Provenance Initiative's 'Consent in Crisis' (July 2024) finding was:",
+      "options": [
+        "Most AI training datasets lack any documentation of consent practices",
+        "Publishers are adding robots.txt restrictions at an accelerating rate, contracting the openly-trainable-upon data commons — approximately 25% of top training sources added restrictions in 2023-2024",
+        "AI labs are using training data beyond the terms of their licenses at increasing rates",
+        "There is no legal mechanism for individual users to consent to or opt out of AI training"
+      ],
+      "correct": 1,
+      "explanation": "Longpre, Mahari, Lee et al. audited the AI training data commons and found the open web is contracting: approximately 25% of top training sources added robots.txt or equivalent restrictions between 2023 and 2024. The implication is that future training data availability depends on licensing, synthetic generation, and incentivized participation."
+    },
+    {
+      "stage": "post",
+      "question": "The 2025 DPA convergence (Irish DPC, Cologne court, Hamburg DPA, UK ICO) established what principle about LLM training on public content?",
+      "options": [
+        "Explicit consent is required for any use of personal data in LLM training",
+        "Legitimate interest can justify training on first-party publicly available content with appropriate opt-out mechanisms — consent is not required if users have a meaningful opt-out",
+        "All LLM training on EU/EEA data is prohibited without a specific regulatory exemption",
+        "Training on public content is always lawful regardless of individual rights claims"
+      ],
+      "correct": 1,
+      "explanation": "The 2025 convergence: Irish DPC accepted Meta's plan for EU/EEA first-party public content training with safeguards; Cologne court dismissed the injunction; Hamburg DPA dropped urgency. UK ICO issued a positive regulatory response to LinkedIn's safeguards. Convergent principle: legitimate interest is a sufficient basis for training on publicly available first-party content, with opt-out provided."
+    },
+    {
+      "stage": "post",
+      "question": "Which of the 12 California AB 2013 fields is described as new relative to Gebru et al.'s 2018 Datasheets for Datasets?",
+      "options": [
+        "Field 7 — whether the dataset includes personal information",
+        "Field 5 — whether the dataset includes copyrighted material",
+        "Field 12 — whether the system uses or continuously uses synthetic data generation",
+        "Field 10 — the time period during which data was collected"
+      ],
+      "correct": 2,
+      "explanation": "The lesson identifies Field 12 (whether the system uses or continuously uses synthetic data generation) as new relative to Gebru et al.'s 2018 datasheets, reflecting the significant growth of synthetic data use in LLM training after 2018. Field 7 (personal information) triggers California Privacy Rights Act (CPRA) obligations."
+    },
+    {
+      "stage": "post",
+      "question": "The Brazilian ANPD's June 2024 suspension of Meta's data processing differed from the EU DPA decisions in what way?",
+      "options": [
+        "Brazil requires a different legal basis than the EU for AI training",
+        "Brazil prioritized information transparency as a prerequisite — ANPD suspended processing over insufficient information transparency, not over the legal basis of legitimate interest",
+        "Brazil prohibits all foreign AI training on data from Brazilian users",
+        "The ANPD ruling was procedural rather than substantive, based on missing filing deadlines"
+      ],
+      "correct": 1,
+      "explanation": "The ANPD's July 2024 suspension emphasized information transparency: Meta had not provided sufficient information about how Brazilian user data would be used in AI training. The EU DPAs focused on the legitimacy of the legal basis (legitimate interest). ANPD prioritized transparency as a separate and independent requirement, reflecting different regulatory priorities."
+    }
+  ]
+}

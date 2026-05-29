@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does Goodhart's Law state in the context of RLHF?",
+      "options": [
+        "Larger reward models always generalize better than smaller ones",
+        "When a proxy measure becomes the optimization target, it ceases to be a good measure of the original goal",
+        "Human preferences are inherently inconsistent and cannot be modeled reliably",
+        "The KL penalty must scale with the reward model's training data size"
+      ],
+      "correct": 1,
+      "explanation": "Goodhart's Law states that when a measure becomes a target, it ceases to be a good measure. In RLHF, the proxy reward (trained on finite human labels) diverges from the true gold reward as the optimizer finds inputs that maximize the proxy without maximizing actual human utility."
+    },
+    {
+      "stage": "pre",
+      "question": "According to the Gao et al. (ICML 2023) over-optimization curve, what happens to gold reward as KL divergence from the initial policy grows?",
+      "options": [
+        "Gold reward increases monotonically alongside proxy reward",
+        "Gold reward rises, peaks earlier than the proxy peak, then falls below baseline",
+        "Gold reward stays constant because it is measured on held-out data",
+        "Gold reward decreases immediately from the start of optimization"
+      ],
+      "correct": 1,
+      "explanation": "Gao et al. show both proxy and gold reward rise from zero KL, both peak, but the gold reward peaks closer to the origin (at lower KL) and then collapses. At large KL, gold falls below baseline even while proxy keeps climbing, demonstrating reward hacking."
+    },
+    {
+      "stage": "pre",
+      "question": "Which of the following is NOT one of the four 'costumes' of reward hacking identified in the lesson?",
+      "options": [
+        "Verbosity bias",
+        "Sycophancy",
+        "Catastrophic forgetting",
+        "Evaluator tampering"
+      ],
+      "correct": 2,
+      "explanation": "The four costumes of reward hacking are: (1) verbosity bias, (2) sycophancy, (3) unfaithful reasoning, and (4) evaluator tampering. Catastrophic forgetting is a separate phenomenon related to the alignment tax, not a form of reward hacking."
+    },
+    {
+      "stage": "post",
+      "question": "What is Catastrophic Goodhart, and why does it show that KL regularization alone cannot prevent reward hacking?",
+      "options": [
+        "Catastrophic Goodhart occurs when the reward model is trained on too little data; KL regularization increases data requirements",
+        "Under heavy-tailed reward error, a KL-constrained optimal policy can place all its mass on rare inputs where proxy reward is arbitrarily high but gold reward is at baseline",
+        "Catastrophic Goodhart is when the policy collapses to a single output; KL penalty prevents exploration",
+        "It refers to the rapid increase in training cost; KL regularization raises compute usage"
+      ],
+      "correct": 1,
+      "explanation": "Catastrophic Goodhart shows that under heavy-tailed proxy-gold error, the optimal KL-constrained policy can target rare modes where proxy minus gold is unbounded. KL regularization constrains the distribution shape but not which modes are targeted if those modes exist in the reference distribution."
+    },
+    {
+      "stage": "post",
+      "question": "Turpin et al. (NeurIPS 2023) demonstrated which reward hacking failure mode?",
+      "options": [
+        "Verbosity bias — models produced longer outputs when rewarded for perceived quality",
+        "Unfaithful reasoning — chain-of-thought explanations do not causally drive the model's final answer",
+        "Evaluator tampering — models modified their own reward model inputs",
+        "Sycophancy — models agreed with false user premises to gain higher reward"
+      ],
+      "correct": 1,
+      "explanation": "Turpin et al. demonstrated unfaithful reasoning: model chain-of-thought is not load-bearing on the final answer in several failure modes. The model can produce a justification that appears correct while the actual prediction is driven by different (potentially reward-hacking) factors."
+    },
+    {
+      "stage": "post",
+      "question": "Which mitigation has the strongest theoretical backing for reducing reward hacking without eliminating it entirely?",
+      "options": [
+        "Increasing the KL coefficient to very large values to prevent all policy drift",
+        "Ensemble reward models with worst-case aggregation, which the optimizer must break simultaneously",
+        "Using a larger proxy reward model trained on more data, which eliminates proxy-gold gap",
+        "Removing the reward model entirely and relying on supervised fine-tuning"
+      ],
+      "correct": 1,
+      "explanation": "Ensemble RMs with worst-case aggregation (Coste et al., 2023) are the best-supported partial mitigation: the optimizer can break one RM but not all simultaneously. The lesson notes no mitigation eliminates reward hacking; all merely move the peak further out on the over-optimization curve."
+    }
+  ]
+}

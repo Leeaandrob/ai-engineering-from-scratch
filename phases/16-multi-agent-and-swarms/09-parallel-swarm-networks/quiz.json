@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the core architectural difference between a supervisor pattern and a swarm architecture?",
+      "options": ["Supervisor agents use LLMs while swarm workers use rule-based scripts", "Supervisor has a central planner that dispatches work; swarm workers pull tasks from a shared queue with no central orchestrator", "Supervisors run workers sequentially while swarms run them in parallel", "Supervisor architectures use shared memory while swarms use only message passing"],
+      "correct": 1,
+      "explanation": "In a supervisor, a central agent decides who does what. That supervisor becomes the bottleneck at scale. In a swarm, workers pull work off a shared queue independently. The 'coordination' is baked into the queue semantics. No orchestrator; the system scales until the queue does."
+    },
+    {
+      "stage": "pre",
+      "question": "What is 'queue starvation' in a swarm architecture?",
+      "options": ["Workers running out of memory because too many tasks are loaded into the queue simultaneously", "A situation where long-running tasks are never picked up because workers always prefer faster available tasks", "The queue service becoming unavailable, blocking all workers from receiving new tasks", "Workers processing duplicate tasks because the queue delivery guarantee is at-most-once"],
+      "correct": 1,
+      "explanation": "Starvation: if all workers always pull the fastest-available task, slow/complex tasks wait indefinitely. At the extreme, a slow task is only picked when it is the last remaining item. Mitigation: priority queues with aging (increase priority as wait time grows), or workers that exclusively handle long tasks."
+    },
+    {
+      "stage": "post",
+      "question": "What key insight does the Matrix framework (arXiv:2511.21686) contribute to swarm architectures?",
+      "options": ["It introduces a central coordinator that can be elected and replaced when the current one fails", "It serializes both control flow and data flow as messages on distributed queues, making the system look like a pub/sub event mesh with no coordinator", "It proposes a hierarchical swarm where swarm workers can spawn their own sub-swarms", "It proves that swarm architectures always outperform supervisor architectures when the number of tasks exceeds 100"],
+      "correct": 1,
+      "explanation": "Matrix's contribution: not just data but also coordination decisions are serialized messages on queues. The programming model becomes 'which topic does this agent subscribe to?' instead of 'which agent does the supervisor pick next?' This produces maximum scalability at the cost of determinism and traceability."
+    },
+    {
+      "stage": "post",
+      "question": "Why must swarm workers be idempotent?",
+      "options": ["Because multiple workers may read the same queue message simultaneously and must produce consistent outputs", "Because a worker may crash mid-task and the task will be re-queued and re-executed by another worker", "Because the queue may deliver messages out of order and workers must handle any ordering", "Because swarm architectures require each task to be validated by at least two independent workers"],
+      "correct": 1,
+      "explanation": "If a worker crashes after completing a task but before the queue acknowledges receipt, the queue re-delivers the task. Another worker (or the restarted worker) processes it again. If the operation is not idempotent, you get doubled payments, duplicate records, or incorrect state. Idempotency is a hard requirement for exactly-once effective semantics."
+    },
+    {
+      "stage": "post",
+      "question": "When does a swarm architecture fail compared to a supervisor pattern?",
+      "options": ["When the number of workers exceeds 50, making queue contention a bottleneck", "When tasks require a coherent global plan or have strong ordering dependencies between them", "When workers have different cost structures and you want to minimize total compute spend", "When the system needs to support human-in-the-loop approval steps"],
+      "correct": 1,
+      "explanation": "Swarm excels at many independent, order-insensitive tasks (scraping, classification, transformation). It fails when tasks are interdependent (step 3 needs step 2's output) or when a coherent plan spanning all tasks is required (research questions need synthesis, not independent facts). Supervisor is better for these cases."
+    }
+  ]
+}

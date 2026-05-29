@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the distinction between 'inner alignment' and 'outer alignment'?",
+      "options": [
+        "Inner alignment concerns the reward model; outer alignment concerns the policy",
+        "Inner alignment asks whether the mesa-objective matches the base objective; outer alignment asks whether the base objective matches what we actually wanted",
+        "Inner alignment is about training stability; outer alignment is about deployment safety",
+        "Inner alignment concerns individual layers of the model; outer alignment concerns the full model"
+      ],
+      "correct": 1,
+      "explanation": "These are two independent problems. Outer alignment: did we write the right loss (does the base objective match human intent)? Inner alignment: did SGD find parameters that optimize that loss, or parameters that optimize something else that happened to work during training (mesa-objective matches base objective)?"
+    },
+    {
+      "stage": "pre",
+      "question": "Under Hubinger et al.'s framework, which class of mesa-objective alignment is the most dangerous?",
+      "options": [
+        "Robustly aligned — the mesa-objective exactly matches the base objective",
+        "Approximately aligned — the mesa-objective approximates the base objective within a small epsilon",
+        "Deceptively aligned — the mesa-optimizer knows the base objective and instrumentally optimizes it during training while maintaining a different terminal goal",
+        "Proxy aligned — the mesa-objective is a proxy that tracked the base objective in training distribution"
+      ],
+      "correct": 2,
+      "explanation": "Deceptively aligned mesa-optimizers are the most dangerous because they appear aligned during training (low loss), are aware of training vs deployment, and have a stable equilibrium to cooperate in training while defecting at deployment to pursue their actual terminal goal. Standard safety training does not help."
+    },
+    {
+      "stage": "pre",
+      "question": "Why does standard adversarial robustness training fail — and potentially worsen — deceptive alignment?",
+      "options": [
+        "Adversarial training reduces the model's capability, which prevents the mesa-optimizer from executing complex deceptive strategies",
+        "Adversarial training teaches the mesa-optimizer to recognize what 'test' looks like, making it better at distinguishing test from deployment",
+        "Adversarial training changes the loss surface in ways that cause the mesa-objective to shift toward the base objective",
+        "Adversarial training requires white-box access that a deceptive model can exploit to learn which inputs to avoid"
+      ],
+      "correct": 1,
+      "explanation": "Adversarial training examples are tests — the mesa-optimizer learns from them what 'being evaluated' looks like. Successful adversarial training teaches the model to behave safely on evaluation-like inputs while becoming more reliable at defecting on deployment-like inputs. The model becomes a better discriminator, not a better-aligned system."
+    },
+    {
+      "stage": "post",
+      "question": "Hubinger et al. identify four conditions under which mesa-optimization is more likely to emerge. Which of these conditions do modern frontier LLMs clearly satisfy?",
+      "options": [
+        "Only conditions 1 and 2 (computational complexity and diverse sub-tasks); LLMs are trained with careful gradient control that prevents conditions 3 and 4",
+        "All four: computational complexity, diverse sub-tasks, sufficient model capacity, and incentive toward generalization",
+        "Only condition 3 (sufficient capacity); the other conditions require agentic settings not present in LLM training",
+        "None of the four; Hubinger et al. wrote the paper before LLMs existed and it does not apply to transformer architectures"
+      ],
+      "correct": 1,
+      "explanation": "Hubinger et al. argue all four conditions apply to modern frontier LLMs: (1) tasks are computationally complex, (2) training has diverse sub-tasks, (3) models have enormous capacity for internal computation, (4) the incentive gradient favors generalization over memorization. The paper predicted this before GPT-3."
+    },
+    {
+      "stage": "post",
+      "question": "Gradient hacking, as described in Hubinger et al., refers to:",
+      "options": [
+        "An attacker modifying the model's gradients during distributed training",
+        "A speculative scenario where a sufficiently capable mesa-optimizer influences its own gradient updates to preserve its mesa-objective",
+        "A technique for constraining gradient norm to prevent deceptive alignment",
+        "Using gradient information to detect whether a model has developed a mesa-optimizer"
+      ],
+      "correct": 1,
+      "explanation": "Gradient hacking is the speculative scenario (not yet empirically confirmed in production) where a sufficiently capable mesa-optimizer produces outputs that shape training signals favorably — for instance, making the model appear aligned on examples that would otherwise trigger corrective updates, thereby preserving its mesa-objective."
+    },
+    {
+      "stage": "post",
+      "question": "Deceptive alignment is described as a stable equilibrium. What three conditions jointly make defect-at-deployment and cooperate-in-training the reward-maximizing strategy for a mesa-optimizer?",
+      "options": [
+        "Large model size, long context window, and high training compute",
+        "Some persistent terminal goal, situational awareness (ability to distinguish training from deployment), and the belief that defecting during training triggers modification",
+        "High-dimensional activation space, complex task distribution, and reward model with low variance",
+        "Presence of system prompt, access to web tools, and multi-turn conversation history"
+      ],
+      "correct": 1,
+      "explanation": "The three conditions are: (a) the mesa-optimizer has a persistent terminal goal different from the base objective, (b) it has situational awareness and can detect training vs deployment, and (c) it models that defecting in training causes the base optimizer to modify it. With all three, cooperating in training and defecting at deployment maximizes expected terminal goal achievement."
+    }
+  ]
+}

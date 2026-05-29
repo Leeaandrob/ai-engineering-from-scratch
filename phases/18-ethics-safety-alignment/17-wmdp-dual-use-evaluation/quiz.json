@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does WMDP stand for, and how many questions are in the benchmark?",
+      "options": [
+        "Weapons of Mass Destruction Preparedness; 1,000 questions",
+        "Weapons of Mass Destruction Proxy; 4,157 multiple-choice questions across biosecurity, cybersecurity, and chemistry",
+        "Weapons Measurement and Detection Protocol; 2,500 questions",
+        "Wide-scale Malicious Deployment Prevention; 3,000 questions"
+      ],
+      "correct": 1,
+      "explanation": "WMDP (Li et al., ICML 2024) contains 4,157 multiple-choice questions: 1,520 biosecurity, 2,225 cybersecurity, 412 chemistry. Each question is in the 'yellow zone' — proximate enabling knowledge that required multi-expert review and ITAR/EAR export-control compliance checks."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the 'yellow zone' criterion that WMDP questions must satisfy?",
+      "options": [
+        "Questions must describe synthesis routes that are classified under national security law",
+        "Questions must require proximate enabling knowledge of a harmful process without being a direct synthesis recipe — e.g., asking about a reagent step, not the full process",
+        "Questions must be answerable by novices using only public internet sources",
+        "Questions must have been reviewed by at least one government security official"
+      ],
+      "correct": 1,
+      "explanation": "Yellow-zone questions require knowledge adjacent to harmful capability without being a synthesis recipe. Example: 'What reagent catalyzes step 4 of [published pathway]?' — not 'how do I synthesize [dangerous compound]?' This allows honest capability measurement without the benchmark itself being a harmful publication."
+    },
+    {
+      "stage": "pre",
+      "question": "RMU (Representation Misdirection for Unlearning) is the companion method in the WMDP paper. What does it achieve?",
+      "options": [
+        "It trains a separate classifier to block WMDP-relevant queries at inference time",
+        "It reduces WMDP scores toward random chance on LLaMa-2-7B while preserving general capability (MMLU and other benchmarks) within a few percentage points",
+        "It retrains the model from scratch excluding WMDP-relevant training data",
+        "It adds a fine-tuning step on WMDP examples labeled as 'forget' to suppress specific knowledge"
+      ],
+      "correct": 1,
+      "explanation": "RMU (Representation Misdirection for Unlearning) is the published unlearning method in Li et al.'s WMDP paper. Applied to LLaMa-2-7B, it reduced WMDP performance to near-random while preserving MMLU and general-capability benchmarks within a few percentage points. It became the unlearning baseline for subsequent bio-chem-cyber unlearning papers."
+    },
+    {
+      "stage": "post",
+      "question": "What was the '2.53x uplift' result in Anthropic's 2025 bioweapon-acquisition trial?",
+      "options": [
+        "The model answered 2.53x more WMDP biosecurity questions correctly than GPT-3.5",
+        "Novice participants using the model succeeded on acquisition-phase tasks at 2.53x the rate of a control group using internet search alone",
+        "The model produced 2.53x more harmful outputs on bioweapon queries compared to its previous version",
+        "Expert participants extracted 2.53x more information from the model than from published literature"
+      ],
+      "correct": 1,
+      "explanation": "The Anthropic 2025 controlled novice study measured task success on bioweapon acquisition-phase tasks (procurement, equipment, permits). Participants using the model succeeded at 2.53x the rate of the control group. This was insufficient to definitively rule out ASL-3 threshold crossing under Anthropic's RSP."
+    },
+    {
+      "stage": "post",
+      "question": "Why is 'novice-relative uplift' a different and separate measurement from 'expert-absolute capability'?",
+      "options": [
+        "They use different benchmark question types",
+        "Novice-relative uplift is multiplicative — the same information provides greater relative benefit to someone who knows little — while expert-absolute capability measures the ceiling of what a motivated expert can extract",
+        "Novice uplift is measured via survey; expert capability is measured via task completion",
+        "They target different harm domains: novice uplift for bio, expert capability for cyber"
+      ],
+      "correct": 1,
+      "explanation": "A novice starting from little knowledge receives a large relative benefit from even modest information. An expert already knows most of the information but can extract more with targeted queries. Safety cases must address both: 'the model cannot give a novice enough uplift to execute' AND 'an expert cannot extract information not already published.'"
+    },
+    {
+      "stage": "post",
+      "question": "Why is a high WMDP score necessary but insufficient evidence for a dual-use safety claim?",
+      "options": [
+        "WMDP questions are too easy for frontier models, making scores uninformative",
+        "WMDP is a capability proxy — it does not measure elicitation resistance, tacit knowledge barriers, or actual novice task success in practice",
+        "WMDP only covers cybersecurity questions; bio and chem require separate benchmarks",
+        "WMDP scores depend on the judge model used, making them unreliable"
+      ],
+      "correct": 1,
+      "explanation": "WMDP measures capability via multiple-choice. It does not measure whether that capability can actually be elicited through safety filters, whether tacit wet-lab skill is needed beyond the information, or whether procurement and equipment barriers remain. Anthropic's 2025 bioweapon-acquisition trial added the novice-elicitation layer that WMDP-only evaluations miss."
+    }
+  ]
+}

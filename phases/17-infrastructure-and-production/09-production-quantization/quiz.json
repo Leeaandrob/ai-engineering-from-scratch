@@ -1,0 +1,66 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which quantization format is the 2026 default for CPU and edge serving, delivered through llama.cpp and Ollama?",
+      "options": ["AWQ INT4", "GPTQ INT4", "GGUF Q4_K_M or Q5_K_M", "FP8"],
+      "correct": 2,
+      "explanation": "GGUF Q4_K_M or Q5_K_M owns the CPU and edge tier in 2026. llama.cpp and Ollama both load GGUF natively, and the K-quant variants balance quality and size better than uniform INT4."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the calibration trap for quantized models?",
+      "options": [
+        "The calibration dataset must be from the same domain as deployment traffic or model quality degrades",
+        "Calibration only works on models with even numbers of attention heads",
+        "Calibration requires at least 100,000 samples or the quantization is unstable",
+        "Calibration must run on the same GPU hardware that will serve the model"
+      ],
+      "correct": 0,
+      "explanation": "Quantization calibration uses representative data to determine optimal scale factors. If the calibration dataset mismatches deployment traffic (e.g., calibrate on Wikipedia, serve financial documents), the quantized model loses quality on in-distribution inputs."
+    },
+    {
+      "stage": "post",
+      "question": "AWQ with Marlin-AWQ kernels delivers approximately how many tokens per second on a 7B class model, and what makes it the 2026 datacenter GPU default?",
+      "options": [
+        "~200 tok/s; it is the default because it supports AMD hardware",
+        "~741 tok/s; it delivers the best Pass@1 quality at INT4 among GPU formats",
+        "~1,500 tok/s; it compresses faster than other formats",
+        "~100 tok/s; it is the only format supported on cloud TPUs"
+      ],
+      "correct": 1,
+      "explanation": "AWQ with Marlin-AWQ kernels delivers ~741 tok/s on a 7B model while maintaining the best Pass@1 quality at INT4. This combination of throughput and quality makes it the 2026 datacenter production default for GPU serving."
+    },
+    {
+      "stage": "post",
+      "question": "The KV cache trap is a common mistake when deploying quantized models. What does it describe?",
+      "options": [
+        "Teams cache quantized weights in DRAM but forget to cache KV blocks",
+        "Teams count only weight memory when sizing GPUs, forgetting that KV cache can add 10-30 GB at production batch sizes",
+        "Teams quantize the KV cache too aggressively and lose attention accuracy",
+        "Teams enable KV cache sharing across tenants but forget to clear stale entries"
+      ],
+      "correct": 1,
+      "explanation": "The lesson's example: a 70B INT4 model weighs ~35 GB but KV cache at 128 concurrent requests with 2k context adds ~20 GB, plus activations ~5 GB, totaling ~60 GB. Teams celebrating '4 GB model!' miss that serving-time memory is dominated by KV cache."
+    },
+    {
+      "stage": "post",
+      "question": "Which quantization format should be used for reasoning-heavy workloads in 2026, and why not AWQ?",
+      "options": [
+        "GGUF Q5_K_M, because it is the only format with verified reasoning benchmarks",
+        "FP8, because AWQ INT4 introduces quality degradation that accumulates in multi-step reasoning chains",
+        "GPTQ, because it uses block-wise quantization that preserves reasoning neurons",
+        "NVFP4, because Blackwell hardware accelerates reasoning with microscaling"
+      ],
+      "correct": 1,
+      "explanation": "The lesson explicitly states AWQ INT4 is hazardous for reasoning workloads — quality drops are visible on reasoning-heavy benchmarks. FP8 is near-lossless and widely supported on Hopper, Ada, and Blackwell, making it the safe choice for reasoning."
+    },
+    {
+      "stage": "pre",
+      "question": "Which quantization format wins when serving the same base model with multiple LoRA adapters simultaneously in vLLM?",
+      "options": ["AWQ", "FP8", "GPTQ", "NVFP4"],
+      "correct": 2,
+      "explanation": "GPTQ wins for multi-LoRA serving inside vLLM. AWQ does not natively support multiple LoRA adapters on the same base model as efficiently. NVFP4 has no LoRA support as of early 2026."
+    }
+  ]
+}

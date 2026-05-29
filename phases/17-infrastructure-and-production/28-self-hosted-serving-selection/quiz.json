@@ -1,0 +1,71 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "TGI (Text Generation Inference) entered maintenance mode on what date, and what does that mean for new projects?",
+      "options": [
+        "January 1, 2026; means no new features but security patches continue",
+        "December 11, 2025; means only bug fixes, making it a risky long-term bet — prefer vLLM or SGLang",
+        "March 2026; means HuggingFace deprecated it in favor of their new serving stack",
+        "TGI is not in maintenance mode; it is the recommended default in 2026"
+      ],
+      "correct": 1,
+      "explanation": "TGI entered maintenance mode on December 11, 2025 — only bug fixes going forward. This biases new projects toward vLLM or SGLang. TGI has historically had top observability and HF-ecosystem integration, but its maintenance status makes it a risky long-term foundation."
+    },
+    {
+      "stage": "pre",
+      "question": "Which self-hosted engine is the only option when running on CPU-only hardware?",
+      "options": ["Ollama", "vLLM", "llama.cpp", "SGLang"],
+      "correct": 2,
+      "explanation": "CPU-only hardware forces llama.cpp — it is the only engine of the five that runs without a GPU. vLLM, SGLang, and TRT-LLM all require NVIDIA GPUs. Ollama wraps llama.cpp but adds overhead."
+    },
+    {
+      "stage": "post",
+      "question": "What throughput penalty does Ollama carry versus llama.cpp under production-like load?",
+      "options": [
+        "Ollama is faster due to better HTTP connection pooling",
+        "~5% slower under any load",
+        "15-30% slower; 3x throughput gap under production-like load",
+        "Identical to llama.cpp — Ollama is just a wrapper with no overhead"
+      ],
+      "correct": 2,
+      "explanation": "Ollama is 15-30% slower than llama.cpp due to Go + CGo + HTTP serialization overhead. Under production-like load (concurrent requests), the gap widens to approximately 3x throughput. Ollama is for developer laptops, not serving."
+    },
+    {
+      "stage": "post",
+      "question": "Why can AMD GPUs only use vLLM and not TRT-LLM for self-hosted serving?",
+      "options": [
+        "AMD does not support the ROCm driver version required by TRT-LLM",
+        "TRT-LLM is an NVIDIA-only closed stack and does not compile for AMD hardware",
+        "AMD GPUs lack NVLink, which TRT-LLM requires for KV cache transfer",
+        "TRT-LLM's NVFP4 format is specific to Blackwell Tensor Cores not found in AMD"
+      ],
+      "correct": 1,
+      "explanation": "TRT-LLM is a closed NVIDIA stack — it uses NVIDIA-specific primitives (CUDA, NVLink, TensorRT kernels) and does not build for AMD hardware. vLLM has ROCm support and is the only option for AMD GPU self-hosted serving."
+    },
+    {
+      "stage": "post",
+      "question": "What is the recommended dev/staging/prod pipeline for self-hosted serving in 2026?",
+      "options": [
+        "Dev: vLLM local, Staging: TGI, Prod: TRT-LLM",
+        "Dev: Ollama, Staging: llama.cpp, Prod: vLLM or SGLang — same GGUF/HF weights throughout",
+        "Dev: HuggingFace transformers, Staging: TGI, Prod: vLLM",
+        "Dev, Staging, and Prod all use the same engine for consistency"
+      ],
+      "correct": 1,
+      "explanation": "The 2026 pipeline pattern: dev = Ollama (one-command install), staging = llama.cpp (CPU-accurate reference), prod = vLLM or SGLang. The key insight is using the same GGUF or HF weights throughout — format compatibility enables the pipeline."
+    },
+    {
+      "stage": "pre",
+      "question": "When should SGLang be chosen over vLLM as the production serving engine?",
+      "options": [
+        "When running on Blackwell hardware with NVFP4 weights",
+        "For agentic multi-turn workloads and prefix-heavy RAG where shared prefix reuse is high",
+        "When the model is under 8B parameters",
+        "When AMD GPU hardware is required"
+      ],
+      "correct": 1,
+      "explanation": "SGLang wins for agentic multi-turn workloads and prefix-heavy RAG — its RadixAttention and cache-aware scheduling deliver 29-640% throughput improvements over vLLM on these patterns. vLLM is the general-purpose default for workloads without strong prefix locality."
+    }
+  ]
+}

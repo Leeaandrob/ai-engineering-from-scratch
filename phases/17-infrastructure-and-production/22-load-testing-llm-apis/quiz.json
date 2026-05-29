@@ -1,0 +1,66 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the Locust GIL trap in LLM load testing?",
+      "options": [
+        "Locust cannot generate enough concurrent users to saturate a GPU",
+        "Locust's token-level measurement runs tokenization under the Python GIL, competing with request generation and inflating reported inter-token latency",
+        "Locust does not support streaming HTTP responses",
+        "Locust measures wall-clock time but GPU benchmarks require GPU-time measurement"
+      ],
+      "correct": 1,
+      "explanation": "Locust runs tokenization (to measure ITL) under the Python GIL. At high concurrency, the tokenization backlog competes with request generation — your test client becomes the bottleneck, inflating reported inter-token latency. The server looks slower than it is."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the prompt-uniformity trap and how does LLMPerf address it?",
+      "options": [
+        "Identical prompts hit the provider's prompt cache, making latency unrealistically low; LLMPerf randomizes prompts",
+        "Identical prompts in a loop test one point on the token length distribution; LLMPerf uses --mean-input-tokens + --stddev-input-tokens to generate variable-length prompts",
+        "Identical prompts cause GPU memory to fragment; LLMPerf flushes cache between requests",
+        "Identical prompts trigger deduplication at the gateway; LLMPerf uses unique request IDs"
+      ],
+      "correct": 1,
+      "explanation": "Using identical prompts in a loop tests only one point on the token distribution and creates artificial cache hit rates. LLMPerf's --mean-input-tokens and --stddev-input-tokens generate prompts that sample from a distribution matching real traffic shape."
+    },
+    {
+      "stage": "post",
+      "question": "k6 Operator 1.0 reached general availability in which month and year?",
+      "options": ["January 2025", "September 2025", "February 2026", "June 2026"],
+      "correct": 1,
+      "explanation": "k6 Operator 1.0 went GA in September 2025. It enables Kubernetes-native distributed load testing via TestRun and PrivateLoadZone CRDs — making k6 the recommended tool for CI/CD gates in 2026."
+    },
+    {
+      "stage": "post",
+      "question": "Which load pattern is designed to test autoscaling behavior?",
+      "options": [
+        "Steady-state (constant RPS for 30+ minutes)",
+        "Ramp (linearly increasing RPS)",
+        "Spike (sudden traffic burst)",
+        "Soak (low RPS for many hours)"
+      ],
+      "correct": 2,
+      "explanation": "Spike patterns test autoscaling: does the cluster provision new nodes and scale up before requests fail? The spike also validates Karpenter provisioning latency and KAI Scheduler gang-scheduling behavior under sudden load."
+    },
+    {
+      "stage": "post",
+      "question": "What failure mode does a soak load test specifically uncover?",
+      "options": [
+        "GPU provisioning bottlenecks under sudden load",
+        "Memory leaks or gradual resource exhaustion over hours",
+        "Cache cold-start latency on first requests",
+        "Batch scheduler fairness between concurrent users"
+      ],
+      "correct": 1,
+      "explanation": "Soak tests run low RPS for many hours to detect gradual failure modes: memory leaks, connection pool exhaustion, KV cache fragmentation accumulation, log file growth. These only surface over time and are invisible in short benchmark runs."
+    },
+    {
+      "stage": "pre",
+      "question": "For a CI/CD gate, approximately how many iterations at baseline RPS should a load test run per PR?",
+      "options": ["5-10 iterations", "30-50 iterations", "100-500 iterations", "1,000+ iterations"],
+      "correct": 1,
+      "explanation": "The lesson prescribes 30-50 iterations per CI gate — enough for statistical confidence on P50/P95 TTFT and error rate without making the CI pipeline impractically slow. Gate criteria: P50/P95 TTFT within bounds, 5xx < 5%, TPOT under threshold."
+    }
+  ]
+}

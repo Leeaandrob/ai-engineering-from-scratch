@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the core mechanism of the STaR (Self-Taught Reasoner) training loop?",
+      "options": [
+        "Fine-tune on rationales that produce correct answers, then repeat",
+        "Have human experts rate each chain-of-thought trace",
+        "Sample rationales and keep only the longest ones",
+        "Train a separate verifier model to score all reasoning traces"
+      ],
+      "correct": 0,
+      "explanation": "STaR samples a reasoning trace plus answer. If the final answer is correct, the trace is kept and the model is fine-tuned on the kept traces. This loop repeats, bootstrapping reasoning ability without new human annotation."
+    },
+    {
+      "stage": "pre",
+      "question": "What is 'rationalization' in the STaR framework?",
+      "options": [
+        "Discarding irrational or incorrect reasoning traces",
+        "Injecting the correct answer as a hint and re-prompting for a rationale on problems the model fails",
+        "A post-training step that removes shortcuts from the model",
+        "Verifying that rationale steps are logically consistent"
+      ],
+      "correct": 1,
+      "explanation": "When the STaR model cannot get a problem right, rationalization injects the correct answer as a hint and re-prompts the model to produce a rationale that leads to it. These rationalized rationales are added to the training set."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the key shared safety concern across STaR, V-STaR, and Quiet-STaR?",
+      "options": [
+        "All three require too much compute to be practical",
+        "All three use the final answer as the gradient signal, reinforcing shortcuts that reach correct answers via flawed reasoning",
+        "All three cannot generalize beyond arithmetic tasks",
+        "All three produce models that refuse to reason on adversarial inputs"
+      ],
+      "correct": 1,
+      "explanation": "All three methods use the final answer as the gradient signal. A rationale that reaches the right answer via a shortcut or non-generalizing pattern gets positively reinforced. On in-distribution problems the shortcut works; on OOD problems it breaks silently."
+    },
+    {
+      "stage": "post",
+      "question": "What key improvement does V-STaR add over standard STaR?",
+      "options": [
+        "It generates rationales at every token position rather than just between question and answer",
+        "It trains a DPO verifier on both correct and incorrect rationales and uses it for inference-time selection",
+        "It uses human feedback instead of model-generated critiques",
+        "It eliminates the need for rationalization by using larger base models"
+      ],
+      "correct": 1,
+      "explanation": "V-STaR uses every incorrect rationale as data: pairs of (rationale, correctness) are used to train a verifier via Direct Preference Optimization. At inference time, N rationales are sampled and the verifier selects the best, producing +4 to +17 percentage point gains over prior baselines."
+    },
+    {
+      "stage": "post",
+      "question": "What distinguishes Quiet-STaR from STaR and V-STaR?",
+      "options": [
+        "It only generates rationales for problems the model would otherwise fail",
+        "It generates hidden internal rationales at every token position, not just between question and answer",
+        "It uses process reward models instead of outcome-based signals",
+        "It fine-tunes on human-written rationales instead of model-generated ones"
+      ],
+      "correct": 1,
+      "explanation": "Quiet-STaR trains a model to emit a short internal 'thought' at every token position, then mixes the thought-aware prediction with the baseline prediction via a learned weight. Mistral 7B gained zero-shot improvements on GSM8K (5.9% to 10.9%) without task-specific fine-tuning."
+    },
+    {
+      "stage": "post",
+      "question": "How does a process reward model (PRM) differ from the STaR training signal?",
+      "options": [
+        "A PRM rewards intermediate reasoning steps individually, not just final answer correctness",
+        "A PRM requires more correct answers per training example than STaR",
+        "A PRM only works on math problems while STaR generalizes broadly",
+        "A PRM is faster to train because it skips incorrect rationales"
+      ],
+      "correct": 0,
+      "explanation": "A process reward model rewards each rationale step independently, contrasting with STaR's answer-conditioned gradient that only rewards final correct answers. PRMs are the process-supervised alternative that avoids reinforcing shortcut reasoning that happens to reach correct answers."
+    }
+  ]
+}

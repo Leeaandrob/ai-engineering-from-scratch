@@ -1,0 +1,66 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What base model is Llama Guard 3 built on, and what makes it suitable for deployment on mobile hardware?",
+      "options": [
+        "Llama-3.1-70B; quantized to 4-bit reducing memory usage",
+        "Llama-3.1-8B fine-tuned for content safety; a 1B-INT4 quantized variant runs at over 30 tokens/sec on mobile CPUs",
+        "Llama-3.1-8B without fine-tuning; runs natively on mobile GPUs",
+        "A custom 3B safety model distilled from Llama-3.1-405B"
+      ],
+      "correct": 1,
+      "explanation": "Llama Guard 3 is built on Llama-3.1-8B fine-tuned for content safety classification. A 1B-INT4 quantized variant runs at over 30 tokens/sec on mobile CPUs, enabling on-device deployment without server infrastructure."
+    },
+    {
+      "stage": "pre",
+      "question": "What new hazard category does Llama Guard 4 add that is specifically relevant to autonomous coding agents?",
+      "options": [
+        "S13 Elections misinformation",
+        "S14 Code Interpreter Abuse",
+        "S12 Financial fraud",
+        "S15 Autonomous AI behavior"
+      ],
+      "correct": 1,
+      "explanation": "Llama Guard 4 expands the taxonomy from 13 to S1-S14, adding S14 Code Interpreter Abuse. This category specifically covers autonomous coding agents that execute code in sandboxes, a class of attack the earlier taxonomy did not name."
+    },
+    {
+      "stage": "pre",
+      "question": "What attack success rate did Emoji Smuggling achieve against six prominent guard systems according to Huang et al.?",
+      "options": ["About 20%", "About 50%", "About 72%", "100%"],
+      "correct": 3,
+      "explanation": "Huang et al. (arXiv:2504.11168) showed Emoji Smuggling—inserting non-printable or visually similar emoji between characters of a forbidden request—hit 100% attack success rate on six prominent guard systems. The tokenizer coalesces them differently than the classifier expects."
+    },
+    {
+      "stage": "post",
+      "question": "What distinguishes NeMo Guardrails' dialog rails from input and output rails?",
+      "options": [
+        "Dialog rails run on the server while input/output rails run on the client",
+        "Dialog rails enforce conversation-level constraints across multiple turns via Colang; input/output rails operate on single turns",
+        "Dialog rails are only available for enterprise users while input/output rails are open source",
+        "Dialog rails use LLM-based evaluation while input/output rails use rule matching"
+      ],
+      "correct": 1,
+      "explanation": "Input/output rails classify and block on individual turns. Dialog rails use Colang to define flow constraints that persist across turns—e.g., 'do not discuss medical diagnosis in a customer-support bot even if the user asks three different ways.' This multi-turn awareness is NeMo's key differentiator."
+    },
+    {
+      "stage": "post",
+      "question": "Where does the Llama Guard/NeMo classifier layer sit in the full agent safety stack?",
+      "options": [
+        "At the top, as the primary safety mechanism that other layers support",
+        "Below the constitutional (model weights) layer and above the runtime layer (permission modes, budgets, kill switches)",
+        "At the network layer, filtering requests before they reach the model",
+        "At the output layer only, never at the input layer"
+      ],
+      "correct": 1,
+      "explanation": "The defense-in-depth stack: model weights trained with Constitutional AI provide base refusal behavior, the classifier layer (Llama Guard/NeMo) provides fast reject and category routing, the runtime layer (permission modes, budgets, kill switches) enforces operational limits, and HITL propose-then-commit covers consequential actions."
+    },
+    {
+      "stage": "post",
+      "question": "What NeMo Guard Detect attack success rate did Huang et al. measure on jailbreak benchmarks?",
+      "options": ["About 15%", "About 35%", "72.54%", "100%"],
+      "correct": 2,
+      "explanation": "Huang et al. measured 72.54% ASR for NeMo Guard Detect on a jailbreak benchmark under adversarial craft. This is not under casual user conditions—it requires careful attack design—but it demonstrates that classifiers have a ceiling well below 100% coverage even with sophisticated tooling."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What SWE-bench Verified score did Claude Sonnet 4.5 achieve inside Cline's autonomous scaffold, versus on SWE-agent v1?",
+      "options": [
+        "SWE-agent v1: 59.8%, Cline: 43.2%",
+        "SWE-agent v1: 43.2%, Cline: 59.8%",
+        "SWE-agent v1: 70.1%, Cline: 80.9%",
+        "SWE-agent v1: 20.0%, Cline: 35.5%"
+      ],
+      "correct": 1,
+      "explanation": "The same Claude Sonnet 4.5 scored 43.2% on SWE-agent v1 and 59.8% on Cline autonomous—a 16.6 absolute point difference with identical model weights. This demonstrates that scaffolding around the model now matters as much as the model itself."
+    },
+    {
+      "stage": "pre",
+      "question": "What is 'CodeAct' as used in OpenHands?",
+      "options": [
+        "A benchmark for evaluating coding agent correctness",
+        "A permission mode that restricts agents to code-editing actions only",
+        "An architecture where the agent emits Python code executed by a Jupyter-style kernel in a sandbox, rather than JSON tool calls",
+        "A training method that fine-tunes models specifically on coding tasks"
+      ],
+      "correct": 2,
+      "explanation": "CodeAct is OpenHands' architectural bet: instead of JSON tool calls decoded by a host, the model emits Python code and a Jupyter-style kernel runs it in a sandbox. The agent can loop over files, chain tools, and catch its own exceptions inside one action."
+    },
+    {
+      "stage": "pre",
+      "question": "What methodological issue does SWE-bench Verified have that inflates top scores?",
+      "options": [
+        "The test cases are not derived from real GitHub issues",
+        "161 of 500 tasks require only 1-2 line changes, pulling top scores up on an easy tail",
+        "The benchmark allows unlimited retries, so agents can guess their way to correct patches",
+        "All tasks are from a single Python library, limiting generalization"
+      ],
+      "correct": 1,
+      "explanation": "161 of 500 SWE-bench Verified tasks require only 1-2 lines of change. High scores are driven partly by this easy tail. SWE-bench Pro restricts to 10+ line changes and returns scores in the 23-59% range for the same frontier systems."
+    },
+    {
+      "stage": "post",
+      "question": "Why do verifier loops produce the largest non-model reliability gains in coding agents?",
+      "options": [
+        "Because they compress the context window to keep token costs low",
+        "Because running tests, reading stack traces, and re-attempting catches failures that the initial attempt missed, contributing 10+ points on SWE-bench",
+        "Because they prevent the agent from making any irreversible changes",
+        "Because they enable the agent to use multiple models in parallel"
+      ],
+      "correct": 1,
+      "explanation": "A verifier loop that runs tests, reads the output, and revises the patch is a 10+ point delta on SWE-bench. The same model with and without a verifier loop looks like two different products. This is one of three places where scaffolding buys reliability points (along with retrieval and failure containment)."
+    },
+    {
+      "stage": "post",
+      "question": "What is the key tradeoff between CodeAct and JSON tool calls for production deployments?",
+      "options": [
+        "CodeAct is faster but less accurate; JSON tool calls are slower but more accurate",
+        "CodeAct is compositional and flexible but requires a hardened sandbox; JSON tool calls are easier to audit with limited compositionality and safe by default",
+        "CodeAct works only with open-source models; JSON tool calls work only with proprietary APIs",
+        "JSON tool calls support multi-file editing; CodeAct is restricted to single files"
+      ],
+      "correct": 1,
+      "explanation": "JSON tool calls: every action is one turn, easy to audit, limited compositionality, safe by default because each call goes through an explicit validator. CodeAct: one action can be a whole program, compositional, but requires a hardened sandbox (OpenHands uses Docker) and failure modes include anything the sandbox runtime allows."
+    },
+    {
+      "stage": "post",
+      "question": "What is the silent bottleneck in coding agent reliability identified by SWE-agent's ACI, OpenHands' file-index, and Aider's repo-map?",
+      "options": [
+        "Model hallucination rate on unfamiliar APIs",
+        "Finding the right files to read before attempting a fix",
+        "Writing syntactically valid patches",
+        "Parsing test suite output formats"
+      ],
+      "correct": 1,
+      "explanation": "Finding the right files to read is the silent bottleneck. SWE-agent's Agent-Computer Interface, OpenHands' file-index, and Aider's repo-map all attack retrieval quality as the primary scaffolding investment, because an agent that finds the wrong files cannot produce a correct patch regardless of model capability."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What are the core components of a Hierarchical Task Network (HTN)?",
+      "options": [
+        "Goals, Subgoals, Actions, Rewards",
+        "Tasks (compound and primitive), Methods (decomposition rules), Operators (primitive actions with preconditions/effects), and State",
+        "Nodes, Edges, Weights, Heuristics",
+        "Plans, Steps, Tools, Constraints"
+      ],
+      "correct": 1,
+      "explanation": "An HTN consists of: Tasks (compound tasks to be decomposed, and primitive tasks that can be directly executed), Methods (ways to decompose a compound task into subtasks with preconditions), Operators (primitive actions with preconditions and effects), and State (a set of facts)."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the central claim of ChatHTN regarding plan soundness?",
+      "options": [
+        "LLM-generated plans are inherently sound because LLMs are well-trained",
+        "Every plan produced is provably sound because LLM suggestions only enter as candidate decompositions validated by the symbolic layer, never as direct plan edits",
+        "Plans are approximately sound most of the time",
+        "Plan soundness is not important for practical applications"
+      ],
+      "correct": 1,
+      "explanation": "ChatHTN (Gopalakrishnan et al., 2025) claims every plan is provably sound because LLM suggestions enter only as candidate decompositions that are validated against the operator schema — the symbolic layer owns correctness; the LLM only expands the method library."
+    },
+    {
+      "stage": "post",
+      "question": "What published results did AlphaEvolve achieve in matrix multiplication?",
+      "options": [
+        "First 10% speedup in matrix multiplication in 20 years",
+        "First improvement over Strassen for 4x4 complex matrix multiplication in 56 years, using 48 scalar multiplications",
+        "First GPU-based matrix multiplication optimization",
+        "First neural network that outperforms human experts at matrix multiplication design"
+      ],
+      "correct": 1,
+      "explanation": "AlphaEvolve (Novikov et al., arXiv:2506.13131, DeepMind, June 2025) achieved the first improvement over Strassen's algorithm for 4x4 complex matrix multiplication in 56 years, finding a solution with 48 scalar multiplications."
+    },
+    {
+      "stage": "post",
+      "question": "What is the hard constraint for AlphaEvolve to work?",
+      "options": [
+        "The problem must involve code generation",
+        "The fitness function must be machine-checkable and deterministic",
+        "The model must have been fine-tuned on similar problems",
+        "The search space must be smaller than a certain size"
+      ],
+      "correct": 1,
+      "explanation": "AlphaEvolve's evolutionary search only converges with a machine-checkable, deterministic fitness function. Evolutionary search over prose or subjective quality does not converge — the evaluator must return a reliable numeric score."
+    },
+    {
+      "stage": "post",
+      "question": "What was the impact of AlphaEvolve's Borg scheduling heuristic optimization?",
+      "options": [
+        "0.1% compute recovered",
+        "0.7% of Google compute recovered via a Borg scheduling heuristic",
+        "5% cost savings on cloud compute",
+        "10x faster job scheduling"
+      ],
+      "correct": 1,
+      "explanation": "AlphaEvolve applied evolutionary code search to optimize Google's Borg scheduling heuristic, recovering 0.7% of Google's total compute — a significant win at that scale."
+    },
+    {
+      "stage": "pre",
+      "question": "When should you use HTN planning over ReAct or ReWOO?",
+      "options": [
+        "For any task involving more than 5 steps",
+        "For scheduling and compliance workflows where the plan must be provably correct by construction",
+        "Whenever the task involves multiple agents",
+        "Only for Minecraft-like game environments"
+      ],
+      "correct": 1,
+      "explanation": "HTN planning is the right choice for scheduling, flight pathing, and compliance workflows where a hallucinated step is unacceptable and the plan must be sound by construction. ReAct/ReWOO are better for open-ended tasks without formal correctness requirements."
+    }
+  ]
+}
